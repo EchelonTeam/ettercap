@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+
+dh_targets=binary binary-arch binary-indep build build-arch build-indep clean install
+
+$(dh_targets) %:
+	dh $@ --with autoreconf --parallel
+
+.PHONY: $(dh_targets)
+
+override_dh_autoreconf:
+	mkdir -p libltdl/m4
+	dh_autoreconf
+
+override_dh_auto_configure:
+	@echo main configuration deferred until build, as it must be done twice
+
+override_dh_auto_build:
+	dh_auto_configure -- --enable-https --enable-plugins --disable-gtk
+	$(MAKE) -C src
+	cp src/ettercap ettercap-text-only
+	$(MAKE) -C src clean
+	dh_auto_configure -- --enable-https --enable-plugins --enable-gtk
+	$(MAKE)
+
+override_dh_auto_install:
+	dh_auto_install
+	mkdir -p debian/tmp/usr/sbin
+	install --mode=0755 ettercap-text-only debian/tmp/usr/sbin/
+
+override_dh_install:
+	dh_install
+	mkdir -p debian/ettercap-text-only/usr/sbin
+	install --mode=0755 \
+	 debian/tmp/usr/sbin/ettercap-text-only \
+	 debian/ettercap-text-only/usr/sbin/ettercap
+	-rm --verbose debian/ettercap-common/usr/share/ettercap/ettercap.png
