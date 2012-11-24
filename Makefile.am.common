@@ -1,0 +1,8 @@
+AUTOMAKE_OPTIONS = foreign
+
+AM_CPPFLAGS = \
+ -DINSTALL_SYSCONFDIR='"$(sysconfdir)"' \
+ -DINSTALL_DATADIR='"$(datadir)"' \
+ -DINSTALL_LIBDIR='"$(libdir)"'
+
+DISTCLEANFILES = *~
