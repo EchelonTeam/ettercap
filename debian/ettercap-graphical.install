@@ -2,3 +2,4 @@ debian/tmp/usr/bin/ettercap usr/sbin/
 debian/tmp/usr/share/ettercap/ettercap.png
 debian/tmp/usr/share/icons
 debian/tmp/usr/share/applications
+debian/kali-ettercap-gtk.desktop usr/share/applications/
