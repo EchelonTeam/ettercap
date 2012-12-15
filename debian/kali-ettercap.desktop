@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=ettercap
-Encoding=UTF-8
-Exec=sh -c "ettercap -h;sudo -s"
-Icon=kali-menu.png
-StartupNotify=false
-Terminal=true
-Type=Application
-Categories=01-02-identify-live-hosts;07-03-01-network-spoofing;
