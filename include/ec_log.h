@@ -106,7 +106,7 @@ struct log_header_info {
    
    u_char fingerprint[FINGER_LEN+1];
 
-   /* account informations */
+   /* account information */
    u_int8 failed;
    struct ip_addr client;
 

@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ef.h>
@@ -152,12 +153,13 @@ void load_tables(void)
       add_virtualpointer(name, level, oname, offset, size);
    }
 
-   /* print some nice informations */
+   /* print some nice information */
    fprintf(stdout, "\n%3d protocol tables loaded:\n", ntables);
    fprintf(stdout, "\t");
    SLIST_FOREACH(t, &table_head, next)
       fprintf(stdout, "%s ", t->name);
    fprintf(stdout, "\n");
+   fclose(fc);
   
 }
 
@@ -304,12 +306,13 @@ void load_constants(void)
       SLIST_INSERT_HEAD(&const_head, c, next);
    }
    
-   /* print some nice informations */
+   /* print some nice information */
    fprintf(stdout, "\n%3d constants loaded:\n", nconst);
    fprintf(stdout, "\t");
    SLIST_FOREACH(c, &const_head, next)
       fprintf(stdout, "%s ", c->name);
    fprintf(stdout, "\n");
+   fclose(fc);
 }
 
 

@@ -1,26 +1,28 @@
 #!/usr/bin/make -f
 
-dh_targets=binary binary-arch binary-indep build build-arch build-indep clean install
+%:
+	dh $@ --parallel
 
-$(dh_targets) %:
-	dh $@ --with autoreconf --parallel
+LIBNET_VER := $(shell dpkg --status libnet1-dev | awk '/^Version:/ {print $$2}')
 
-.PHONY: $(dh_targets)
-
-override_dh_autoreconf:
-	mkdir -p libltdl/m4
-	dh_autoreconf
+ENABLE_IPV6 := $(shell \
+ if dpkg --compare-versions $(LIBNET_VER) ge 1.1.6; \
+ then echo ON; \
+ else echo OFF; \
+ fi)
 
 override_dh_auto_configure:
+	@echo LIBNET_VER = $(LIBNET_VER)
+	@echo ENABLE_IPV6 = $(ENABLE_IPV6)
 	@echo main configuration deferred until build, as it must be done twice
 
 override_dh_auto_build:
-	dh_auto_configure -- --enable-https --enable-plugins --disable-gtk
-	$(MAKE) -C src
-	cp src/ettercap ettercap-text-only
-	$(MAKE) -C src clean
-	dh_auto_configure -- --enable-https --enable-plugins --enable-gtk
-	$(MAKE)
+	dh_auto_configure -- -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=OFF
+	dh_auto_build
+	mkdir tmp
+	mv obj*/src/ettercap ettercap-text-only
+	dh_auto_configure -- -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=ON
+	dh_auto_build
 
 override_dh_auto_install:
 	dh_auto_install
@@ -34,3 +36,10 @@ override_dh_install:
 	 debian/tmp/usr/sbin/ettercap-text-only \
 	 debian/ettercap-text-only/usr/sbin/ettercap
 	-rm --verbose debian/ettercap-common/usr/share/ettercap/ettercap.png
+
+override_dh_installdocs:
+	dh_installdocs -pettercap-common
+	dh_installdocs -Nettercap-common --link-doc=ettercap-common
+
+override_dh_strip:
+	dh_strip --dbg-package=ettercap-dbg

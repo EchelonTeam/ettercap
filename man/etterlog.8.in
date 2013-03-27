@@ -14,6 +14,7 @@
 .\"  along with this program; if not, write to the Free Software
 .\"  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 .\"
+.\"
 .de Sp
 .if n .sp
 .if t .sp 0.4
@@ -37,7 +38,7 @@ system which was used to dump in a single static manner).
 You will be able to dump traffic from only one connection of your choice, from 
 only one or more hosts, print data in hex, ascii, binary etc...
 .Sp
-TIP: All useless messages are printed to stderr, so you can save the
+TIP: All non-useful messages are printed to stderr, so you can save the
 output from etterlog with the following command:
 .TP
 \fIetterlog [options] logfile > outfile\fR

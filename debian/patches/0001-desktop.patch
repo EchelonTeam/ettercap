@@ -1,0 +1,23 @@
+From: "Barak A. Pearlmutter" <barak+git@cs.nuim.ie>
+Date: Fri, 19 Oct 2012 09:44:48 +0100
+Subject: desktop
+
+desktop/ettercap.desktop fixes: description and invocation.
+---
+ desktop/ettercap.desktop |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/desktop/ettercap.desktop b/desktop/ettercap.desktop
+index e2345d9..02ca686 100644
+--- a/desktop/ettercap.desktop
++++ b/desktop/ettercap.desktop
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+ Name=Ettercap
+-Comment=Nework sniffer/analyser
+-Exec=ettercap-gtk
++Comment=Network sniffer/analyser
++Exec=su-to-root -X -c "/usr/sbin/ettercap --gtk"
+ Icon=ettercap
+ Terminal=false
+ Type=Application

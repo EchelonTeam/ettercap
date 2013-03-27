@@ -18,6 +18,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -48,12 +49,9 @@ FUNC_DECODER(dissector_ldap)
    DECLARE_DISP_PTR_END(ptr, end);
    u_int16 type, user_len, pass_len;
    char tmp[MAX_ASCII_ADDR_LEN];
-   
-   /* unused variable */
-   (void)end;
 
-   /* Skip ACK packets */
-   if (PACKET->DATA.len == 0)
+   /* We need at least 15 bytes of data to be interested*/
+   if (PACKET->DATA.len < 15)
       return NULL;
     
    /* Only packets coming from the server */
@@ -68,7 +66,14 @@ FUNC_DECODER(dissector_ldap)
 
    /* Quite self-explaining :) */
    user_len = (u_int16)ptr[11];
+
+   if ((ptr + user_len + 12) > end)
+      return NULL;
+
    pass_len = (u_int16)ptr[13 + user_len];
+
+   if ((ptr + user_len + pass_len + 14) > end)
+      return NULL;
 
    if (user_len == 0) {
       PACKET->DISSECTOR.user = strdup("[Anonymous Bind]");

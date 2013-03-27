@@ -3,9 +3,7 @@
 #ifndef WDG_H
 #define WDG_H
 
-#ifdef HAVE_CONFIG_H
-   #include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 #include <unistd.h>
@@ -22,7 +20,6 @@
 
 #if defined HAVE_STDINT_H && !defined OS_SOLARIS
 	#include <stdint.h>
-#elif !defined OS_SOLARIS
 	#include <sys/types.h>
 #elif defined OS_SOLARIS
 	#include <sys/inttypes.h>
@@ -123,7 +120,7 @@ extern void wdg_bug(char *file, const char *function, int line, char *message);
 #define CTRL(x)      ((x) & 0x1f)
 #define KEY_ESC      CTRL('[')
 
-/* informations about the current screen */
+/* information about the current screen */
 struct wdg_scr {
    size_t lines;
    size_t cols;

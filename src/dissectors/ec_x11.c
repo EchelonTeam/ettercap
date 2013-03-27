@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -79,7 +80,7 @@ FUNC_DECODER(dissector_x11)
        * it should be better checked in the header to find the 
        * banner length etc etc...
        */
-      PACKET->DISSECTOR.banner = strdup(PACKET->DATA.disp_data + 40);
+      PACKET->DISSECTOR.banner = strdup((const char*)PACKET->DATA.disp_data + 40);
      
    } ENDIF_FIRST_PACKET_FROM_SERVER(s, ident)
    
@@ -107,7 +108,7 @@ FUNC_DECODER(dissector_x11)
       return NULL;
    
    /* check the magic string */
-   if (strncmp(x11->name, "MIT-MAGIC-COOKIE-1", x11->name_len))
+   if (strncmp((const char*)x11->name, "MIT-MAGIC-COOKIE-1", x11->name_len))
       return NULL;
        
    DEBUG_MSG("\tDissector_x11 COOKIE");
@@ -119,7 +120,7 @@ FUNC_DECODER(dissector_x11)
    SAFE_CALLOC(PACKET->DISSECTOR.pass, 33, sizeof(char));
       
    for (i = 0; i < 16; i++)                                                                      
-      sprintf(PACKET->DISSECTOR.pass + (i * 2), "%.2x", x11->data[i] ); 
+      snprintf(PACKET->DISSECTOR.pass + (i * 2), 3, "%.2x", x11->data[i] ); 
    
    /* 
     * create the session to remember to check the

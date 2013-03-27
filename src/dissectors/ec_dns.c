@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -180,7 +181,7 @@ FUNC_DECODER(dissector_dns)
             NS_GET32(addr, q);
             /* convert to network order */
             addr = htonl(addr);
-            ip_addr_init(&ip, AF_INET, (char *)&addr);
+            ip_addr_init(&ip, AF_INET, (u_char *)&addr);
            
             /* insert the answer in the resolv cache */
             resolv_cache_insert(&ip, name);

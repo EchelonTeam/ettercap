@@ -5,12 +5,85 @@ Legenda:
          !! bug fixed
 
 =========================================
+0.7.6-Locard 20130327
+   !! Fixed some parsing errors
+   !! Fixes to TN3270 dissector and SSL Strip
+   !! PostgreSQL dissector: Update output format to reflect release syntax
+      for John the Ripper 1.7.9-Jumbo-8. The old format is still supported,
+      but deprecated.
+   !! Fixed memory leak in SSL Strip plugin
+   !! Fixed check in invalid ip header
+   !! Fixed QoS packets handling (they aren't dropped anymore)
+   !! Fix in o5logon Heap Corruption
+   !! New and updated OUI file
+   !! Some memory leaks fixed
+   !! Fixed some bugs in return values and fstat failures handling
+   !! Fixed a bug in some password display (didn't get null terminated)
+   !! Many fixes in gcc warnings when building
+   !! Better cmake module to find curl and libnet
+   !! Fixed bug in filters load
+   !! Fixes in HTTP and HTTPs protocols
+   !! Fixed UI deadlock
+   !! Fixes in tcp and http handling (infinite loop and crash)
+   !! Better reads in BGP to avoid invalid reads
+    + New logo
+    + Added ascii FQDN support to DHCP ACK
+    + Added UA parsing to http packets
+    + Added support for IPv4 and IPv6 Tunnels
+    + New mDNS dissector
+    + Added PPI support (per packet information) for wireless captures
+    + Ensure that we find required packages with cmake
+    + New clean-all cmake target
+    + Print a message when done reading PCAP file
+    - Removed 'u' and 'p' fields  from etter.fields
 
-NG-0.7.4         20110811
+0.7.5.3-Assimilation 20130201
+   !! Fixed ncurses host scan crash (already fixed in 0.7.5.2)
+   !! Fixed ppp connection crash (already fixed in 0.7.5.2)
+   !! Fixed only MiTM mode selecting text interface
+    + Changed to version 0.7.5.3 to help distributions.
+
+0.7.5.2-Assimilation 20130129
+   !! applied patch to fix CVE-2012-0722
+   !! fixed username detection in TN3270 dissector
+    + Added new private-key and certificate-file options for SSL MiTM
+    + Fix for crash in ncurses multiple scan for host mode
+    + Fix for crash in ppp0 connections
+
+0.7.5.1-Assimilation 20130103
+   !! fixed set_blocking() method preventing SSL MiTM from working
+   !! changed SSLStrip plugin to use PCRE
+   !! more improvements to SSLStrip plugin
+    + Added MySQL 5.x dissector
+    + Added O5Logon dissector
+    + Added iSCSI CHAP dissector
+    + Added TN3270 dissector
+    + Added MongoDB dissector
+
+0.7.5-Assimilation 20121015
+   !! fixed more memory leaks
+   !! improved GTK GUI
+   !! changed build system to CMake.
+    + Added IPv6 poisoning and capture.
+    + Added NBNS spoof plugin.
+    + Added SSLStrip Plugin (EXPERIMENTAL)
+
+0.7.4-Lazarus	20111202
+   !! fixed resource depletion issue
+   !! buffer access out-of-bounds issues
+   !! fixed DNS dissector not working on 64bit systems
+   !! multiple buffer overflows
+   !! multiple memory leaks
+   !! multiple files with obsolete code
+   !! fixed SEND L3 errors experienced by some users
+   !! fixed a compilation error under Mac OS X Lion
+   !! updated build system
+   (Please see bug track for issue specifics)
+
+NG-0.7.4         2005
 
    + added the radius dissector
    + go into unoffensive mode if libnet initialization fails
-   - remove autoupdate from website for passive databases
    !! etterfilter now accepts empty blocks
    !! the log files are closed on SIGTERM
    !! fixed a compilation error under Mac OS X Tiger

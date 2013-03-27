@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -86,7 +87,6 @@ void __init ppp_init(void)
    dissect_add("ppp", NET_LAYER, LL_TYPE_PPP, decode_ppp);
 }
 
-
 FUNC_DECODER(decode_ppp)
 {
    FUNC_DECODER_PTR(next_decoder);
@@ -95,8 +95,9 @@ FUNC_DECODER(decode_ppp)
    struct ppp_chap_challenge *chapch;
    u_int16 proto;
    u_int32 i;
-   u_char user[128], dummy[3], auth_len, temp[128], *pap_auth;
-   static u_char  version=0, schallenge[512];
+   u_char auth_len;
+   char user[128], dummy[3], temp[128], *pap_auth;
+   static char version=0, schallenge[512];
 #ifdef HAVE_OPENSSL
    u_char digest[SHA_DIGEST_LENGTH];
    SHA_CTX ctx;
@@ -159,7 +160,7 @@ FUNC_DECODER(decode_ppp)
                schallenge[0]=0;
                version = 1;
                for (i=0; i<8; i++) {
-                  sprintf(dummy, "%02X", chapch->value.challenge_v1[i]);
+                  snprintf(dummy, 3, "%02X", chapch->value.challenge_v1[i]);
                   strcat(schallenge, dummy);
                }	    
             } else if (chapch->size == 16) {
@@ -168,60 +169,67 @@ FUNC_DECODER(decode_ppp)
             }
                else version = 0;
             break;
-	
+
          case PPP_CHAP_CODE_RESPONSE: 
-	    
+
             if (version != 1 && version !=2) 
                break;			
                
             i = ntohs(lcph->length) - 5 - chapch->size;
             if (i > sizeof(user)-2) 
                i = sizeof(user)-2;
-		
+
             memcpy(user, (u_char *)lcph + 5 + chapch->size, i);
             user[i] = '\0';	
-		
+
             /* Check if it's from PPP or PPTP */
             if (!ip_addr_null(&PACKET->L3.dst) && !ip_addr_null(&PACKET->L3.src)) {
                DISSECT_MSG("\n\nTunnel PPTP: %s -> ", ip_addr_ntoa(&PACKET->L3.src, temp)); 
                DISSECT_MSG("%s\n", ip_addr_ntoa(&PACKET->L3.dst, temp));
             }
-		
-            DISSECT_MSG("PPP : MS-CHAP Password:   %s:\"\":\"\":", user);
-		
+
+            DISSECT_MSG("PPP*MS-CHAP Password*%s:$MSCHAPv2$", user);
+
             if (version == 1) {        
                for (i = 0; i < 24; i++) 
                   DISSECT_MSG("%02X", chapch->value.response_v1.lanman[i]);
                DISSECT_MSG(":");
-			
                for (i = 0; i < 24; i++) 
                   DISSECT_MSG("%02X", chapch->value.response_v1.nt[i]);
                DISSECT_MSG(":%s\n\n",schallenge);
-		  	
+
             } else if (version == 2) {
-#ifdef HAVE_OPENSSL 
-               u_char *p;
+#ifdef HAVE_OPENSSL
+               char *p;
 
                if ((p = strchr(user, '\\')) == NULL)
                   p = user;
                else 
                   p++;
-			
+
                SHA1_Init(&ctx);
                SHA1_Update(&ctx, chapch->value.response_v2.peer_challenge, 16);
                SHA1_Update(&ctx, schallenge, 16);
                SHA1_Update(&ctx, p, strlen(p));
                SHA1_Final(digest, &ctx);
-			
-               DISSECT_MSG("000000000000000000000000000000000000000000000000:");
-			
-               for (i = 0; i < 24; i++) 
-                  DISSECT_MSG("%02X",chapch->value.response_v2.nt[i]);
-               DISSECT_MSG(":");
 
                for (i = 0; i < 8; i++) 
                   DISSECT_MSG("%02X", digest[i]);
-               DISSECT_MSG("\n\n");			
+               DISSECT_MSG("$");
+
+               for (i = 0; i < 24; i++)
+                  DISSECT_MSG("%02X",chapch->value.response_v2.nt[i]);
+               DISSECT_MSG("$%s\n\n", user);
+#else
+               for (i = 0; i < 16; i++)
+                  DISSECT_MSG("%02X", schallenge[i]);
+               DISSECT_MSG("$");
+               for (i = 0; i < 24; i++)
+                       DISSECT_MSG("%02X",chapch->value.response_v2.nt[i]);
+               DISSECT_MSG("$");
+               for (i = 0; i < 16; i++)
+                       DISSECT_MSG("%02X",chapch->value.response_v2.peer_challenge[i]);
+               DISSECT_MSG("$%s\n\n", user);
 #endif
             }
             version = 0;

@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -30,7 +31,7 @@ FUNC_DECODER(dissector_telnet);
 void telnet_init(void);
 static void skip_telnet_command(u_char **ptr, u_char *end);
 static void convert_zeros(u_char *ptr, u_char *end);
-static int match_login_regex(char *ptr);
+static int match_login_regex(const char *ptr);
 
 /************************************************/
 
@@ -95,13 +96,13 @@ FUNC_DECODER(dissector_telnet)
       
       /* start the collecting process when a "reserved" word is seen */
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == -ENOTFOUND) {
-         if (match_login_regex(ptr)) {
+         if (match_login_regex((const char*)ptr)) {
             DEBUG_MSG("\tdissector_telnet - BEGIN");
          
             /* create the session to begin the collection */
             dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_telnet));
             /* use this value to remember to not collect the banner again */
-            s->data = "\xe7\x7e";
+            s->data = strdup("\xe7\x7e");
             session_put(s);
 
             return NULL;
@@ -128,7 +129,7 @@ FUNC_DECODER(dissector_telnet)
             DEBUG_MSG("\tdissector_telnet - FIRST CHAR");
 
             /* save the first packet */
-            s->data = strdup(ptr);
+            s->data = strdup((const char*)ptr);
          
          /* collect the subsequent packets */
          } else {
@@ -139,10 +140,10 @@ FUNC_DECODER(dissector_telnet)
             memset(str, 0, sizeof(str));
 
             /* concat the char to the previous one */
-            sprintf(str, "%s%s", (char *)s->data, ptr);
+            snprintf((char*)str, strlen(s->data) + PACKET->DATA.disp_len + 2, "%s%s", (char *)s->data, ptr);
             
             /* parse the string for backspaces and erase as wanted */
-            for (p = str, i = 0; i < strlen(str); i++) {
+            for (p = str, i = 0; i < strlen((const char*)str); i++) {
                if (str[i] == '\b' || str[i] == 0x7f) {
                   p--;
                } else {
@@ -154,10 +155,10 @@ FUNC_DECODER(dissector_telnet)
 
             /* save the new string */
             SAFE_FREE(s->data);
-            p = s->data = strdup(str);
+            p = s->data = strdup((const char*)str);
             
             /* terminate the string at \n */
-            if ((p = strchr(s->data, '\n')) != NULL)
+            if ((p = (u_char*)strchr(s->data, '\n')) != NULL)
                *p = '\0';
             
             /* 
@@ -166,18 +167,18 @@ FUNC_DECODER(dissector_telnet)
              * the presence of \r in the string
              * we store "user\rpass\r" and then we split it
              */
-            if (strchr(ptr, '\r') || strchr(ptr, '\n')) {
+            if (strchr((const char*)ptr, '\r') || strchr((const char*)ptr, '\n')) {
                /* there is the \r and it is not the last char */
-               if ( ((ptr = strchr(s->data, '\r')) || (ptr = strchr(s->data, '\n')))
+               if ( ((ptr = (u_char*)strchr(s->data, '\r')) || (ptr = (u_char*)strchr(s->data, '\n')))
                      && ptr != s->data + strlen(s->data) - 1 ) {
 
                   /* fill the structure */
                   PACKET->DISSECTOR.user = strdup(s->data);
-                  if ( (ptr = strchr(PACKET->DISSECTOR.user, '\r')) != NULL )
+                  if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.user, '\r')) != NULL )
                      *ptr = '\0';
          
-                  PACKET->DISSECTOR.pass = strdup(ptr + 1);
-                  if ( (ptr = strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
+                  PACKET->DISSECTOR.pass = strdup((const char*)ptr + 1);
+                  if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
                      *ptr = '\0';
                   
                   
@@ -212,7 +213,7 @@ FUNC_DECODER(dissector_telnet)
       if ( end > ptr && (u_int32)(end - ptr) <= PACKET->DATA.len) /* Paranoid check */
          memcpy(PACKET->DISSECTOR.banner, ptr, end - ptr );
 
-      q = PACKET->DISSECTOR.banner;
+      q = (u_char*)PACKET->DISSECTOR.banner;
       for (i = 0; i < PACKET->DATA.len; i++) {
          /* replace \r\n with spaces */ 
          if (q[i] == '\r' || q[i] == '\n')
@@ -237,7 +238,7 @@ FUNC_DECODER(dissector_telnet)
        * some OS (e.g. windows and ipso) send the "login:" in the
        * same packet as the banner...
        */
-      if (match_login_regex(ptr)) {
+      if (match_login_regex((const char*)ptr)) {
          DEBUG_MSG("\tdissector_telnet - BEGIN");
          
          /* create the session to begin the collection */
@@ -301,7 +302,7 @@ static void convert_zeros(u_char *ptr, u_char *end)
  * serach the strings which can identify failed login...
  * return 1 on succes, 0 on failure
  */
-static int match_login_regex(char *ptr)
+static int match_login_regex(const char *ptr)
 {
    char *words[] = {"incorrect", "failed", "failure", NULL };
    int i = 0;

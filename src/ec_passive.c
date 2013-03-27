@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -101,7 +102,7 @@ void print_host(struct host_profile *h)
       
    if (h->type & FP_HOST_LOCAL || h->type == FP_UNKNOWN) {
       fprintf(stdout, " MAC address  : %s \n", mac_addr_ntoa(h->L2_addr, tmp));
-      fprintf(stdout, " MANUFACTURER : %s \n\n", manuf_search(h->L2_addr));
+      fprintf(stdout, " MANUFACTURER : %s \n\n", manuf_search((const char*)h->L2_addr));
    }
 
    fprintf(stdout, " DISTANCE     : %d   \n", h->distance);
@@ -118,7 +119,7 @@ void print_host(struct host_profile *h)
       
    
    fprintf(stdout, " FINGERPRINT      : %s\n", h->fingerprint);
-   if (fingerprint_search(h->fingerprint, os) == ESUCCESS)
+   if (fingerprint_search((const char*)h->fingerprint, os) == ESUCCESS)
       fprintf(stdout, " OPERATING SYSTEM : %s \n\n", os);
    else {
       fprintf(stdout, " OPERATING SYSTEM : unknown fingerprint (please submit it) \n");
@@ -171,7 +172,7 @@ void print_host_xml(struct host_profile *h)
    
    if (h->type & FP_HOST_LOCAL || h->type == FP_UNKNOWN) {
       fprintf(stdout, "\t\t<mac>%s</mac>\n", mac_addr_ntoa(h->L2_addr, tmp));
-      fprintf(stdout, "\t\t<manuf>%s</manuf>\n", manuf_search(h->L2_addr));
+      fprintf(stdout, "\t\t<manuf>%s</manuf>\n", manuf_search((const char*)h->L2_addr));
    }
    
    fprintf(stdout, "\t\t<distance>%d</distance>\n", h->distance);
@@ -187,8 +188,8 @@ void print_host_xml(struct host_profile *h)
       fprintf(stdout, "\t\t<type>unknown</type>\n");
   
    
-   if (strcmp(h->fingerprint, "")) {
-      if (fingerprint_search(h->fingerprint, os) == ESUCCESS) {
+   if (strcmp((const char*)h->fingerprint, "")) {
+      if (fingerprint_search((const char*)h->fingerprint, os) == ESUCCESS) {
          fprintf(stdout, "\t\t<fingerprint type=\"known\">%s</fingerprint>\n", h->fingerprint);
          fprintf(stdout, "\t\t<os type=\"exact\">%s</os>\n", os);
       } else {

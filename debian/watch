@@ -1,3 +1,4 @@
 version=3
-http://githubredir.debian.net/github/drizztbsd/ettercap \
- /github/drizztbsd/ettercap/NG-(.*).tar.gz
+
+http://ettercap.github.com/ettercap/downloads.html \
+(?:.*[/=]|)ettercap[_\-](\d.*)\.(?:tgz|tbz2|txz|tar\.(?:gz|bz2|xz)).*

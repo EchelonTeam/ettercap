@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 
@@ -39,17 +40,17 @@ static int good_page(char *str);
 
 struct plugin_ops remote_browser_ops = { 
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version = EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,                        
    /* the name of the plugin */
-   .name =             "remote_browser",  
+   .name =              "remote_browser",  
     /* a short description of the plugin (max 50 chars) */                    
-   .info =             "Sends visited URLs to the browser",  
+   .info =              "Sends visited URLs to the browser",  
    /* the plugin version. */ 
-   .version =          "1.2",   
+   .version =           "1.2",   
    /* activation function */
-   .init =             &remote_browser_init,
+   .init =              &remote_browser_init,
    /* deactivation function */                     
-   .fini =             &remote_browser_fini,
+   .fini =              &remote_browser_fini,
 };
 
 /**********************************************************/
@@ -93,9 +94,9 @@ static void remote_browser(struct packet_object *po)
    int i = 0;
    
    /* the client is making a request */
-   if (po->DATA.disp_len != 0 && strstr(po->DATA.disp_data, "GET")) {
+   if (po->DATA.disp_len != 0 && strstr((const char*)po->DATA.disp_data, "GET")) {
       
-      tmp = strdup(po->DATA.disp_data);
+      tmp = strdup((const char*)po->DATA.disp_data);
 
       /* get the Host: directoive */
       host = strstr(tmp, "Host: ");

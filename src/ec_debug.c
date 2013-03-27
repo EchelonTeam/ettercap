@@ -17,6 +17,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+
 */
 
 #include <ec.h>
@@ -86,6 +87,9 @@ void debug_init(void)
    
    fprintf (debug_file, "\n==============================================================\n\n");
                    
+  	fprintf (debug_file, "-> ${prefix}        %s\n", INSTALL_PREFIX);
+  	fprintf (debug_file, "-> ${exec_prefix}   %s\n", INSTALL_EXECPREFIX);
+  	fprintf (debug_file, "-> ${bindir}        %s\n", INSTALL_BINDIR);
   	fprintf (debug_file, "-> ${libdir}        %s\n", INSTALL_LIBDIR);
   	fprintf (debug_file, "-> ${sysconfdir}    %s\n", INSTALL_SYSCONFDIR);
   	fprintf (debug_file, "-> ${datadir}       %s\n\n", INSTALL_DATADIR);
@@ -96,7 +100,7 @@ void debug_init(void)
       fprintf (debug_file, "-> running on %s %s %s\n", buf.sysname, buf.release, buf.machine);
    #endif
    #if defined (__GNUC__) && defined (__GNUC_MINOR__)
-      fprintf (debug_file, "-> compiled with gcc %d.%d (%s)\n", __GNUC__, __GNUC_MINOR__, GCC_VERSION);
+      fprintf (debug_file, "-> compiled with gcc %d.%d (%s)\n", __GNUC__, __GNUC_MINOR__, CC_VERSION);
    #endif
    #if defined (__GLIBC__) && defined (__GLIBC_MINOR__)
       fprintf (debug_file, "-> glibc version %d.%d\n", __GLIBC__, __GLIBC_MINOR__);

@@ -18,7 +18,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-    $Id: ec_gg.c,v 0.2 2007/06/15 11:30:10 msz Exp $
 */
 
 /*
@@ -319,10 +318,6 @@ FUNC_DECODER(dissector_gg)
    struct gg_send_msg_hdr *gg_send_msg;
    struct gg_recv_msg_hdr *gg_recv_msg;
    struct gg_new_status_hdr *gg_new_status;
-   struct gg_status_hdr *gg_status;
-   struct gg_status50_hdr *gg_status50;
-   struct gg_status60_hdr *gg_status60;
-   struct gg_status70_hdr *gg_status70;
    char *tbuf, *tbuf2, *tbuf3;
    char user[10], pass[40];
 
@@ -342,10 +337,6 @@ FUNC_DECODER(dissector_gg)
    gg_send_msg = (struct gg_send_msg_hdr *)(gg + 1);
    gg_recv_msg = (struct gg_recv_msg_hdr *)(gg + 1);
    gg_new_status = (struct gg_new_status_hdr *)(gg + 1);
-   gg_status = (struct gg_status_hdr *)(gg + 1);
-   gg_status50 = (struct gg_status50_hdr *)(gg + 1);
-   gg_status60 = (struct gg_status60_hdr *)(gg + 1);
-   gg_status70 = (struct gg_status70_hdr *)(gg + 1);
 
    /* what type of packets do we process ? */
    if (gg->type != GG_LOGIN50_CMD && gg->type != GG_LOGIN60_CMD && gg->type != GG_LOGIN70_CMD && gg->type != GG_WELCOME_CMD && gg->type != GG_SEND_MSG_CMD && gg->type != GG_RECV_MSG_CMD && gg->type != GG_NEW_STATUS_CMD && gg->type != GG_STATUS_CMD && gg->type != GG_STATUS50_CMD && gg->type != GG_STATUS60_CMD && gg->type != GG_STATUS70_CMD)
@@ -662,7 +653,7 @@ default:
 if ((version&0xf0000000)==0x40000000)
    strcat(str," + has audio");
 
-if ((version&0x0f000000)==0x040000000)
+if ((version&0x0f000000)== 0x04000000)
    strcat(str," + eraomnix");
 
 }

@@ -3,18 +3,20 @@ Section: net
 Priority: optional
 Maintainer: Barak A. Pearlmutter <bap@debian.org>
 Uploaders: Murat Demirten <murat@debian.org>
-Build-Depends: debhelper (>= 8),
-	dh-autoreconf,
+Build-Depends: debhelper (>= 9),
+	cmake,
 	bison | bison++ | byacc | byacc-j | yacc | btyacc,
 	flex | lex,
 	libgtk2.0-dev,
 	libltdl3-dev,
-	libncurses-dev,
+	libncurses-dev | libncurses5-dev,
 	libnet1-dev,
-	libpcap0.8-dev,
+	libpcap-dev | libpcap0.8-dev,
 	libpcre3-dev,
 	libssl-dev,
-Standards-Version: 3.9.2
+	libcurl4-openssl-dev | libcurl-ssl-dev | libcurl-dev,
+	ghostscript,
+Standards-Version: 3.9.4
 Homepage: http://ettercap.sourceforge.net
 Vcs-Git: git://github.com/barak/ettercap.git
 Vcs-Browser: http://github.com/barak/ettercap
@@ -49,7 +51,7 @@ Description: Multipurpose sniffer/interceptor/logger for switched LAN
 Package: ettercap-text-only
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ettercap-common (= ${binary:Version})
-Replaces: ettercap-gtk, ettercap-graphical, ettercap (<= 1:0.7.3)
+Replaces: ettercap-gtk, ettercap-graphical, ettercap
 Conflicts: ettercap-gtk, ettercap-graphical, ettercap (<= 1:0.7.3)
 Provides: ettercap
 Description: Ettercap console-mode executable
@@ -72,8 +74,8 @@ Description: Ettercap console-mode executable
 
 Package: ettercap-graphical
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ettercap-common (= ${binary:Version})
-Replaces: ettercap-gtk, ettercap-text-only, ettercap (<= 1:0.7.3)
+Depends: ${shlibs:Depends}, ${misc:Depends}, ettercap-common (= ${binary:Version}), menu
+Replaces: ettercap-gtk, ettercap-text-only, ettercap
 Conflicts: ettercap-gtk, ettercap-text-only, ettercap (<= 1:0.7.3)
 Provides: ettercap
 Recommends: gksu
@@ -94,3 +96,13 @@ Description: Ettercap GUI-enabled executable
  fingerprints (active or passive) to find the geometry of the LAN.
  .
  This package contains the ettercap GUI-enabled executable.
+
+Package: ettercap-dbg
+Section: debug
+Priority: extra
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+	 ettercap-common (= ${binary:Version}),
+	 ettercap-graphical (= ${binary:Version}) | ettercap-text-only (= ${binary:Version})
+Description: Debug symbols for Ettercap.
+ Ettercap runtime debug symbols.

@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -95,8 +96,8 @@ int set_loglevel(int level, char *filename)
       USER_MSG("*********************************************************\n\n");
    }
    
-   sprintf(eci, "%s.eci", filename);
-   sprintf(ecp, "%s.ecp", filename);
+   snprintf(eci, strlen(filename)+5, "%s.eci", filename);
+   snprintf(ecp, strlen(filename)+5, "%s.ecp", filename);
    
    memset(&fdp, 0, sizeof(struct log_fd));
    memset(&fdi, 0, sizeof(struct log_fd));
@@ -243,7 +244,7 @@ static void log_packet(struct packet_object *po)
 
    /* the regex is set, respect it */
    if (GBL_OPTIONS->regex) {
-      if (regexec(GBL_OPTIONS->regex, po->DATA.disp_data, 0, NULL, 0) == 0)
+      if (regexec(GBL_OPTIONS->regex, (const char*)po->DATA.disp_data, 0, NULL, 0) == 0)
          log_write_packet(&fdp, po);
    } else {
       /* if no regex is set, dump all the packets */
@@ -380,7 +381,7 @@ void log_write_packet(struct log_fd *fd, struct packet_object *po)
 
 
 /*
- * log passive informations
+ * log passive information
  *
  * hi is the source
  * hid is the dest, used to log password.
@@ -455,7 +456,7 @@ void log_write_info(struct log_fd *fd, struct packet_object *po)
    hi.type = po->PASSIVE.flags;
 
    /* calculate if the dest is local or not */
-   switch (ip_addr_is_local(&po->L3.dst)) {
+   switch (ip_addr_is_local(&po->L3.dst, NULL)) {
       case ESUCCESS:
          hid.type |= FP_HOST_LOCAL;
          break;
@@ -467,7 +468,7 @@ void log_write_info(struct log_fd *fd, struct packet_object *po)
          break;
    }
    
-   /* set account informations */
+   /* set account information */
    hid.failed = po->DISSECTOR.failed;
    memcpy(&hid.client, &po->L3.src, sizeof(struct ip_addr));
    
@@ -486,7 +487,7 @@ void log_write_info(struct log_fd *fd, struct packet_object *po)
   
    /* check if the packet is interesting... else return */
    if (hi.L4_addr == 0 &&                 // the port is not open
-       !strcmp(hi.fingerprint, "") &&     // no fingerprint
+       !strcmp((char*)hi.fingerprint, "") &&     // no fingerprint
        hid.var.user_len == 0 &&           // no user and pass infos...
        hid.var.pass_len == 0 &&
        hid.var.info_len == 0 &&

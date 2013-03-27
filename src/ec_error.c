@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -63,7 +64,7 @@ void error_msg(char *file, const char *function, int line, char *message, ...)
    fprintf(stderr, "ERROR : %d, %s\n[%s:%s:%d]\n\n %s \n\n",  err_code, strerror(err_code),
                    file, function, line, errmsg );
 
-   exit(-err_code);
+   clean_exit(-err_code);
 }
 
 
@@ -89,7 +90,7 @@ void fatal_error(char *message, ...)
    ui_fatal_error(errmsg);
 
    /* the ui should exits, but to be sure... */
-   exit(-1);
+   clean_exit(-1);
 }
 
 /*
@@ -106,7 +107,7 @@ void bug(char *file, const char *function, int line, char *message)
   
    fprintf(stderr, "\n\nBUG at [%s:%s:%d]\n\n %s \n\n", file, function, line, message );
 
-   exit(-666);
+   clean_exit(-666);
 }
 
 

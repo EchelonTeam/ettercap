@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -55,8 +56,9 @@ void globals_alloc(void)
    /* filter list entries are allocated as needed */
    gbls->filters = NULL;
 
-   /* init the struct */
+   /* init the structures */
    TAILQ_INIT(&GBL_PROFILES);
+   LIST_INIT(&GBL_HOSTLIST);
    
    return;
 }

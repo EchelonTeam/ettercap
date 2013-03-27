@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 
@@ -94,17 +95,17 @@ static void dns_spoof_dump(void);
 
 struct plugin_ops dns_spoof_ops = { 
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version = EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,                        
    /* the name of the plugin */
-   .name =             "dns_spoof",  
+   .name =              "dns_spoof",  
     /* a short description of the plugin (max 50 chars) */                    
-   .info =             "Sends spoofed dns replies",  
+   .info =              "Sends spoofed dns replies",  
    /* the plugin version. */ 
-   .version =          "1.1",   
+   .version =           "1.1",   
    /* activation function */
-   .init =             &dns_spoof_init,
+   .init =              &dns_spoof_init,
    /* deactivation function */                     
-   .fini =             &dns_spoof_fini,
+   .fini =              &dns_spoof_fini,
 };
 
 /**********************************************************/
@@ -158,7 +159,7 @@ static int load_db(void)
    int lines = 0, type;
    
    /* open the file */
-   f = open_data("share", ETTER_DNS, FOPEN_READ_TEXT);
+   f = open_data("etc", ETTER_DNS, FOPEN_READ_TEXT);
    if (f == NULL) {
       USER_MSG("Cannot open %s", ETTER_DNS);
       return -EINVALID;
@@ -191,7 +192,7 @@ static int load_db(void)
       SAFE_CALLOC(d, 1, sizeof(struct dns_spoof_entry));
 
       /* fill the struct */
-      ip_addr_init(&d->ip, AF_INET, (char *)&ipaddr);
+      ip_addr_init(&d->ip, AF_INET, (u_char *)&ipaddr);
       d->name = strdup(name);
       d->type = type;
 
@@ -295,7 +296,7 @@ static void dns_spoof(struct packet_object *po)
          
          struct ip_addr *reply;
          u_int8 answer[(q - data) + 16];
-         char *p = answer + (q - data);
+         u_char *p = answer + (q - data);
          char tmp[MAX_ASCII_ADDR_LEN];
          
          /* found the reply in the list */
@@ -325,7 +326,7 @@ static void dns_spoof(struct packet_object *po)
       } else if (type == ns_t_ptr) {
          
          u_int8 answer[(q - data) + 256];
-         char *a, *p = answer + (q - data);
+         char *a, *p = (char*)answer + (q - data);
          int rlen;
          
          /* found the reply in the list */
@@ -344,7 +345,7 @@ static void dns_spoof(struct packet_object *po)
          memcpy(p + 4, "\x00\x01", 2);                    /* class */
          memcpy(p + 6, "\x00\x00\x0e\x10", 4);            /* TTL (1 hour) */
          /* compress the string into the buffer */
-         rlen = dn_comp(a, p + 12, 256, NULL, NULL);
+         rlen = dn_comp(a, (u_char*)p + 12, 256, NULL, NULL);
          /* put the length before the dn_comp'd string */
          p += 10;
          NS_PUT16(rlen, p);
@@ -359,7 +360,7 @@ static void dns_spoof(struct packet_object *po)
          
          struct ip_addr *reply;
          u_int8 answer[(q - data) + 21 + 16];
-         char *p = answer + (q - data);
+         char *p = (char*)answer + (q - data);
          char tmp[MAX_ASCII_ADDR_LEN];
          
          /* found the reply in the list */
@@ -390,7 +391,7 @@ static void dns_spoof(struct packet_object *po)
          memcpy(p + 25, "\x00\x01", 2);                     /* class */
          memcpy(p + 27, "\x00\x00\x0e\x10", 4);             /* TTL (1 hour) */
          memcpy(p + 31, "\x00\x04", 2);                     /* datalen */
-         ip_addr_cpy(p + 33, reply);                        /* data */
+         ip_addr_cpy((u_char*)p + 33, reply);                        /* data */
          
          /* send the fake reply */
          send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src, ntohs(dns->id), answer, sizeof(answer), 1);
@@ -402,7 +403,7 @@ static void dns_spoof(struct packet_object *po)
 
          struct ip_addr *reply;
          u_int8 answer[(q - data) + 16];
-         char *p = answer + (q - data);
+         char *p = (char*)answer + (q - data);
          char tmp[MAX_ASCII_ADDR_LEN];
 
          /* found the reply in the list */
@@ -420,7 +421,7 @@ static void dns_spoof(struct packet_object *po)
          memcpy(p + 4, "\x00\x01", 2);                    /* class IN */
          memcpy(p + 6, "\x00\x00\x0e\x10", 4);            /* TTL (1 hour) */
          memcpy(p + 10, "\x00\x04", 2);                   /* datalen */
-         ip_addr_cpy(p + 12, reply);                      /* data */
+         ip_addr_cpy((u_char*)p + 12, reply);                      /* data */
 
          /* send the fake reply */
          send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src, ntohs(dns->id), answer, sizeof(answer), 1);
@@ -459,7 +460,7 @@ static int get_spoofed_ptr(const char *arpa, char **a)
    struct dns_spoof_entry *d;
    struct ip_addr ptr;
    int a0, a1, a2, a3;
-   char ip[4];
+   u_char ip[4];
 
    /* parses the arpa format */
    if (sscanf(arpa, "%d.%d.%d.%d.in-addr.arpa", &a3, &a2, &a1, &a0) != 4)
@@ -550,7 +551,9 @@ static void dns_spoof_dump(void)
          DEBUG_MSG("  %s -> [%s], type %s", d->name, int_ntoa(d->ip.addr),
                    type_str(d->type));
       else
+      {
          DEBUG_MSG("  %s -> ??", d->name);   /* IPv6 possible? */
+      }
    }
 }
    

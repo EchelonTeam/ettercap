@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <el.h>
@@ -47,7 +48,8 @@ FUNC_EXTRACTOR(extractor_http)
    struct so_list *ret, *ret2;
    char host[MAX_ASCII_ADDR_LEN];
    int len, fd;
-   u_char *ptr, *data;
+   char* ptr;
+   u_char *data;
    int client, server;
 
    
@@ -74,7 +76,7 @@ FUNC_EXTRACTOR(extractor_http)
          stream_move(STREAM, 4, SEEK_CUR, client);
 
          memset(header, 0, sizeof(header));
-         stream_read(STREAM, header, 128, client);
+         stream_read(STREAM, (u_char*)header, 128, client);
           
          /* get the filename (until the first blank) */
          if ( (ptr = strchr(header, ' ')) != NULL )
@@ -104,7 +106,7 @@ FUNC_EXTRACTOR(extractor_http)
          
          /* get the string until the \r */
          stream_move(STREAM, 16, SEEK_CUR, server);
-         stream_read(STREAM, header, 10, server);
+         stream_read(STREAM, (u_char*)header, 10, server);
          if ( (ptr = strchr(header, '\r')) != NULL )
             *ptr = '\0';
          
