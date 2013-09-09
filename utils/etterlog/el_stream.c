@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 
@@ -28,7 +29,7 @@ void stream_init(struct stream_object *so);
 int stream_add(struct stream_object *so, struct log_header_packet *pck, char *buf);
 int stream_read(struct stream_object *so, u_char *buf, size_t size, int mode);
 int stream_move(struct stream_object *so, size_t offset, int whence, int mode);
-struct so_list * stream_search(struct stream_object *so, u_char *buf, size_t buflen, int mode);
+struct so_list * stream_search(struct stream_object *so, const char *buf, size_t buflen, int mode);
    
 /*******************************************/
 
@@ -281,7 +282,7 @@ move_end:
  * returns  - NULL if not found
  *          - the packet containing the string if found
  */
-struct so_list * stream_search(struct stream_object *so, u_char *buf, size_t buflen, int mode)
+struct so_list * stream_search(struct stream_object *so, const char *buf, size_t buflen, int mode)
 {
    u_char *tmpbuf = NULL, *find;
    size_t offset = 0, len = 0;

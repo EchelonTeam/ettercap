@@ -17,6 +17,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+
 */
 
 #include <ec.h>
@@ -165,7 +166,7 @@ int hex_format(const u_char *buf, size_t len, u_char *dst)
   
    /* some sanity checks */
    if (len == 0 || buf == NULL) {
-      strcpy(dst, "");
+      strncpy((char*)dst, "", 1);
       return 0;
    }
   
@@ -173,32 +174,32 @@ int hex_format(const u_char *buf, size_t len, u_char *dst)
    memset(dst, 0, hex_len(len));
    
    for (i = 0; i < len; i += HEX_CHAR_PER_LINE) {
-           sprintf(dst, "%s %04x: ", dst, i );
+           snprintf((char*)dst, strlen((char*)dst)+5, "%s %04x: ", dst, i );
            jm = len - i;
            jm = jm > HEX_CHAR_PER_LINE ? HEX_CHAR_PER_LINE : jm;
 
            for (j = 0; j < jm; j++) {
                    if ((j % 2) == 1) {
-                      sprintf(dst, "%s%02x ", dst, (u_char) buf[i+j]);
+                      snprintf((char*)dst, strlen((char*)dst) + 3, "%s%02x ", dst, buf[i+j]);
                    } else {
-                      sprintf(dst, "%s%02x", dst, (u_char) buf[i+j]);
+                      snprintf((char*)dst, strlen((char*)dst)+3, "%s%02x", dst, buf[i+j]);
                    }
            }
            for (; j < HEX_CHAR_PER_LINE; j++) {
                    if ((j % 2) == 1) {
-                      strcat(dst, "   ");
+                      strcat((char*)dst, "   ");
                    } else {
-                      strcat(dst, "  ");
+                      strcat((char*)dst, "  ");
                    }
            } 
-           strcat(dst, " ");
+           strcat((char*)dst, " ");
 
            for (j = 0; j < jm; j++) {
-                   c = (u_char) buf[i+j];
+                   c = buf[i+j];
                    c = isprint(c) ? c : '.';
-                   dim = sprintf(dst, "%s%c", dst, c);
+                   dim = snprintf((char*)dst, strlen((char*)dst)+1, "%s%c", dst, c);
            }
-           strcat(dst, "\n");
+           strcat((char*)dst, "\n");
    }
 
    return dim + 1;
@@ -215,7 +216,7 @@ int ascii_format(const u_char *buf, size_t len, u_char *dst)
    
    /* some sanity checks */
    if (len == 0 || buf == NULL) {
-      strcpy(dst, "");
+      strncpy((char*)dst, "", 1);
       return 0;
    }
 
@@ -240,7 +241,7 @@ int text_format(const u_char *buf, size_t len, u_char *dst)
    
    /* some sanity checks */
    if (len == 0 || buf == NULL) {
-      strcpy(dst, "");
+      strncpy((char*)dst, "", 1);
       return 0;
    }
 
@@ -275,7 +276,7 @@ int ebcdic_format(const u_char *buf, size_t len, u_char *dst)
    
    /* some sanity checks */
    if (len == 0 || buf == NULL) {
-      strcpy(dst, "");
+      strncpy((char*)dst, "", 1);
       return 0;
    }
    
@@ -296,7 +297,7 @@ int html_format(const u_char *buf, size_t len, u_char *dst)
    
    /* some sanity checks */
    if (len == 0 || buf == NULL) {
-      strcpy(dst, "");
+      strncpy((char*)dst, "", 1);
       return 0;
    }
 
@@ -322,7 +323,7 @@ int bin_format(const u_char *buf, size_t len, u_char *dst)
 {
    /* some sanity checks */
    if (len == 0 || buf == NULL) {
-      strcpy(dst, "");
+      strncpy((char*)dst, "", 1);
       return 0;
    }
    
@@ -338,7 +339,7 @@ int bin_format(const u_char *buf, size_t len, u_char *dst)
 
 int zero_format(const u_char *buf, size_t len, u_char *dst)
 {
-   strcpy(dst, "");
+   strncpy((char*)dst, "", 1);
    return 0;
 }
 
@@ -351,7 +352,7 @@ int utf8_format(const u_char *buf, size_t len, u_char *dst)
 #ifndef HAVE_UTF8
    /* some sanity checks */
    if (len == 0 || buf == NULL) {
-      strcpy(dst, "");
+      strncpy(dst, "", 1);
       return 0;
    }
    
@@ -372,7 +373,7 @@ int utf8_format(const u_char *buf, size_t len, u_char *dst)
 
    /* some sanity checks */
    if (len == 0 || buf == NULL) {
-      strcpy(dst, "");
+      strncpy((char*)dst, "", 1);
       return 0;
    }
 
@@ -408,20 +409,20 @@ int set_utf8_encoding(u_char *fromcode)
 
    DEBUG_MSG("set_utf8_encoding: %s", fromcode);
       
-   if (fromcode == NULL || strlen(fromcode) < 1)
+   if (fromcode == NULL || strlen((const char*)fromcode) < 1)
       return -EINVALID;
 
    SAFE_FREE(utf8_encoding);
 
    /* make sure encoding type is supported */
-   cd = iconv_open("UTF-8", fromcode);
+   cd = iconv_open("UTF-8", (const char*)fromcode);
    
    if (cd == (iconv_t)(-1))
       SEMIFATAL_ERROR("The conversion from %s to UTF-8 is not supported.", fromcode);
    
    iconv_close(cd);
 
-   utf8_encoding = strdup(fromcode);
+   utf8_encoding = strdup((const char*)fromcode);
 
    return ESUCCESS;
 #endif

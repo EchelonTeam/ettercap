@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -112,7 +113,7 @@ FUNC_BUILDER(build_fddi)
             0x03,                         /* Unnumbered info/frame */
             FDDI_ORG_CODE,                /* Organization Code */
             proto,                        /* protocol type */
-            GBL_LNET->lnet);              /* libnet handle */
+            GBL_IFACE->lnet);             /* libnet handle */
    
 }
 

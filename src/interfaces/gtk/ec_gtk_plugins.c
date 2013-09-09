@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -52,7 +53,7 @@ static GtkTreeSelection *selection = NULL;
 void gtkui_plugin_load(void)
 {
    GtkWidget *dialog;
-   char *filename;
+   const char *filename;
    int response = 0;
 #ifdef OS_WINDOWS
    char *path = get_full_path("/lib/", "");
@@ -89,7 +90,12 @@ static void gtkui_load_plugin(char *full)
    int ret;
 
    path = full;
+
+#ifdef OS_WINDOWS
+   file = strrchr(full, '\\');
+#else
    file = strrchr(full, '/');
+#endif
    /* remove the last /
       split path and file
       increment file pointer to point to filenam */

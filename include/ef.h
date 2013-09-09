@@ -3,9 +3,7 @@
 #ifndef EF_H
 #define EF_H
 
-#ifdef HAVE_CONFIG_H
-   #include <config.h>
-#endif
+#include <config.h>
 
 #include <sys/types.h>
 #include <sys/time.h>

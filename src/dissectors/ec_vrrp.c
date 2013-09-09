@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 /*
@@ -92,7 +93,7 @@ FUNC_DECODER(dissector_vrrp)
    DECLARE_DISP_PTR_END(ptr, end);
    char tmp[MAX_ASCII_ADDR_LEN];
    struct vrrp_hdr *vhdr;
-   char *auth;
+   u_char *auth;
 
    /* don't complain about unused var */
    (void)end;

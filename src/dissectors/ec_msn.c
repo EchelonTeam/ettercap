@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -29,7 +30,6 @@
 
 FUNC_DECODER(dissector_msn);
 void msn_init(void);
-void decode_pwd(char *pwd, char *outpwd);
 
 /************************************************/
 
@@ -70,7 +70,7 @@ FUNC_DECODER(dissector_msn)
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == -ENOTFOUND) {
       
          /* search the login */
-         ptr = strstr(ptr, "MD5 I ");
+         ptr = (u_char*)strstr((const char*)ptr, "MD5 I ");
          
          /* not found */
          if (ptr == NULL)
@@ -82,10 +82,10 @@ FUNC_DECODER(dissector_msn)
          dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_msn));
 	 
          /* save the login */
-         s->data = strdup(ptr + strlen("MD5 I "));
+         s->data = strdup((const char*)ptr + strlen("MD5 I "));
 	    
          /* tuncate at the \r */
-         if ( (ptr = strchr(s->data,'\r')) != NULL )
+         if ( (ptr = (u_char*)strchr(s->data,'\r')) != NULL )
             *ptr = '\0';
 
          session_put(s);
@@ -98,7 +98,7 @@ FUNC_DECODER(dissector_msn)
          if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS) {
          
             /* search the login */
-            ptr = strstr(ptr, "MD5 S ");
+            ptr = (u_char*)strstr((const char*)ptr, "MD5 S ");
             
             /* not found */
             if (ptr == NULL)
@@ -107,11 +107,11 @@ FUNC_DECODER(dissector_msn)
             DEBUG_MSG("\tDissector_msn - PASS ");
             
             /* save the challenge after the login */
-            SAFE_REALLOC(s->data, strlen(s->data) + strlen(ptr) + 2);
-            sprintf(s->data + strlen(s->data), " %s", ptr + strlen("MD5 S "));
+            SAFE_REALLOC(s->data, strlen(s->data) + strlen((const char*)ptr) + 2);
+            snprintf(s->data + strlen(s->data), strlen(s->data) + strlen((const char*)ptr)+2, " %s", ptr + strlen("MD5 S "));
             
             /* tuncate at the \r */
-            if ( (ptr = strchr(s->data,'\r')) != NULL )
+            if ( (ptr = (u_char*)strchr(s->data,'\r')) != NULL )
                *ptr = '\0';
             
             /* save the proper value (splitting the string)
@@ -149,7 +149,7 @@ FUNC_DECODER(dissector_msn)
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS) {
       
          /* search the login */
-         ptr = strstr(ptr, "MD5 S ");
+         ptr = (u_char*)strstr((const char*)ptr, "MD5 S ");
          
          /* not found */
          if (ptr == NULL)
@@ -158,11 +158,11 @@ FUNC_DECODER(dissector_msn)
          DEBUG_MSG("\tDissector_msn - CHALLENGE ");
          
          /* save the challenge after the login */
-         SAFE_REALLOC(s->data, strlen(s->data) + strlen(ptr) + 2);
-         sprintf(s->data + strlen(s->data), " %s", ptr + strlen("MD5 S "));
+         SAFE_REALLOC(s->data, strlen(s->data) + strlen((const char*)ptr) + 2);
+         snprintf(s->data + strlen(s->data), strlen(s->data)+strlen((const char*)ptr)+2, " %s", ptr + strlen("MD5 S "));
          
          /* tuncate at the \r */
-         if ( (ptr = strchr(s->data,'\r')) != NULL )
+         if ( (ptr = (u_char*)strchr(s->data,'\r')) != NULL )
             *ptr = '\0';
          
       }

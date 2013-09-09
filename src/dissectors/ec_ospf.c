@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 /*
@@ -109,7 +110,9 @@ FUNC_DECODER(dissector_ospf)
        * we use a local variable since this does 
        * not need to reach the top half
        */
-      strncpy(pass, (char *)ohdr->auth1, OSPF_AUTH_LEN);
+      char o[OSPF_AUTH_LEN];
+      snprintf(o, OSPF_AUTH_LEN, "%u", ohdr->auth1);
+      strncpy(pass, o, OSPF_AUTH_LEN);
       
    } 
 
@@ -118,7 +121,7 @@ FUNC_DECODER(dissector_ospf)
       
       DEBUG_MSG("\tDissector_ospf NO AUTH");
       
-      strcpy(pass, "No Auth");
+      strncpy(pass, "No Auth", 7);
    }
    
    DISSECT_MSG("OSPF : %s:%d -> AUTH: %s \n", ip_addr_ntoa(&PACKET->L3.dst, tmp),

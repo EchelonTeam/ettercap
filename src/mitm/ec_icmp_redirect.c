@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <ec.h>
@@ -70,12 +71,12 @@ static int icmp_redirect_start(char *args)
    if (!strcmp(args, "")) {
       SEMIFATAL_ERROR("ICMP redirect needs a parameter.\n");
    } else {
-      char tmp[strlen(args)+2];
+      char temp[strlen(args)+3];
 
       /* add the / to be able to use the target parsing function */
-      sprintf(tmp, "%s/", args);
+      snprintf(temp, strlen(args)+3, "%s//", args);
       
-      if (compile_target(tmp, &redirected_gw) != ESUCCESS)
+      if (compile_target(temp, &redirected_gw) != ESUCCESS)
          SEMIFATAL_ERROR("Wrong target parameter");
    }
 

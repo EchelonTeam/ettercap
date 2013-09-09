@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 /*
@@ -102,11 +103,11 @@ FUNC_DECODER(dissector_radius)
    char tmp[MAX_ASCII_ADDR_LEN];
    struct radius_header *radius;
    u_char *attributes;
-   u_char *attr;
+   char *attr;
    u_int16 attr_len;
-   u_char user[0xff+1];
-   u_char pass[0xff+1];
-   u_char auth[0xff];
+   char user[0xff+1];
+   char pass[0xff+1];
+   char auth[0xff];
    size_t i;
    
    DEBUG_MSG("RADIUS --> UDP dissector_radius");
@@ -122,7 +123,7 @@ FUNC_DECODER(dissector_radius)
       return NULL;
 
    /* search for the username attribute */
-   attr = radius_get_attribute(RADIUS_ATTR_USER_NAME, &attr_len, attributes, end);
+   attr = (char*)radius_get_attribute(RADIUS_ATTR_USER_NAME, &attr_len, attributes, end);
   
    /* if the attribute is not found, the packet is not interesting */
    if (attr == NULL)
@@ -136,7 +137,7 @@ FUNC_DECODER(dissector_radius)
    strncpy(user, attr, attr_len);
    
    /* search for the password attribute */
-   attr = radius_get_attribute(RADIUS_ATTR_PASSWORD, &attr_len, attributes, end);
+   attr = (char*)radius_get_attribute(RADIUS_ATTR_PASSWORD, &attr_len, attributes, end);
   
    /* if the attribute is not found, the packet is not interesting */
    if (attr == NULL)
@@ -150,7 +151,7 @@ FUNC_DECODER(dissector_radius)
    strncpy(pass, attr, attr_len);
    
    for (i = 0; i < 16; i++)
-      sprintf(auth + i*2, "%02X", radius->auth[i]);
+      snprintf(auth + i*2, 3, "%02X", radius->auth[i]);
 
   
    SAFE_CALLOC(PACKET->DISSECTOR.pass, attr_len * 2 + 1, sizeof(char));
@@ -159,7 +160,7 @@ FUNC_DECODER(dissector_radius)
    PACKET->DISSECTOR.user = strdup(user);
    
    for (i = 0; i < attr_len; i++)
-      sprintf(PACKET->DISSECTOR.pass + i*2, "%02X", pass[i]);
+      snprintf(PACKET->DISSECTOR.pass + i*2, 3, "%02X", pass[i]);
    
    PACKET->DISSECTOR.info = strdup(auth);
   

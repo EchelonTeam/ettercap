@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 #include <wdg.h>
@@ -25,7 +26,7 @@
 
 /* GLOBALS */
 
-/* informations about the current screen */
+/* information about the current screen */
 struct wdg_scr current_screen;
 
 /* called when idle */

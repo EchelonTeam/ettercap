@@ -18,6 +18,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 */
 
 
@@ -44,17 +45,17 @@ static void parse_arp(struct packet_object *po);
 
 struct plugin_ops link_type_ops = { 
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version = EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,                        
    /* the name of the plugin */
-   .name =             "link_type",  
+   .name =              "link_type",  
     /* a short description of the plugin (max 50 chars) */                    
-   .info =             "Check the link type (hub/switch)",  
+   .info =              "Check the link type (hub/switch)",  
    /* the plugin version. */ 
-   .version =          "1.0",   
+   .version =           "1.0",   
    /* activation function */
-   .init =             &link_type_init,
+   .init =              &link_type_init,
    /* deactivation function */                     
-   .fini =             &link_type_fini,
+   .fini =              &link_type_fini,
 };
 
 /**********************************************************/
