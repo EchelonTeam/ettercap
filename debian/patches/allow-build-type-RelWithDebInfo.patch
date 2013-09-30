@@ -1,0 +1,22 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,7 +19,7 @@ option(LIBRARY_BUILD "Build for libetter
+ option(INSTALL_DESKTOP "Install ettercap desktop files" ON)
+ 
+ 
+-SET(VALID_BUILD_TYPES Debug Release)
++SET(VALID_BUILD_TYPES Debug Release RelWithDebInfo)
+ 
+ if(NOT CMAKE_BUILD_TYPE)
+   # Default to using "Release" as our build type.
+--- a/tests/check/CMakeLists.txt
++++ b/tests/check/CMakeLists.txt
+@@ -34,6 +34,8 @@ IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug
+   SET(EXPORT_C_FLAGS "${EXPORT_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
+ ELSEIF("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+   SET(EXPORT_C_FLAGS "${EXPORT_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
++ELSEIF("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
++  SET(EXPORT_C_FLAGS "${EXPORT_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
+ ENDIF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+ 
+ SET(EXPORT_PREFIX ${CHECK_PREFIX})
