@@ -5,6 +5,7 @@ ettercap (1:0.8.0-0kali1) kali; urgency=low
     - 0001-desktop.patch: upstream uses pkexec by default now, no need to use
       su-to-root, thus drop dep on menu and add dep on policykit-1
     - 0002-centre-scalable-icon.patch: merged upstream
+  * Fix cmake invocation to use a build type supported by upstream.
 
  -- Raphaël Hertzog <hertzog@debian.org>  Mon, 30 Sep 2013 21:17:08 +0200
 

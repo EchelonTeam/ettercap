@@ -17,11 +17,11 @@ override_dh_auto_configure:
 	@echo main configuration deferred until build, as it must be done twice
 
 override_dh_auto_build:
-	dh_auto_configure -- -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=OFF
+	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Release -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=OFF
 	dh_auto_build
 	mkdir tmp
 	mv obj*/src/ettercap ettercap-text-only
-	dh_auto_configure -- -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=ON
+	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Release -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=ON
 	dh_auto_build
 
 override_dh_auto_install:
@@ -30,7 +30,7 @@ override_dh_auto_install:
 	install --mode=0755 ettercap-text-only debian/tmp/usr/sbin/
 
 override_dh_install:
-	dh_install
+	dh_install --list-missing
 	mkdir -p debian/ettercap-text-only/usr/sbin
 	install --mode=0755 \
 	 debian/tmp/usr/sbin/ettercap-text-only \
