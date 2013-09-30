@@ -26,12 +26,15 @@
 #include <ec_send.h>
 #include <ec_log.h>
 #include <ec_format.h>
-#include <ec_update.h>
 #include <ec_mitm.h>
 #include <ec_filter.h>
 #include <ec_plugins.h>
 #include <ec_conf.h>
 #include <ec_strings.h>
+#include <ec_encryption.h>
+#ifdef HAVE_EC_LUA
+#include <ec_lua.h>
+#endif
 
 #include <ctype.h>
 
@@ -50,8 +53,51 @@ int expand_token(char *s, u_int max, void (*func)(void *t, u_int n), void *t );
 int set_regex(char *regex);
 static char **parse_iflist(char *list);
 
-/* from the ec_wifi.c decoder */
-extern int set_wep_key(u_char *string);
+/* set functions */
+void set_mitm(char *mitm);
+void set_onlymitm(void);
+void set_broadcast(void);
+void set_iface_bridge(char *iface);
+void set_promisc(void);
+void set_reversed(void);
+void set_proto(char *arg);
+void set_plugin(char *plugin);
+void set_iface(char *iface);
+void set_lifaces(void);
+void set_secondary(char *iface);
+void set_netmask(char *netmask);
+void set_address(char *address);
+void set_read_pcap(char *pcap_file);
+void set_write_pcap(char *pcap_file);
+void set_pcap_filter(char *filter);
+void load_filter(char *end, char *filter);
+void set_loglevel_packet(char *arg);
+void set_loglevel_info(char *arg);
+void set_loglevel_true(char *arg);
+void set_compress(void);
+void opt_set_regex(char *regex);
+void set_quiet(void);
+void set_superquiet(void);
+void set_script(char *script);
+void set_silent(void);
+void set_unoffensive(void);
+void disable_sslmitm(void);
+void set_resolve(void);
+void load_hosts(char *file);
+void save_hosts(char *file);
+void opt_set_format(char *format);
+void set_ext_headers(void);
+void set_wifi_key(char *key);
+void set_conf_file(char *file);
+void set_ssl_cert(char *cert);
+void set_ssl_key(char *key);
+#ifdef HAVE_EC_LUA
+void set_lua_args(char *args);
+void set_lua_script(char *script);
+#endif
+void set_target_target1(char *target1);
+void set_target_target2(char *target2);
+
 
 /*****************************************/
 
@@ -60,7 +106,12 @@ void ec_usage(void)
 
    fprintf(stdout, "\nUsage: %s [OPTIONS] [TARGET1] [TARGET2]\n", GBL_PROGRAM);
 
+#ifdef WITH_IPV6
    fprintf(stdout, "\nTARGET is in the format MAC/IP/IPv6/PORTs (see the man for further detail)\n");
+#else
+   fprintf(stdout, "\nTARGET is in the format MAC/IP/PORTs (see the man for further detail)\n");
+#endif
+
    
    fprintf(stdout, "\nSniffing and Attack options:\n");
    fprintf(stdout, "  -M, --mitm <METHOD:ARGS>    perform a mitm attack\n");
@@ -99,6 +150,12 @@ void ec_usage(void)
    fprintf(stdout, "  -e, --regex <regex>         visualize only packets matching this regex\n");
    fprintf(stdout, "  -E, --ext-headers           print extended header for every pck\n");
    fprintf(stdout, "  -Q, --superquiet            do not display user and password\n");
+
+#ifdef HAVE_EC_LUA
+   fprintf(stdout, "\nLUA options:\n");
+   fprintf(stdout, "      --lua-script <script1>,[<script2>,...]     comma-separted list of LUA scripts\n");
+   fprintf(stdout, "      --lua-args n1=v1,[n2=v2,...]               comma-separated arguments to LUA script(s)\n");
+#endif
    
    fprintf(stdout, "\nGeneral options:\n");
    fprintf(stdout, "  -i, --iface <iface>         use this network interface\n");
@@ -111,11 +168,10 @@ void ec_usage(void)
    fprintf(stdout, "  -z, --silent                do not perform the initial ARP scan\n");
    fprintf(stdout, "  -j, --load-hosts <file>     load the hosts list from <file>\n");
    fprintf(stdout, "  -k, --save-hosts <file>     save the hosts list to <file>\n");
-   fprintf(stdout, "  -W, --wep-key <wkey>        use this wep key to decrypt wifi packets\n");
+   fprintf(stdout, "  -W, --wifi-key <wkey>       use this key to decrypt wifi packets (wep or wpa)\n");
    fprintf(stdout, "  -a, --config <config>       use the alterative config file <config>\n");
    
    fprintf(stdout, "\nStandard options:\n");
-   fprintf(stdout, "  -U, --update                updates the databases from ettercap website\n");
    fprintf(stdout, "  -v, --version               prints the version and exit\n");
    fprintf(stdout, "  -h, --help                  this help screen\n");
 
@@ -133,7 +189,6 @@ void parse_options(int argc, char **argv)
    static struct option long_options[] = {
       { "help", no_argument, NULL, 'h' },
       { "version", no_argument, NULL, 'v' },
-      { "update", no_argument, NULL, 'U' },
       
       { "iface", required_argument, NULL, 'i' },
       { "lifaces", no_argument, NULL, 'I' },
@@ -149,6 +204,10 @@ void parse_options(int argc, char **argv)
       { "plugin", required_argument, NULL, 'P' },
       
       { "filter", required_argument, NULL, 'F' },
+#ifdef HAVE_EC_LUA
+      { "lua-script", required_argument, NULL, 0 },
+      { "lua-args", required_argument, NULL, 0 },
+#endif
       
       { "superquiet", no_argument, NULL, 'Q' },
       { "quiet", no_argument, NULL, 'q' },
@@ -158,7 +217,7 @@ void parse_options(int argc, char **argv)
       { "nosslmitm", no_argument, NULL, 'S' },
       { "load-hosts", required_argument, NULL, 'j' },
       { "save-hosts", required_argument, NULL, 'k' },
-      { "wep-key", required_argument, NULL, 'W' },
+      { "wifi-key", required_argument, NULL, 'W' },
       { "config", required_argument, NULL, 'a' },
       
       { "dns", no_argument, NULL, 'd' },
@@ -208,39 +267,35 @@ void parse_options(int argc, char **argv)
    optind = 0;
    int option_index = 0;
 
-   while ((c = getopt_long (argc, argv, "A:a:bB:CchDdEe:F:f:GhIi:j:k:L:l:M:m:n:oP:pQqiRr:s:STt:UuV:vW:w:Y:z", long_options, &option_index)) != EOF) {
+   while ((c = getopt_long (argc, argv, "A:a:bB:CchDdEe:F:f:GhIi:j:k:L:l:M:m:n:oP:pQqiRr:s:STt:uV:vW:w:Y:z", long_options, &option_index)) != EOF) {
       /* used for parsing arguments */
       char *opt_end = optarg;
       while (opt_end && *opt_end) opt_end++;
       /* enable a loaded filter script? */
-      uint8_t f_enabled = 1;
 
       switch (c) {
 
          case 'M':
-                  GBL_OPTIONS->mitm = 1;
-                  if (mitm_set(optarg) != ESUCCESS)
-                     FATAL_ERROR("MITM method '%s' not supported...\n", optarg);
+		  set_mitm(optarg);
                   break;
                   
          case 'o':
-                  GBL_OPTIONS->only_mitm = 1;
+		  set_onlymitm();
                   //select_text_interface();
                   break;
 
          case 'b':
-                  GBL_OPTIONS->broadcast = 1;
+		  set_broadcast();
 		  break;
                   
          case 'B':
-                  GBL_OPTIONS->iface_bridge = strdup(optarg);
-                  set_bridge_sniff();
+		  set_iface_bridge(optarg);
                   break;
                   
          case 'p':
-                  GBL_PCAP->promisc = 0;
+		  set_promisc();
                   break;
-                 
+#ifndef JUST_LIBRARY 
          case 'T':
                   select_text_interface();
                   break;
@@ -257,159 +312,127 @@ void parse_options(int argc, char **argv)
          case 'D':
                   select_daemon_interface();
                   break;
+#endif
                   
          case 'R':
-                  GBL_OPTIONS->reversed = 1;
+		  set_reversed();
                   break;
                   
          case 't':
-                  GBL_OPTIONS->proto = strdup(optarg);
+		  set_proto(optarg);
                   break;
                   
          case 'P':
-                  /* user has requested the list */
-                  if (!strcasecmp(optarg, "list")) {
-                     plugin_list();
-                     clean_exit(0);
-                  }
-                  /* else set the plugin */
-                  GBL_OPTIONS->plugin = strdup(optarg);
+		  set_plugin(optarg);
                   break;
                   
          case 'i':
-                  GBL_OPTIONS->iface = strdup(optarg);
+		  set_iface(optarg);
                   break;
                   
          case 'I':
                   /* this option is only useful in the text interface */
-                  select_text_interface();
-                  GBL_OPTIONS->lifaces = 1;
+	          set_lifaces();
                   break;
 
          case 'Y':
-                  GBL_OPTIONS->secondary = parse_iflist(optarg);
+                  set_secondary(optarg);
                   break;
          
          case 'n':
-                  GBL_OPTIONS->netmask = strdup(optarg);
+                  set_netmask(optarg);
                   break;
 
          case 'A':
-                  GBL_OPTIONS->address = strdup(optarg);
+                  set_address(optarg);
                   break;
                   
          case 'r':
-                  /* we don't want to scan the lan while reading from file */
-                  GBL_OPTIONS->silent = 1;
-                  GBL_OPTIONS->read = 1;
-                  GBL_OPTIONS->pcapfile_in = strdup(optarg);
+                  set_read_pcap(optarg);
                   break;
                  
          case 'w':
-                  GBL_OPTIONS->write = 1;
-                  GBL_OPTIONS->pcapfile_out = strdup(optarg);
+		  set_write_pcap(optarg);
                   break;
                   
          case 'f':
-                  GBL_PCAP->filter = strdup(optarg);
+		  set_pcap_filter(optarg);
                   break;
                   
          case 'F':
-                  /* is there a :0 or :1 appended to the filename? */
-                  if ( (opt_end-optarg >=2) && *(opt_end-2) == ':' ) {
-                     *(opt_end-2) = '\0';
-                     f_enabled = !( *(opt_end-1) == '0' );
-		  }
-                  if (filter_load_file(optarg, GBL_FILTERS, f_enabled) != ESUCCESS)
-                     FATAL_ERROR("Cannot load filter file \"%s\"", optarg);
+		  load_filter(opt_end, optarg);
                   break;
                   
          case 'L':
-                  if (set_loglevel(LOG_PACKET, optarg) == -EFATAL)
-                     clean_exit(-EFATAL);
-                  break;
+		  set_loglevel_packet(optarg);
 
          case 'l':
-                  if (set_loglevel(LOG_INFO, optarg) == -EFATAL)
-                     clean_exit(-EFATAL);
+		  set_loglevel_info(optarg);
                   break;
 
          case 'm':
-                  if (set_msg_loglevel(LOG_TRUE, optarg) == -EFATAL)
-                     clean_exit(-EFATAL);
+	          set_loglevel_true(optarg);
                   break;
                   
          case 'c':
-                  GBL_OPTIONS->compress = 1;
+		  set_compress();
                   break;
 
          case 'e':
-                  if (set_regex(optarg) == -EFATAL)
-                     clean_exit(-EFATAL);
+                  opt_set_regex(optarg);
                   break;
          
          case 'Q':
-                  GBL_OPTIONS->superquiet = 1;
+                  set_superquiet();
                   /* no break, quiet must be enabled */
          case 'q':
-                  GBL_OPTIONS->quiet = 1;
+		  set_quiet();
                   break;
                   
          case 's':
-                  GBL_OPTIONS->script = strdup(optarg);
+                  set_script(optarg);
                   break;
                   
          case 'z':
-                  GBL_OPTIONS->silent = 1;
+                  set_silent();
                   break;
                   
          case 'u':
-                  GBL_OPTIONS->unoffensive = 1;
+                  set_unoffensive();
                   break;
 
          case 'S':
-                  GBL_OPTIONS->ssl_mitm = 0;
+                  disable_sslmitm();
                   break;
  
          case 'd':
-                  GBL_OPTIONS->resolve = 1;
+                  set_resolve();
                   break;
                   
          case 'j':
-                  GBL_OPTIONS->silent = 1;
-                  GBL_OPTIONS->load_hosts = 1;
-                  GBL_OPTIONS->hostsfile = strdup(optarg);
+                  load_hosts(optarg);
                   break;
                   
          case 'k':
-                  GBL_OPTIONS->save_hosts = 1;
-                  GBL_OPTIONS->hostsfile = strdup(optarg);
+	          save_hosts(optarg);
                   break;
                   
          case 'V':
-                  if (set_format(optarg) != ESUCCESS)
-                     clean_exit(-EFATAL);
+                  opt_set_format(optarg);
                   break;
                   
          case 'E':
-                  GBL_OPTIONS->ext_headers = 1;
+                  set_ext_headers();
                   break;
                   
          case 'W':
-                  set_wep_key((u_char*)optarg);
+                  set_wifi_key(optarg);
                   break;
                   
          case 'a':
-                  GBL_CONF->file = strdup(optarg);
+                  set_conf_file(optarg);
                   break;
          
-         case 'U':
-                  /* load the conf for the connect timeout value */
-                  load_conf();
-                  global_update();
-                  /* NOT REACHED */
-                  break;
-                  
          case 'h':
                   ec_usage();
                   break;
@@ -425,6 +448,14 @@ void parse_options(int argc, char **argv)
 			GBL_OPTIONS->ssl_cert = strdup(optarg);	
 		} else if (!strcmp(long_options[option_index].name, "private-key")) {
 			GBL_OPTIONS->ssl_pkey = strdup(optarg);
+#ifdef HAVE_EC_LUA
+                } else if (!strcmp(long_options[option_index].name,"lua-args")) {
+                    ec_lua_cli_add_args(strdup(optarg));
+                } 
+                else if (!strcmp(long_options[option_index].name,"lua-script")) {
+                    ec_lua_cli_add_script(strdup(optarg));
+        break;
+#endif
 		} else {
 			fprintf(stdout, "\nTry `%s --help' for more options.\n\n", GBL_PROGRAM);
 			clean_exit(-1);
@@ -490,9 +521,11 @@ void parse_options(int argc, char **argv)
    
    if (GBL_OPTIONS->read && GBL_OPTIONS->mitm)
       FATAL_ERROR("Cannot use mitm attacks while reading from file");
-   
+  
+#ifndef JUST_LIBRARY 
    if (GBL_UI->init == NULL)
       FATAL_ERROR("Please select an User Interface");
+#endif
      
    /* force text interface for only mitm attack */
   /* Do not select text interface for only MiTM mode 
@@ -505,7 +538,6 @@ void parse_options(int argc, char **argv)
    } */
 
    DEBUG_MSG("parse_options: options combination looks good");
-   
    return;
 }
 
@@ -621,6 +653,245 @@ static char **parse_iflist(char *list)
    r[n] = NULL;
 
    return r;
+}
+
+/* set functions */
+void set_mitm(char *mitm) 
+{
+	GBL_OPTIONS->mitm = 1;
+	if(mitm_set(mitm) != ESUCCESS)
+		FATAL_ERROR("MiTM method '%s' not supported...\n", mitm);
+}
+
+void set_onlymitm(void)
+{
+	GBL_OPTIONS->only_mitm = 1;
+}
+
+void set_broadcast(void)
+{
+	GBL_OPTIONS->broadcast = 1;
+}
+
+void set_iface_bridge(char *iface)
+{
+	GBL_OPTIONS->iface_bridge = strdup(iface);
+	set_bridge_sniff();
+}
+
+void set_promisc(void)
+{
+	GBL_PCAP->promisc = 0;
+}
+
+void set_reversed(void)
+{
+	GBL_OPTIONS->reversed = 1;
+}
+
+void set_plugin(char *plugin)
+{
+	if(!strcasecmp(plugin, "list")) {
+		plugin_list();
+		clean_exit(0);
+	}
+
+	GBL_OPTIONS->plugin = strdup(plugin);
+}
+
+void set_proto(char *proto)
+{
+	GBL_OPTIONS->proto = strdup(proto);
+}
+
+void set_iface(char *iface)
+{
+	GBL_OPTIONS->iface = strdup(iface);
+}
+
+void set_lifaces(void)
+{
+#ifndef JUST_LIBRARY
+	GBL_OPTIONS->lifaces = 1;
+	select_text_interface();
+#endif
+}
+
+void set_secondary(char *iface)
+{
+	GBL_OPTIONS->secondary = parse_iflist(iface);
+}
+
+void set_netmask(char *netmask)
+{
+	GBL_OPTIONS->netmask = strdup(netmask);
+}
+
+void set_address(char *address)
+{
+	GBL_OPTIONS->address = strdup(address);
+}
+
+void set_read_pcap(char *pcap_file)
+{
+	/* we don't want to scan th eLAN while reading from file */
+	GBL_OPTIONS->silent = 1;
+	GBL_OPTIONS->read = 1;
+	GBL_OPTIONS->pcapfile_in = strdup(pcap_file);
+}
+
+void set_write_pcap(char *pcap_file)
+{
+	GBL_OPTIONS->write = 1;
+	GBL_OPTIONS->pcapfile_out = strdup(pcap_file);
+}
+
+void set_pcap_filter(char *filter)
+{
+	GBL_PCAP->filter = strdup(filter);
+}
+
+void load_filter(char *end, char *filter)
+{
+	uint8_t f_enabled = 1;
+	if ( (end-filter >=2) && *(end-2) == ':') {
+		*(end-2) = '\0';
+		f_enabled = !( *(end-1) == '0' );
+	}	
+	
+	if (filter_load_file(filter, GBL_FILTERS, f_enabled) != ESUCCESS)
+		FATAL_ERROR("Cannot load filter file \"%s\"", filter);
+}
+
+
+void set_loglevel_packet(char *arg)
+{
+	if (set_loglevel(LOG_PACKET, arg) == -EFATAL)
+		clean_exit(-EFATAL);
+}
+
+void set_loglevel_info(char *arg)
+{
+	if (set_loglevel(LOG_INFO, arg) == -EFATAL)
+		clean_exit(-EFATAL);
+}
+
+void set_loglevel_true(char *arg)
+{
+	if (set_msg_loglevel(LOG_TRUE, arg) == -EFATAL)
+		clean_exit(-EFATAL);
+}
+
+void set_compress(void)
+{
+	GBL_OPTIONS->compress = 1;
+}
+
+void opt_set_regex(char *regex)
+{
+	if (set_regex(regex) == -EFATAL)
+		clean_exit(-EFATAL);
+}
+
+void set_superquiet()
+{
+	GBL_OPTIONS->superquiet = 1;
+}
+
+void set_quiet(void)
+{
+	GBL_OPTIONS->quiet = 1;
+}
+
+void set_script(char *script)
+{
+	GBL_OPTIONS->script = strdup(script);
+}
+
+void set_silent(void)
+{
+	GBL_OPTIONS->silent = 1;
+}
+
+void set_unoffensive(void)
+{
+	GBL_OPTIONS->unoffensive = 1;
+}
+
+void disable_sslmitm(void)
+{
+	GBL_OPTIONS->ssl_mitm = 0;
+}
+
+void set_resolve(void)
+{
+	GBL_OPTIONS->resolve = 1;
+}
+
+void load_hosts(char *file)
+{
+	GBL_OPTIONS->silent = 1;
+	GBL_OPTIONS->load_hosts = 1;
+	GBL_OPTIONS->hostsfile = strdup(file);
+}
+
+void save_hosts(char *file)
+{
+	GBL_OPTIONS->save_hosts = 1;
+	GBL_OPTIONS->hostsfile = strdup(file);
+}
+
+void opt_set_format(char *format)
+{
+	if (set_format(format) != ESUCCESS)
+		clean_exit(-EFATAL);	
+}
+
+void set_ext_headers(void)
+{
+	GBL_OPTIONS->ext_headers = 1;
+}
+
+void set_wifi_key(char *key)
+{
+	wifi_key_prepare(key);
+}
+
+void set_conf_file(char *file)
+{
+	GBL_CONF->file = strdup(file);
+}
+
+void set_ssl_cert(char *cert)
+{
+	GBL_OPTIONS->ssl_cert = strdup(cert);
+}
+
+void set_ssl_key(char *key)
+{
+	GBL_OPTIONS->ssl_pkey = strdup(key);
+}
+
+#ifdef HAVE_EC_LUA
+void set_lua_args(char *args)
+{
+	ec_lua_cli_add_args(strdup(args));
+}
+
+void set_lua_script(char *script)
+{
+	ec_lua_cli_add_script(strdup(script));
+}
+#endif
+
+void set_target_target1(char *target1)
+{
+	GBL_OPTIONS->target1 = strdup(target1);
+}
+
+void set_target_target2(char *target2)
+{
+	GBL_OPTIONS->target2 = strdup(target2);
 }
 
 /* EOF */

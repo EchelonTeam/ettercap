@@ -245,7 +245,7 @@ static int execute_func(struct filter_op *fop, struct packet_object *po)
          
       case FFUNC_MSG:
          /* display the message to the user */
-         USER_MSG("%s", fop->op.func.string);
+         USER_MSG("%s\n", fop->op.func.string);
          return FLAG_TRUE;
          break;
          
@@ -882,8 +882,8 @@ static int func_kill(struct packet_object *po)
        * we can trust the ack number.
        * at least one side will be reset. the other is automatically reset 
        */
-      send_tcp(&po->L3.src, &po->L3.dst, po->L4.src, po->L4.dst, po->L4.seq, 0, TH_RST);
-      send_tcp(&po->L3.dst, &po->L3.src, po->L4.dst, po->L4.src, po->L4.ack, 0, TH_RST);
+      send_tcp(&po->L3.src, &po->L3.dst, po->L4.src, po->L4.dst, po->L4.seq, 0, TH_RST, NULL, 0);
+      send_tcp(&po->L3.dst, &po->L3.src, po->L4.dst, po->L4.src, po->L4.ack, 0, TH_RST, NULL, 0);
    } else if (po->L4.proto == NL_TYPE_UDP) {
       send_L3_icmp_unreach(po);
    }
@@ -913,6 +913,7 @@ static int func_exec(struct filter_op *fop)
    
    /* differentiate between the parent and the child */
    if (!pid) {
+      int k, param_length;
       char **param = NULL;
       char *q = (char*)fop->op.func.string;
       char *p;
@@ -931,6 +932,7 @@ static int func_exec(struct filter_op *fop)
       SAFE_REALLOC(param, (i + 1) * sizeof(char *));
       
       param[i] = NULL;
+      param_length= i + 1; //because there is a SAFE_REALLOC after the for.
      
       /* 
        * close input, output and error.
@@ -945,7 +947,10 @@ static int func_exec(struct filter_op *fop)
       execve(param[0], param, NULL);
 
       /* reached on errors */
-      exit(-1);
+	   for(k= 0; k < param_length; ++k)
+		   SAFE_FREE(param[k]);
+	   SAFE_FREE(param);
+      _exit(-1);
    }
       
    return ESUCCESS;

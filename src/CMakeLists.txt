@@ -8,7 +8,11 @@ set(EC_SRC
         ec_decode.c
         ec_dispatcher.c
         ec_dissect.c
+        ec_encryption_ccmp.c
+        ec_encryption_tkip.c
+        ec_encryption.c
         ec_error.c
+        ec_exit.c
         ec_file.c
         ec_filter.c
         ec_fingerprint.c
@@ -18,9 +22,7 @@ set(EC_SRC
         ec_hook.c
         ec_inet.c
         ec_inject.c
-        ec_interfaces.c
         ec_log.c
-        ec_main.c
         ec_manuf.c
         ec_mitm.c
         ec_network.c
@@ -46,7 +48,6 @@ set(EC_SRC
         ec_strings.c
         ec_threads.c
         ec_ui.c
-        ec_update.c
 
         dissectors/ec_bgp.c
         dissectors/ec_cvs.c
@@ -63,7 +64,6 @@ set(EC_SRC
         dissectors/ec_mountd.c
         dissectors/ec_msn.c
         dissectors/ec_mysql.c
-        dissectors/ec_napster.c
         dissectors/ec_nbns.c
         dissectors/ec_nntp.c
         dissectors/ec_o5logon.c
@@ -93,22 +93,31 @@ set(EC_SRC
 
         protocols/ec_arp.c
         protocols/ec_cooked.c
+        protocols/ec_erf.c
         protocols/ec_eth.c
         protocols/ec_fddi.c
         protocols/ec_gre.c
         protocols/ec_icmp.c
         protocols/ec_ip.c
+        protocols/ec_mpls.c
+        protocols/ec_pap.c
         protocols/ec_ppi.c
         protocols/ec_ppp.c
-        protocols/ec_prism.c
-        protocols/ec_radiotap.c
+        protocols/ec_pppoe.c
         protocols/ec_rawip.c
         protocols/ec_tcp.c
         protocols/ec_tr.c
         protocols/ec_udp.c
         protocols/ec_vlan.c
         protocols/ec_wifi.c
+        protocols/ec_wifi_eapol.c
+        protocols/ec_wifi_prism.c
+        protocols/ec_wifi_radiotap.c
 )
+
+if (NOT LIBRARY_BUILD)
+	set(EC_SRC ${EC_SRC} ec_interfaces.c)
+endif(NOT LIBRARY_BUILD)
 
 if(ENABLE_IPV6)
     set(EC_SRC ${EC_SRC} protocols/ec_icmp6.c protocols/ec_ip6.c mitm/ec_ip6nd_poison.c)
@@ -153,10 +162,58 @@ endif(NOT HAVE_MEMMEM)
 if(NOT HAVE_BASENAME)
     set(EC_SRC ${EC_SRC} missing/basename.c)
 endif(NOT HAVE_BASENAME)
+if(NOT HAVE_STRNDUP)
+    set(EC_SRC ${EC_SRC} missing/strndup.c)
+endif(NOT HAVE_STRNDUP)
 
-add_subdirectory(interfaces)
 
-add_executable(ettercap ${EC_SRC})
-target_link_libraries(ettercap ec_interfaces ${EC_LIBS})
-set_target_properties(ettercap PROPERTIES ENABLE_EXPORTS TRUE)
-install(TARGETS ettercap DESTINATION ${INSTALL_BINDIR})
+if(NOT LIBRARY_BUILD)
+	add_subdirectory(interfaces)
+endif(NOT LIBRARY_BUILD)
+
+add_library(lib_ettercap SHARED ${EC_SRC})
+add_dependencies(lib_ettercap libnet)
+
+if (NOT LIBRARY_BUILD)
+	add_executable(ettercap ec_main.c)
+endif(NOT LIBRARY_BUILD)
+
+# Only compile lua stuff if lua is enabled!
+IF(ENABLE_LUA)
+  add_subdirectory(lua)
+  target_link_libraries(lib_ettercap ec_lua)
+  if(OS_DARWIN AND (CMAKE_SIZEOF_VOID_P EQUAL 8))
+    # On 64-bit OSX platforms, luajit requires the following flags to be added.
+    # See: http://luajit.org/install.html
+    get_target_property(OLD_FLAGS ettercap LINK_FLAGS)
+    if(OLD_FLAGS STREQUAL "OLD_FLAGS-NOTFOUND")
+      set(OLD_FLAGS "")
+    endif()
+    set(NEW_FLAGS "${OLD_FLAGS} -pagezero_size 10000 -image_base 100000000")
+    SET_TARGET_PROPERTIES(ettercap PROPERTIES LINK_FLAGS "${NEW_FLAGS}")
+  endif()
+endif(ENABLE_LUA)
+
+if(NOT LIBRARY_BUILD)
+	target_link_libraries(lib_ettercap ec_interfaces ${EC_LIBS})
+else(NOT LIBRARY_BUILD)
+	target_link_libraries(lib_ettercap ${EC_LIBS})
+endif(NOT LIBRARY_BUILD)
+
+set_target_properties(lib_ettercap PROPERTIES 
+  ENABLE_EXPORTS On
+  LINK_INTERFACE_LIBRARIES ""
+  #  INSTALL_RPATH ${INSTALL_LIBDIR}
+  OUTPUT_NAME ettercap
+  )
+
+if (NOT LIBRARY_BUILD)
+	target_link_libraries(ettercap lib_ettercap)
+	set_target_properties(ettercap PROPERTIES 
+  	INSTALL_RPATH ${INSTALL_LIBDIR}
+  	)
+endif(NOT LIBRARY_BUILD)
+install(TARGETS lib_ettercap DESTINATION ${INSTALL_LIBDIR})
+if(NOT LIBRARY_BUILD)
+	install(TARGETS ettercap DESTINATION ${INSTALL_BINDIR})
+endif(NOT LIBRARY_BUILD)

@@ -74,7 +74,7 @@ static void toggle_unoffensive(void);
 static void toggle_nopromisc(void);
 
 static void gtkui_file_open(void);
-static void read_pcapfile(char *file);
+static void read_pcapfile(const char *file);
 static void gtkui_file_write(void);
 static void write_pcapfile(void);
 static void gtkui_unified_sniff(void);
@@ -170,33 +170,35 @@ static void gtkui_fatal_error_wrap(const char *msg) {
 }
 
 struct gtkui_input_data {
-   const char *title;
+   char *title;
    char *input;
    size_t n;
    void (*callback)(void);
 };
 
-static gboolean gtkui_input_shim(gpointer data) {
+/*static gboolean gtkui_input_shim(gpointer data) {
 
    struct gtkui_input_data *gid = data;
    gtkui_input(gid->title, gid->input, gid->n, gid->callback);
+   free(gid->title);
    free(gid);
    return FALSE;
-}
+}*/
 
-static void gtkui_input_wrap(const char *title, char *input, size_t n, void (*callback)(void)) {
+/*static void gtkui_input_wrap(const char *title, char *input, size_t n, void (*callback)(void)) {
 
    struct gtkui_input_data *gid = malloc(sizeof *gid);
    if (gid) {
-      gid->title = title;
+      gid->title = strdup(title);
       gid->input = input;
       gid->n = n;
       gid->callback = callback;
-      g_idle_add(gtkui_input_shim, gid);
+      //g_idle_add(gtkui_input_shim, gid);
+       gtkui_input_shim(gid);
    } else {
       FATAL_ERROR("out of memory");
    }
-}
+}*/
 
 struct gtkui_progress_data {
    char *title;
@@ -208,6 +210,7 @@ static gboolean gtkui_progress_shim(gpointer data) {
 
    struct gtkui_progress_data *gpd = data;
    gtkui_progress(gpd->title, gpd->value, gpd->max);
+   free(gpd->title);
    free(gpd);
    return FALSE;
 }
@@ -221,9 +224,13 @@ static int gtkui_progress_wrap(char *title, int value, int max) {
       return UI_PROGRESS_INTERRUPTED;
    }
 
+   if (!title) {
+    return UI_PROGRESS_UPDATED;
+   }
+
    gpd = malloc(sizeof *gpd);
    if (gpd) {
-      gpd->title = title;
+      gpd->title = strdup(title);
       gpd->value = value;
       gpd->max = max;
       g_idle_add(gtkui_progress_shim, gpd);
@@ -257,7 +264,7 @@ void set_gtk_interface(void)
    ops.msg = &gtkui_msg_wrap;
    ops.error = &gtkui_error_wrap;
    ops.fatal_error = &gtkui_fatal_error_wrap;
-   ops.input = &gtkui_input_wrap;
+   ops.input = &gtkui_input;
    ops.progress = &gtkui_progress_wrap;
 
    
@@ -422,6 +429,7 @@ void gtkui_input(const char *title, char *input, size_t n, void (*callback)(void
    entry = gtk_entry_new_with_max_length(n);
    g_object_set_data(G_OBJECT (entry), "dialog", dialog);
    g_signal_connect(G_OBJECT (entry), "activate", G_CALLBACK (gtkui_dialog_enter), NULL);
+
    
    if (input)
       gtk_entry_set_text(GTK_ENTRY (entry), input); 
@@ -488,9 +496,11 @@ static void gtkui_progress(char *title, int value, int max)
     * when 100%, destroy it
     */
    if (value == max) {
-      gtk_widget_destroy(progress_dialog);
+      if (progress_dialog)
+         gtk_widget_destroy(progress_dialog);
       progress_dialog = NULL;
       progress_bar = NULL;
+      gtkui_refresh_host_list();
    }
 
 }
@@ -600,8 +610,8 @@ static void gtkui_setup(void)
       { "/Options/Promisc mode", NULL, toggle_nopromisc,  0, "<ToggleItem>" },
       { "/Options/Set netmask", "n", gtkui_set_netmask,   0, "<Item>"}
 #ifndef OS_WINDOWS
-     ,{"/_Help",          NULL,         NULL,             0, "<Branch>" },
-      {"/Help/Contents", " ",           gtkui_help,       0, "<StockItem>", GTK_STOCK_HELP }
+     ,{"/_?",          NULL,         NULL,             0, "<Branch>" },
+      {"/?/Contents", " ",           gtkui_help,       0, "<StockItem>", GTK_STOCK_HELP }
 #endif
    };
    gint nmenu_items = sizeof (file_menu) / sizeof (file_menu[0]);
@@ -676,7 +686,7 @@ static void gtkui_setup(void)
    /* messages */
    scroll = gtk_scrolled_window_new(NULL, NULL);
    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (scroll),
-                                  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (scroll), GTK_SHADOW_IN);
    gtk_paned_pack2(GTK_PANED (vpaned), scroll, FALSE, TRUE);
    gtk_widget_show(scroll);
@@ -730,9 +740,9 @@ static void gtkui_file_open(void)
    }
 }
 
-static void read_pcapfile(char *file)
+static void read_pcapfile(const char *file)
 {
-   char errbuf[128];
+   char pcap_errbuf[PCAP_ERRBUF_SIZE];
    
    DEBUG_MSG("read_pcapfile %s", file);
    
@@ -741,8 +751,8 @@ static void read_pcapfile(char *file)
    snprintf(GBL_OPTIONS->pcapfile_in, strlen(file)+1, "%s", file);
 
    /* check if the file is good */
-   if (is_pcap_file(GBL_OPTIONS->pcapfile_in, errbuf) != ESUCCESS) {
-      ui_error("%s", errbuf);
+   if (is_pcap_file(GBL_OPTIONS->pcapfile_in, pcap_errbuf) != ESUCCESS) {
+      ui_error("%s", pcap_errbuf);
       SAFE_FREE(GBL_OPTIONS->pcapfile_in);
       return;
    }

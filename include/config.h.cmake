@@ -22,10 +22,11 @@
 #cmakedefine HAVE_DLFCN_H
 #cmakedefine HAVE_CTYPE_H
 #cmakedefine HAVE_MUTEX_RECURSIVE_NP
-#cmakedefine HAVE_PCRE_H
 
+#cmakedefine HAVE_PCRE
 #cmakedefine HAVE_POLL
 #cmakedefine HAVE_STRTOK_R
+#cmakedefine HAVE_STRNDUP
 #cmakedefine HAVE_SELECT
 #cmakedefine HAVE_SCANDIR
 #cmakedefine HAVE_STRLCAT
@@ -42,6 +43,7 @@
 #cmakedefine HAVE_UTF8
 #cmakedefine HAVE_PLUGINS
 #cmakedefine WITH_IPV6
+#cmakedefine HAVE_EC_LUA
 
 #cmakedefine INSTALL_PREFIX         "@INSTALL_PREFIX@"
 #cmakedefine INSTALL_SYSCONFDIR     "@INSTALL_SYSCONFDIR@"
@@ -50,4 +52,5 @@
 #cmakedefine INSTALL_EXECPREFIX     "@INSTALL_EXECPREFIX@"
 #cmakedefine INSTALL_BINDIR         "@INSTALL_BINDIR@"
 
+#cmakedefine JUST_LIBRARY
 #endif
