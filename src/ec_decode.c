@@ -78,10 +78,10 @@ void ec_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u_char *pk
 {
    FUNC_DECODER_PTR(packet_decoder);
    struct packet_object po;
-   int len;
+   bpf_u_int32 len;
    u_char *data;
-   size_t datalen;
-   
+   bpf_u_int32 datalen;
+
    CANCELLATION_POINT();
 
    /* start the timer for the stats */
@@ -90,7 +90,7 @@ void ec_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u_char *pk
    /* XXX -- remove this */
 #if 0
    if (!GBL_OPTIONS->quiet)
-      USER_MSG("CAPTURED: 0x%04x bytes form %s\n", pkthdr->caplen, param );
+      USER_MSG("CAPTURED: 0x%04x bytes form %s\n", pkthdr->caplen, iface->name );
 #endif
    
    if (GBL_OPTIONS->read)
@@ -106,7 +106,7 @@ void ec_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u_char *pk
     * it dumps all the packets disregarding the filter
     *
     * do not perform the operation if we are reading from another
-    * filedump. see below where the file is dumped when reading 
+    * filedump. See below where the file is dumped when reading
     * form other files (useful for decription).
     */
    if (GBL_OPTIONS->write && !GBL_OPTIONS->read) {
@@ -115,7 +115,7 @@ void ec_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u_char *pk
        * packets are dumped in the log file by two threads
        */
       DUMP_LOCK;
-      pcap_dump((u_char *)GBL_PCAP->dump, pkthdr, pkt);
+      pcap_dump((u_char *)param, pkthdr, pkt);
       DUMP_UNLOCK;
    }
  
@@ -156,11 +156,10 @@ void ec_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u_char *pk
    
    /* set the po timestamp */
    memcpy(&po.ts, &pkthdr->ts, sizeof(struct timeval));
-   
    /* set the interface where the packet was captured */
-   if (GBL_OPTIONS->iface && !strcmp((const char*)param, GBL_OPTIONS->iface))
+   if (GBL_OPTIONS->iface && !strcmp(GBL_IFACE->name, GBL_OPTIONS->iface))
       po.flags |= PO_FROMIFACE;
-   else if (GBL_OPTIONS->iface_bridge && !strcmp((const char*)param, GBL_OPTIONS->iface_bridge))
+   else if (GBL_OPTIONS->iface_bridge && !strcmp(GBL_IFACE->name, GBL_OPTIONS->iface_bridge))
       po.flags |= PO_FROMBRIDGE;
 
    /* HOOK POINT: RECEIVED */ 
@@ -209,13 +208,13 @@ void ec_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u_char *pk
 
    /* 
     * dump packets to a file from another file.
-    * thi is useful when decrypting packets or applying filters
+    * this is useful when decrypting packets or applying filters
     * on pcapfile and we want to save the result in a file
     */
    if (GBL_OPTIONS->write && GBL_OPTIONS->read) {
       DUMP_LOCK;
       /* reuse the original pcap header, but with the modified packet */
-      pcap_dump((u_char *)GBL_PCAP->dump, pkthdr, po.packet);
+      pcap_dump((u_char *)param, pkthdr, po.packet);
       DUMP_UNLOCK;
    }
    

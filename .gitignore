@@ -1,7 +1,8 @@
 tags
 .clang_complete
-include/config.h
 gmon.out
 ettercap-*_debug.log
 libwdg-*_debug.log
 build/
+include/config.h
+/obj-*/

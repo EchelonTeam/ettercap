@@ -11,6 +11,10 @@ add_library(dns_spoof MODULE dns_spoof/dns_spoof.c)
 target_link_libraries(dns_spoof ${HAVE_RESOLV})
 set_target_properties(dns_spoof PROPERTIES PREFIX "ec_")
 
+add_library(mdns_spoof MODULE mdns_spoof/mdns_spoof.c)
+target_link_libraries(mdns_spoof ${HAVE_RESOLV})
+set_target_properties(mdns_spoof PROPERTIES PREFIX "ec_")
+
 add_library(dos_attack MODULE dos_attack/dos_attack.c)
 target_link_libraries(dos_attack ${HAVE_LIBNET})
 set_target_properties(dos_attack PROPERTIES PREFIX "ec_")
@@ -33,6 +37,9 @@ set_target_properties(finger PROPERTIES PREFIX "ec_")
 add_library(finger_submit MODULE finger_submit/finger_submit.c)
 set_target_properties(finger_submit PROPERTIES PREFIX "ec_")
 
+add_library(fraggle_attack MODULE fraggle_attack/fraggle_attack.c)
+set_target_properties(fraggle_attack PROPERTIES PREFIX "ec_")
+
 add_library(gre_relay MODULE gre_relay/gre_relay.c)
 set_target_properties(gre_relay PROPERTIES PREFIX "ec_")
 
@@ -51,7 +58,9 @@ set_target_properties(nbns_spoof PROPERTIES PREFIX "ec_")
 if(HAVE_PCRE)
     if(CURL_FOUND)
         add_library(sslstrip MODULE sslstrip/sslstrip.c)
-        target_link_libraries(sslstrip ${CURL_LIBRARY} ${HAVE_PCRE})
+        include_directories(${CURL_INCLUDE_DIR} ${PCRE_INCLUDE_DIR})
+        add_dependencies(sslstrip curl)
+        target_link_libraries(sslstrip ${CURL_LIBRARY} ${PCRE_LIBRARY})
         set_target_properties(sslstrip PROPERTIES PREFIX "ec_")
         set(SSL_STRIP_PLUGIN sslstrip)
     else(CURL_FOUND)
@@ -107,6 +116,7 @@ set(PLUGINS arp_cop
 autoadd
 chk_poison
 dns_spoof
+mdns_spoof
 dos_attack
 dummy
 find_conn
@@ -114,6 +124,7 @@ find_ettercap
 find_ip
 finger
 finger_submit
+fraggle_attack
 gre_relay
 gw_discover
 isolate
@@ -136,7 +147,7 @@ smurf_attack
 stp_mangler)
 
 foreach(plugin ${PLUGINS})
-	target_link_libraries(${plugin} ettercap)
+	target_link_libraries(${plugin} lib_ettercap)
 endforeach(plugin)
 
 install(TARGETS
@@ -144,6 +155,7 @@ install(TARGETS
             autoadd
             chk_poison
             dns_spoof
+	    mdns_spoof
             dos_attack
             dummy
             find_conn
@@ -151,6 +163,7 @@ install(TARGETS
             find_ip
             finger
             finger_submit
+            fraggle_attack
             gre_relay
             gw_discover
             isolate

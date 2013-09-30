@@ -383,6 +383,7 @@ static void sslw_hook_handled(struct packet_object *po)
  */
 static int sslw_insert_redirect(u_int16 sport, u_int16 dport)
 {
+   int param_length;
    char asc_sport[16];
    char asc_dport[16];
    int ret_val, i = 0;
@@ -391,8 +392,10 @@ static int sslw_insert_redirect(u_int16 sport, u_int16 dport)
  
    /* the script is not defined */
    if (GBL_CONF->redir_command_on == NULL)
+   {
+      USER_MSG("SSLStrip: cannot setup the redirect, did you uncomment the redir_command_on command on your etter.conf file?");
       return -EFATAL;
-   
+   }
    snprintf(asc_sport, 16, "%u", sport);
    snprintf(asc_dport, 16, "%u", dport);
 
@@ -420,17 +423,20 @@ static int sslw_insert_redirect(u_int16 sport, u_int16 dport)
    SAFE_REALLOC(param, (i + 1) * sizeof(char *));
                
    param[i] = NULL;
+   param_length= i + 1; //because there is a SAFE_REALLOC after the for.
                
    /* execute the script */ 
    switch (fork()) {
       case 0:
          execvp(param[0], param);
-         exit(EINVALID);
+         WARN_MSG("Cannot setup http redirect (command: %s), please edit your etter.conf file and put a valid value in redir_command_on field\n", param[0]);
+         safe_free_mem(param, &param_length, command);
+         _exit(EINVALID);
       case -1:
-         SAFE_FREE(param);
+         safe_free_mem(param, &param_length, command);
          return -EINVALID;
       default:
-         SAFE_FREE(param);
+         safe_free_mem(param, &param_length, command);
          wait(&ret_val);
          if (ret_val == EINVALID)
             return -EINVALID;
@@ -444,6 +450,7 @@ static int sslw_insert_redirect(u_int16 sport, u_int16 dport)
  */
 static int sslw_remove_redirect(u_int16 sport, u_int16 dport)
 {
+   int param_length;
    char asc_sport[16];
    char asc_dport[16];
    int ret_val, i = 0;
@@ -452,8 +459,11 @@ static int sslw_remove_redirect(u_int16 sport, u_int16 dport)
  
    /* the script is not defined */
    if (GBL_CONF->redir_command_off == NULL)
+   {
+      USER_MSG("SSLStrip: cannot remove the redirect, did you uncomment the redir_command_off command on your etter.conf file?");
       return -EFATAL;
-   
+   }
+
    snprintf(asc_sport, 16, "%u", sport);
    snprintf(asc_dport, 16, "%u", dport);
 
@@ -481,15 +491,20 @@ static int sslw_remove_redirect(u_int16 sport, u_int16 dport)
    SAFE_REALLOC(param, (i + 1) * sizeof(char *));
                
    param[i] = NULL;
+   param_length= i + 1; //because there is a SAFE_REALLOC after the for.
                
    /* execute the script */ 
    switch (fork()) {
       case 0:
          execvp(param[0], param);
-         exit(EINVALID);
+         WARN_MSG("Cannot remove http redirect (command: %s), please edit your etter.conf file and put a valid value in redir_command_on field\n", param[0]);
+         safe_free_mem(param, &param_length, command);
+         _exit(EINVALID);
       case -1:
+         safe_free_mem(param, &param_length, command);
          return -EINVALID;
       default:
+         safe_free_mem(param, &param_length, command);
          wait(&ret_val);
          if (ret_val == EINVALID)
             return -EINVALID;

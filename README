@@ -53,11 +53,13 @@ MANDATORY:
    - libpthread
    - zlib
    - CMake 2.8
-   - ghostscript
    - Curl    >= 7.26.0 to build SSLStrip plugin
    If you don't want to enable SSLStrip plugin you have to disable it. (more information about disabling a plugin in the README.GIT file)
 
 OPTIONAL:
+   To enable PDF documentation generation (enable via ENABLE_PDF_DOCS=On):
+      - ghostscript (ps2pdf)
+      - groff
 
    To enable plugins:
       - libltdl (part of libtool)
@@ -66,7 +68,7 @@ OPTIONAL:
       - libpcre
 
    To support SSH and SSL decryption:
-      - openssl 0.9.7
+      - openssl >= 0.9.7
 
    For the cursed GUI:
       - ncurses   >= 5.3
@@ -79,6 +81,10 @@ OPTIONAL:
 
    For the SSLStrip plugin
       - Curl      >= 7.26.0
+
+If you are running on debian, or any debian based distro you can install the required dependencies by running:
+apt-get install debhelper cmake bison flex libgtk2.0-dev libltdl3-dev libncurses-dev libncurses5-dev libnet1-dev \
+ libpcap-dev libpcre3-dev libssl-dev libcurl4-openssl-dev ghostscript 
 
 ============================================================================
                                    LICENSE

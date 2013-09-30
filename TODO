@@ -1,3 +1,10 @@
+=========================
+  TODO for libettercap
+========================
+
+1. Generate build logic for libettercap
+2. Remove all interfaces if building libettercap
+
 ==========================
   TODO for the NG series
 ==========================
@@ -58,6 +65,10 @@
 
    + IPv6
       - router discovery
+      - UI support for IPv6 address
+      - neighbor discovery poisoning
+      - scan method for IPv6 hosts 
+      
 
    + Rendevouz mitm
 

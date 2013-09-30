@@ -62,7 +62,7 @@ GtkItemFactoryEntry gmenu_view[] = {
    {"/View/_Visualization method...", "v", gtkui_vis_method,       0, "<StockItem>", GTK_STOCK_PREFERENCES },
    {"/View/Visualization _regex...",  "R", gtkui_vis_regex,        0, "<StockItem>", GTK_STOCK_FIND },
    {"/View/sep1",                    NULL, NULL,                   0, "<Separator>" },
-   {"/View/Set the _WEP key...",      "w", gtkui_wep_key,          0, "<StockItem>", GTK_STOCK_FIND }
+   {"/View/Set the _WiFi key...",      "w", gtkui_wifi_key,          0, "<StockItem>", GTK_STOCK_FIND }
 };
 
 GtkItemFactoryEntry gmenu_mitm[] = {
@@ -101,8 +101,8 @@ GtkItemFactoryEntry gmenu_plugins[] = {
 
 #ifndef OS_WINDOWS
 GtkItemFactoryEntry gmenu_help[] = {
-   {"/_Help",                   NULL,         NULL,              0, "<Branch>" },
-   {"/Help/Contents", " ", gtkui_help, 0, "<StockItem>", GTK_STOCK_HELP }
+   {"/_?",                   NULL,         NULL,              0, "<Branch>" },
+   {"/?/Contents", " ", gtkui_help, 0, "<StockItem>", GTK_STOCK_HELP }
 };
 #endif
 

@@ -111,7 +111,7 @@ void build_hosts_list(void)
    del_hosts_list();
 
 #ifdef OS_MINGW
-	/* FIXME: for some reason under windows it does not work in thread mode
+   /* FIXME: for some reason under windows it does not work in thread mode
     * to be investigated...
     */
 	scan_thread(NULL);
@@ -224,7 +224,7 @@ static EC_THREAD_FUNC(scan_thread)
    if (!GBL_OPTIONS->load_hosts && GBL_OPTIONS->resolve) {
       char title[50];
 
-      snprintf(title, sizeof(title), "Resolving %d hostnames...", nhosts);
+      snprintf(title, sizeof(title)-1, "Resolving %d hostnames...", nhosts);
 
       INSTANT_USER_MSG("%s\n", title);
 
@@ -294,9 +294,9 @@ static void scan_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u
 {
    FUNC_DECODER_PTR(packet_decoder);
    struct packet_object po;
-   int len;
+   bpf_u_int32 len;
    u_char *data;
-   int datalen;
+   bpf_u_int32 datalen;
 
    CANCELLATION_POINT();
 
@@ -406,7 +406,7 @@ static void scan_netmask(pthread_t pid)
 
    }
 
-   snprintf(title, sizeof(title), "Scanning the whole netmask for %d hosts...", nhosts);
+   snprintf(title, sizeof(title)-1, "Scanning the whole netmask for %d hosts...", nhosts);
    INSTANT_USER_MSG("%s\n", title);
 
    i = 1;
@@ -550,7 +550,7 @@ static void scan_targets(pthread_t pid)
    if (nhosts == 0)
       return;
 
-   snprintf(title, sizeof(title), "Scanning for merged targets (%d hosts)...", nhosts);
+   snprintf(title, sizeof(title)-1, "Scanning for merged targets (%d hosts)...", nhosts);
    INSTANT_USER_MSG("%s\n\n", title);
 
    /* and now scan the LAN */
