@@ -6,6 +6,8 @@ ettercap (1:0.8.0-0kali1) kali; urgency=low
       su-to-root, thus drop dep on menu and add dep on policykit-1
     - 0002-centre-scalable-icon.patch: merged upstream
   * Fix cmake invocation to use a build type supported by upstream.
+  * Tweak install files to let upstream install the desktop file, the
+    policy kit rules, and the pkexec wrapper.
 
  -- Raphaël Hertzog <hertzog@debian.org>  Mon, 30 Sep 2013 21:17:08 +0200
 
