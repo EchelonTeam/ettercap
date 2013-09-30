@@ -1,3 +1,13 @@
+ettercap (1:0.8.0-0kali1) kali; urgency=low
+
+  * New upstream release.
+  * Drop Debian specific patches:
+    - 0001-desktop.patch: upstream uses pkexec by default now, no need to use
+      su-to-root, thus drop dep on menu and add dep on policykit-1
+    - 0002-centre-scalable-icon.patch: merged upstream
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Mon, 30 Sep 2013 21:17:08 +0200
+
 ettercap (1:0.7.6-1kali0) kali; urgency=low
 
   * Import ettercap from testing
