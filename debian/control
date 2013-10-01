@@ -4,18 +4,19 @@ Priority: optional
 Maintainer: Barak A. Pearlmutter <bap@debian.org>
 Uploaders: Murat Demirten <murat@debian.org>
 Build-Depends: debhelper (>= 9),
-	cmake,
-	bison | bison++ | byacc | byacc-j | yacc | btyacc,
-	flex | lex,
-	libgtk2.0-dev,
-	libltdl3-dev,
-	libncurses-dev | libncurses5-dev,
-	libnet1-dev,
-	libpcap-dev | libpcap0.8-dev,
-	libpcre3-dev,
-	libssl-dev,
-	libcurl4-openssl-dev | libcurl-ssl-dev | libcurl-dev,
-	ghostscript,
+ cmake,
+ bison | bison++ | byacc | byacc-j | yacc | btyacc,
+ flex | lex,
+ libgtk2.0-dev,
+ libltdl3-dev,
+ libncurses-dev | libncurses5-dev,
+ libnet1-dev,
+ libpcap-dev | libpcap0.8-dev,
+ libpcre3-dev,
+ libssl-dev,
+ libcurl4-openssl-dev | libcurl-ssl-dev | libcurl-dev,
+ ghostscript,
+ luajit,
 Standards-Version: 3.9.4
 Homepage: http://ettercap.sourceforge.net
 Vcs-Git: git://github.com/barak/ettercap.git
@@ -50,7 +51,7 @@ Description: Multipurpose sniffer/interceptor/logger for switched LAN
 
 Package: ettercap-text-only
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ettercap-common (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, ettercap-common (= ${binary:Version}), ethtool
 Replaces: ettercap-gtk, ettercap-graphical, ettercap
 Conflicts: ettercap-gtk, ettercap-graphical, ettercap (<= 1:0.7.3)
 Provides: ettercap

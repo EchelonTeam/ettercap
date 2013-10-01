@@ -24,10 +24,18 @@ override_dh_auto_build:
 	dh_auto_configure -- -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=ON -DBUNDLED_LIBS=OFF
 	dh_auto_build
 
+override_dh_auto_install:
+	dh_auto_install
+	mkdir -p debian/tmp/usr/sbin
+	sed 's/bin/sbin/g' -i debian/tmp/usr/share/polkit-1/actions/org.pkexec.ettercap.policy
+	install --mode=0755 ettercap-text-only debian/tmp/usr/sbin/
+
 override_dh_install:
 	dh_install --list-missing
 	mkdir -p debian/ettercap-text-only/usr/sbin
-	install --mode=0755 ettercap-text-only debian/ettercap-text-only/usr/sbin/ettercap
+	install --mode=0755 \
+	 debian/tmp/usr/sbin/ettercap-text-only \
+	 debian/ettercap-text-only/usr/sbin/ettercap
 	-rm --verbose debian/ettercap-common/usr/share/ettercap/ettercap.png
 
 override_dh_installdocs:
