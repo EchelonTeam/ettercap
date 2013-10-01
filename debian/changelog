@@ -9,6 +9,7 @@ ettercap (1:0.8.0-0kali1) kali; urgency=low
     CMAKE_BUILD_TYPE=RelWithDebInfo.
   * Tweak install files to let upstream install the desktop file, the
     policy kit rules, and the pkexec wrapper.
+  * Install libettercap.so in ettercap-common.
 
  -- Raphaël Hertzog <hertzog@debian.org>  Mon, 30 Sep 2013 21:17:08 +0200
 
