@@ -1,0 +1,25 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,10 +32,6 @@ if(contains_valid EQUAL -1)
+ endif()
+ UNSET(contains_valid)
+ 
+-# Ensure that, when we link to stuff outside of our build path, we include the
+-# library dir path in our RPATH.
+-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+-
+ include(CMakeDependentOption)
+ 
+ # If SYSTEM_LIBS is set to off, then all SYSTEM_* options will be
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -209,9 +209,6 @@ set_target_properties(lib_ettercap PROPE
+ 
+ if (NOT LIBRARY_BUILD)
+ 	target_link_libraries(ettercap lib_ettercap)
+-	set_target_properties(ettercap PROPERTIES 
+-  	INSTALL_RPATH ${INSTALL_LIBDIR}
+-  	)
+ endif(NOT LIBRARY_BUILD)
+ install(TARGETS lib_ettercap DESTINATION ${INSTALL_LIBDIR})
+ if(NOT LIBRARY_BUILD)

@@ -1,1 +1,2 @@
 allow-build-type-RelWithDebInfo.patch
+disable-rpath.patch
