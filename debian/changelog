@@ -11,6 +11,8 @@ ettercap (1:0.8.0-0kali1) kali; urgency=low
     policy kit rules, and the pkexec wrapper.
   * Install libettercap.so in ettercap-common.
   * Add disable-rpath.patch to disable RPATH generation.
+  * Add some lintian overrides to deal with the internal but public
+    libettercap.so.
 
  -- Raphaël Hertzog <hertzog@debian.org>  Mon, 30 Sep 2013 21:17:08 +0200
 
