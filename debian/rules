@@ -10,6 +10,15 @@ ENABLE_IPV6 := $(shell \
  then echo ON; \
  else echo OFF; \
  fi)
+ETTERCAP_OPTIONS= \
+ -DENABLE_IPV6=$(ENABLE_IPV6) \
+ -DBUNDLED_LIBS=OFF \
+ -DENABLE_LUA=$(ENABLE_LUA) \
+ -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+ -DENABLE_TESTS=OFF \
+ -DDISABLE_RPATH=ON \
+ -DNO_INSTALL_LICENSE=ON \
+ -DENABLE_PDF_DOCS=ON
 
 override_dh_auto_configure:
 	@echo LIBNET_VER = $(LIBNET_VER)
@@ -17,11 +26,11 @@ override_dh_auto_configure:
 	@echo main configuration deferred until build, as it must be done twice
 
 override_dh_auto_build:
-	dh_auto_configure -- -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=OFF -DBUNDLED_LIBS=OFF
+	dh_auto_configure -- $(ETTERCAP_OPTIONS) -DENABLE_GTK=OFF
 	dh_auto_build
 	cd obj-* && $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
 	mv debian/tmp/usr/bin/ettercap ettercap-text-only
-	dh_auto_configure -- -DENABLE_IPV6=$(ENABLE_IPV6) -DENABLE_GTK=ON -DBUNDLED_LIBS=OFF
+	dh_auto_configure -- $(ETTERCAP_OPTIONS) -DENABLE_GTK=ON
 	dh_auto_build
 
 override_dh_auto_install:
