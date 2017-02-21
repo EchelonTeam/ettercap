@@ -18,6 +18,7 @@ option(ENABLE_LUA "Enable LUA support (EXPERIMENTAL)" OFF)
 option(ENABLE_PDF_DOCS "Enable PDF document generation" OFF)
 option(ENABLE_TESTS "Enable Unit Tests" OFF)
 option(LIBRARY_BUILD "Build for libettercap only" OFF)
+option(ENABLE_NLS "Enable Native Language Suport" ON)
 option(INSTALL_DESKTOP "Install ettercap desktop files" ON)
 
 
@@ -109,6 +110,9 @@ set(DESKTOP_DIR ${INSTALL_PREFIX}/share/applications/ CACHE PATH "Binary files i
 set(ICON_DIR ${INSTALL_PREFIX}/share/pixmaps CACHE PATH "Binary files installation directory")
 set(MAN_INSTALLDIR ${INSTALL_PREFIX}/share/man CACHE PATH "Path for manual pages")
 
+add_definitions(-DPACKAGE="ettercap")
+add_definitions(-DLOCALEDIR="${INSTALL_PREFIX}/share/locale")
+
 set(CMAKE_C_FLAGS_DEBUG "-O0 -ggdb3 -DDEBUG -Wall -Wno-pointer-sign -pg" CACHE STRING "" FORCE)
 set(CMAKE_C_FLAGS_RELEASE "-O2 -w" CACHE STRING "" FORCE)
 
@@ -143,6 +147,10 @@ endif(HAVE_PLUGINS)
 add_subdirectory(utils)
 add_subdirectory(share)
 add_subdirectory(man)
+
+if(ENABLE_NLS)
+    set(WITH_NLS TRUE)
+endif(ENABLE_NLS)
 
 if(ENABLE_IPV6)
     set(WITH_IPV6 TRUE)
