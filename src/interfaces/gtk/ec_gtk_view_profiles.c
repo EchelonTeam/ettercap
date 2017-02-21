@@ -74,7 +74,7 @@ void gtkui_show_profiles(void)
       return;
    }
 
-   profiles_window = gtkui_page_new("Profiles", &gtkui_kill_profiles, &gtkui_profiles_detach);
+   profiles_window = gtkui_page_new(_("Profiles"), &gtkui_kill_profiles, &gtkui_profiles_detach);
 
    vbox = gtk_vbox_new(FALSE, 0);
    gtk_container_add(GTK_CONTAINER (profiles_window), vbox);
@@ -101,12 +101,12 @@ void gtkui_show_profiles(void)
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("IP Address", renderer, "text", 1, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("IP Address"), renderer, "text", 1, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 1);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Hostname", renderer, "text", 2, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Hostname"), renderer, "text", 2, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 2);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
@@ -116,11 +116,11 @@ void gtkui_show_profiles(void)
    hbox = gtk_hbox_new(TRUE, 5);
    gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
-   button = gtk_button_new_with_mnemonic("Purge _Local");
+   button = gtk_button_new_with_mnemonic(_("Purge _Local"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_profiles_local), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
 
-   button = gtk_button_new_with_mnemonic("Purge _Remote");
+   button = gtk_button_new_with_mnemonic(_("Purge _Remote"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_profiles_remote), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show_all(hbox);
@@ -144,7 +144,7 @@ void gtkui_show_profiles(void)
 static void gtkui_profiles_detach(GtkWidget *child)
 {
    profiles_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title(GTK_WINDOW (profiles_window), "Collected passive profiles");
+   gtk_window_set_title(GTK_WINDOW (profiles_window), _("Collected passive profiles"));
    gtk_window_set_default_size(GTK_WINDOW (profiles_window), 400, 300);
    g_signal_connect (G_OBJECT (profiles_window), "delete_event", G_CALLBACK (gtkui_kill_profiles), NULL);
 
@@ -252,11 +252,11 @@ static void gtkui_profile_detail(void)
 
    DEBUG_MSG("gtkui_profile_detail");
 
-   textbuf = gtkui_details_window("Profile Details");
+   textbuf = gtkui_details_window(_("Profile Details"));
 
    memset(os, 0, sizeof(os));
 
-   snprintf(line, 200, " IP Address: \t%s \n", ip_addr_ntoa(&h->L3_addr, tmp));
+   snprintf(line, 200, _(" IP Address: \t%s \n"), ip_addr_ntoa(&h->L3_addr, tmp));
    gtkui_details_print(textbuf, line);
 
    if (strcmp(h->hostname, ""))
@@ -345,7 +345,7 @@ static void gtkui_profiles_convert(void)
 {
    profile_convert_to_hostlist();
    gtkui_refresh_host_list();
-   gtkui_message("The hosts list was populated with local profiles");
+   gtkui_message(_("The hosts list was populated with local profiles"));
 }
 
 static void gtkui_profiles_dump(void *dummy)
@@ -356,7 +356,7 @@ static void gtkui_profiles_dump(void *dummy)
    SAFE_FREE(logfile);
    SAFE_CALLOC(logfile, 50, sizeof(char));
 
-   gtkui_input("Log File :", logfile, 50, dump_profiles);
+   gtkui_input(_("Log File :"), logfile, 50, dump_profiles);
 
 }
 
@@ -364,7 +364,7 @@ static void dump_profiles(void)
 {
    /* dump the profiles */
    if (profile_dump_to_file(logfile) == ESUCCESS)
-      gtkui_message("Profiles dumped to file");
+      gtkui_message(_("Profiles dumped to file"));
 }
 
 static struct host_profile *gtkui_profile_selected(void) {

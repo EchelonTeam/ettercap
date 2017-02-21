@@ -86,15 +86,15 @@ void text_profiles(void)
                break;
             case 'p':
                profile_purge_local();
-               USER_MSG("LOCAL hosts purged !\n");
+               USER_MSG(_("LOCAL hosts purged !\n"));
                break;
             case 'P':
                profile_purge_remote();
-               USER_MSG("REMOTE hosts purged !\n");
+               USER_MSG(_("REMOTE hosts purged !\n"));
                break;
             case 'Q':
             case 'q':
-               USER_MSG("Returning to main menu...\n");
+               USER_MSG(_("Returning to main menu...\n"));
                ui_msg_flush(1);
                return;
                break;

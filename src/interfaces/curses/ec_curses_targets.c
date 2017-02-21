@@ -114,7 +114,7 @@ static void set_protocol(void)
    if (strcasecmp(GBL_OPTIONS->proto, "all") &&
        strcasecmp(GBL_OPTIONS->proto, "tcp") &&
        strcasecmp(GBL_OPTIONS->proto, "udp")) {
-      ui_error("Invalid protocol");
+      ui_error(_("Invalid protocol"));
       SAFE_FREE(GBL_OPTIONS->proto);
    }
 }

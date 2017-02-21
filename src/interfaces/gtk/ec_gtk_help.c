@@ -65,7 +65,7 @@ void gtkui_help(void)
 
    DEBUG_MSG("gtkui_help");
 
-   dialog = gtk_dialog_new_with_buttons(EC_PROGRAM" Help", GTK_WINDOW (window),
+   dialog = gtk_dialog_new_with_buttons(_(" Help"), GTK_WINDOW (window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE, NULL);
    gtk_window_set_default_size(GTK_WINDOW (dialog), 780, 580);
    gtk_dialog_set_has_separator(GTK_DIALOG (dialog), TRUE);
@@ -90,7 +90,7 @@ void gtkui_help(void)
    g_signal_connect(selection, "changed", G_CALLBACK (gtkui_help_selected), liststore);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Contents", renderer, "text", 0, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Contents"), renderer, "text", 0, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 0);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 

@@ -76,7 +76,7 @@ void wipe_targets(void)
    gtkui_create_targets_array();
 
    /* display the message */
-   gtkui_message("TARGETS were reset to ANY/ANY/ANY");
+   gtkui_message(_("TARGETS were reset to ANY/ANY/ANY"));
 }
 
 /*
@@ -92,7 +92,7 @@ void gtkui_select_protocol(void)
       strncpy(GBL_OPTIONS->proto, "all", 3);
    }
 
-   gtkui_input("Protocol :", GBL_OPTIONS->proto, 3, set_protocol);
+   gtkui_input(_("Protocol :"), GBL_OPTIONS->proto, 3, set_protocol);
 }
 
 static void set_protocol(void)
@@ -100,7 +100,7 @@ static void set_protocol(void)
    if (strcasecmp(GBL_OPTIONS->proto, "all") &&
        strcasecmp(GBL_OPTIONS->proto, "tcp") &&
        strcasecmp(GBL_OPTIONS->proto, "udp")) {
-      ui_error("Invalid protocol");
+      ui_error(_("Invalid protocol"));
       SAFE_FREE(GBL_OPTIONS->proto);
    }
 }
@@ -116,13 +116,13 @@ void gtkui_select_targets(void)
 
    DEBUG_MSG("gtk_select_targets");
 
-   dialog = gtk_dialog_new_with_buttons("Enter Targets", GTK_WINDOW(window),
+   dialog = gtk_dialog_new_with_buttons(_("Enter Targets"), GTK_WINDOW(window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
    gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), 20);
 
    hbox = gtk_hbox_new(FALSE, 0);
-   label = gtk_label_new ("Target 1: ");
+   label = gtk_label_new (_("Target 1: "));
 
    gtk_box_pack_start(GTK_BOX (hbox), label, TRUE, TRUE, 0);
    gtk_widget_show(label);
@@ -139,7 +139,7 @@ void gtkui_select_targets(void)
    gtk_widget_show(hbox);
 
    hbox = gtk_hbox_new(FALSE, 0);
-   label = gtk_label_new ("Target 2: ");
+   label = gtk_label_new (_("Target 2: "));
    gtk_box_pack_start(GTK_BOX (hbox), label, TRUE, TRUE, 0);
    gtk_widget_show(label);
 
@@ -218,7 +218,7 @@ void gtkui_current_targets(void)
       return;
    }
 
-   targets_window = gtkui_page_new("Targets", &gtkui_targets_destroy, &gtkui_targets_detach);
+   targets_window = gtkui_page_new(_("Targets"), &gtkui_targets_destroy, &gtkui_targets_detach);
 
    vbox = gtk_vbox_new(FALSE, 0);
    gtk_container_add(GTK_CONTAINER (targets_window), vbox);
@@ -244,7 +244,7 @@ void gtkui_current_targets(void)
    gtk_tree_selection_set_mode (selection1, GTK_SELECTION_MULTIPLE);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Target 1", renderer, "text", 0, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Target 1"), renderer, "text", 0, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 0);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
@@ -264,7 +264,7 @@ void gtkui_current_targets(void)
    gtk_tree_selection_set_mode (selection2, GTK_SELECTION_MULTIPLE);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Target 2", renderer, "text", 0, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Target 2"), renderer, "text", 0, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 0);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
@@ -272,16 +272,16 @@ void gtkui_current_targets(void)
    hbox = gtk_hbox_new(TRUE, 5);
    gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
-   button = gtk_button_new_with_mnemonic("Delete");
+   button = gtk_button_new_with_mnemonic(_("Delete"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_delete_targets), (gpointer)1);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
-   button = gtk_button_new_with_mnemonic("Add");
+   button = gtk_button_new_with_mnemonic(_("Add"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_add_target1), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
-   button = gtk_button_new_with_mnemonic("Delete");
+   button = gtk_button_new_with_mnemonic(_("Delete"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_delete_targets), (gpointer)2);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
-   button = gtk_button_new_with_mnemonic("Add");
+   button = gtk_button_new_with_mnemonic(_("Add"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_add_target2), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
 
@@ -292,7 +292,7 @@ void gtkui_current_targets(void)
 static void gtkui_targets_detach(GtkWidget *child)
 {
    targets_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title(GTK_WINDOW (targets_window), "Current Targets");
+   gtk_window_set_title(GTK_WINDOW (targets_window), _("Current Targets"));
    gtk_window_set_default_size(GTK_WINDOW (targets_window), 400, 300);
    g_signal_connect (G_OBJECT (targets_window), "delete_event", G_CALLBACK (gtkui_targets_destroy), NULL);
 
@@ -362,14 +362,14 @@ static void gtkui_add_target1(void *entry)
 {
    DEBUG_MSG("gtk_add_target1");
 
-   gtkui_input("IP address :", thost, MAX_ASCII_ADDR_LEN, add_target1);
+   gtkui_input(_("IP address :"), thost, MAX_ASCII_ADDR_LEN, add_target1);
 }
 
 static void gtkui_add_target2(void *entry)
 {
    DEBUG_MSG("gtk_add_target2");
 
-   gtkui_input("IP address :", thost, MAX_ASCII_ADDR_LEN, add_target2);
+   gtkui_input(_("IP address :"), thost, MAX_ASCII_ADDR_LEN, add_target2);
 }
 
 static void add_target1(void)
@@ -378,7 +378,7 @@ static void add_target1(void)
    struct ip_addr host;
 
    if (inet_aton(thost, &ip) == 0) {
-      gtkui_message("Invalid ip address");
+      gtkui_message(_("Invalid ip address"));
       return;
    }
 
@@ -396,7 +396,7 @@ static void add_target2(void)
    struct ip_addr host;
 
    if (inet_aton(thost, &ip) == 0) {
-      gtkui_message("Invalid ip address");
+      gtkui_message(_("Invalid ip address"));
       return;
    }
 

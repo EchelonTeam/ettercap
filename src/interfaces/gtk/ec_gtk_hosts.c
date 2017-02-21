@@ -76,7 +76,7 @@ void gtkui_load_hosts(void)
 
    DEBUG_MSG("gtk_load_hosts");
 
-   dialog = gtk_file_selection_new ("Select a hosts file...");
+   dialog = gtk_file_selection_new (_("Select a hosts file..."));
 
    response = gtk_dialog_run (GTK_DIALOG (dialog));
 
@@ -137,7 +137,7 @@ void gtkui_save_hosts(void)
    SAFE_FREE(GBL_OPTIONS->hostsfile);
    SAFE_CALLOC(GBL_OPTIONS->hostsfile, FILE_LEN, sizeof(char));
 
-   gtkui_input("Output file :", GBL_OPTIONS->hostsfile, FILE_LEN, save_hosts);
+   gtkui_input(_("Output file :"), GBL_OPTIONS->hostsfile, FILE_LEN, save_hosts);
 }
 
 static void save_hosts(void)
@@ -147,7 +147,7 @@ static void save_hosts(void)
    /* check if the file is writeable */
    f = fopen(GBL_OPTIONS->hostsfile, "w");
    if (f == NULL) {
-      ui_error("Cannot write %s", GBL_OPTIONS->hostsfile);
+      ui_error(_("Cannot write %s"), GBL_OPTIONS->hostsfile);
       SAFE_FREE(GBL_OPTIONS->hostsfile);
       return;
    }
@@ -178,7 +178,7 @@ void gtkui_host_list(void)
       return;
    }
 
-   hosts_window = gtkui_page_new("Host List", &gtkui_hosts_destroy, &gtkui_hosts_detach);
+   hosts_window = gtkui_page_new(_("Host List"), &gtkui_hosts_destroy, &gtkui_hosts_detach);
 
    vbox = gtk_vbox_new(FALSE, 0);
    gtk_container_add(GTK_CONTAINER (hosts_window), vbox);
@@ -198,17 +198,17 @@ void gtkui_host_list(void)
    gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("IP Address", renderer, "text", 0, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("IP Address"), renderer, "text", 0, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 0);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("MAC Address", renderer, "text", 1, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("MAC Address"), renderer, "text", 1, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 1);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Description", renderer, "text", 2, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Description"), renderer, "text", 2, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 2);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
@@ -222,17 +222,17 @@ void gtkui_host_list(void)
    gtk_box_pack_start(GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
    gtk_widget_show(hbox);
 
-   button = gtk_button_new_with_mnemonic("_Delete Host");
+   button = gtk_button_new_with_mnemonic(_("_Delete Host"));
    gtk_box_pack_start(GTK_BOX (hbox), button, TRUE, TRUE, 0);
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_button_callback), (gpointer)HOST_DELETE);
    gtk_widget_show(button);
 
-   button = gtk_button_new_with_mnemonic("Add to Target _1");
+   button = gtk_button_new_with_mnemonic(_("Add to Target _1"));
    gtk_box_pack_start(GTK_BOX (hbox), button, TRUE, TRUE, 0);
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_button_callback), (gpointer)HOST_TARGET1);
    gtk_widget_show(button);
 
-   button = gtk_button_new_with_mnemonic("Add to Target _2");
+   button = gtk_button_new_with_mnemonic(_("Add to Target _2"));
    gtk_box_pack_start(GTK_BOX (hbox), button, TRUE, TRUE, 0);
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_button_callback), (gpointer)HOST_TARGET2);
    gtk_widget_show(button);
@@ -243,7 +243,7 @@ void gtkui_host_list(void)
 static void gtkui_hosts_detach(GtkWidget *child)
 {
    hosts_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title(GTK_WINDOW (hosts_window), "Hosts list");
+   gtk_window_set_title(GTK_WINDOW (hosts_window), _("Hosts list"));
    gtk_window_set_default_size(GTK_WINDOW (hosts_window), 400, 300);
    g_signal_connect (G_OBJECT (hosts_window), "delete_event", G_CALLBACK (gtkui_hosts_destroy), NULL);
 
@@ -343,7 +343,7 @@ void gtkui_button_callback(GtkWidget *widget, gpointer data)
                add_ip_list(&hl->ip, GBL_TARGET1);
                gtkui_create_targets_array();
 
-               USER_MSG("Host %s added to TARGET1\n", ip_addr_ntoa(&hl->ip, tmp));
+               USER_MSG(_("Host %s added to TARGET1\n"), ip_addr_ntoa(&hl->ip, tmp));
                break;
             case HOST_TARGET2:
                DEBUG_MSG("gtkui_button_callback: add target2");
@@ -351,7 +351,7 @@ void gtkui_button_callback(GtkWidget *widget, gpointer data)
                add_ip_list(&hl->ip, GBL_TARGET2);
                gtkui_create_targets_array();
 
-               USER_MSG("Host %s added to TARGET2\n", ip_addr_ntoa(&hl->ip, tmp));
+               USER_MSG(_("Host %s added to TARGET2\n"), ip_addr_ntoa(&hl->ip, tmp));
                break;
          }
       }

@@ -408,7 +408,7 @@ void gtkui_input(const char *title, char *input, size_t n, void (*callback)(void
 {
    GtkWidget *dialog, *entry, *label, *hbox, *image;
 
-   dialog = gtk_dialog_new_with_buttons(EC_PROGRAM" Input", GTK_WINDOW (window),
+   dialog = gtk_dialog_new_with_buttons(_(" Input"), GTK_WINDOW (window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_dialog_set_has_separator(GTK_DIALOG (dialog), FALSE);
@@ -595,23 +595,23 @@ static void gtkui_setup(void)
    char *path = NULL;
 
    GtkItemFactoryEntry file_menu[] = {
-      { "/_File",         "<shift>F",   NULL,             0, "<Branch>" },
-      { "/File/_Open",    "<control>O", gtkui_file_open,  0, "<StockItem>", GTK_STOCK_OPEN },
-      { "/File/_Save",    "<control>S", gtkui_file_write, 0, "<StockItem>", GTK_STOCK_SAVE },
+      { N_("/_File"),         "<shift>F",   NULL,             0, "<Branch>" },
+      { N_("/File/_Open"),    "<control>O", gtkui_file_open,  0, "<StockItem>", GTK_STOCK_OPEN },
+      { N_("/File/_Save"),    "<control>S", gtkui_file_write, 0, "<StockItem>", GTK_STOCK_SAVE },
       { "/File/sep1",     NULL,         NULL,             0, "<Separator>" },
-      { "/File/E_xit",    "<control>x", gtkui_exit,       0, "<StockItem>", GTK_STOCK_QUIT },
-      { "/_Sniff",        "<shift>S",   NULL,             0, "<Branch>" },
-      { "/Sniff/Unified sniffing...",  "<shift>U", gtkui_unified_sniff, 0, "<StockItem>", GTK_STOCK_DND },
-      { "/Sniff/Bridged sniffing...",  "<shift>B", gtkui_bridged_sniff, 0, "<StockItem>", GTK_STOCK_DND_MULTIPLE },
+      { N_("/File/E_xit"),    "<control>x", gtkui_exit,       0, "<StockItem>", GTK_STOCK_QUIT },
+      { N_("/_Sniff"),        "<shift>S",   NULL,             0, "<Branch>" },
+      { N_("/Sniff/Unified sniffing..."),  "<shift>U", gtkui_unified_sniff, 0, "<StockItem>", GTK_STOCK_DND },
+      { N_("/Sniff/Bridged sniffing..."),  "<shift>B", gtkui_bridged_sniff, 0, "<StockItem>", GTK_STOCK_DND_MULTIPLE },
       { "/Sniff/sep2",    NULL,         NULL,             0, "<Separator>" },
-      { "/Sniff/Set pcap filter...",    "p",       gtkui_pcap_filter,   0, "<StockItem>", GTK_STOCK_PREFERENCES },
-      { "/_Options",                    "<shift>O", NULL, 0, "<Branch>" },
-      { "/Options/Unoffensive", NULL, toggle_unoffensive, 0, "<ToggleItem>" },
-      { "/Options/Promisc mode", NULL, toggle_nopromisc,  0, "<ToggleItem>" },
-      { "/Options/Set netmask", "n", gtkui_set_netmask,   0, "<Item>"}
+      { N_("/Sniff/Set pcap filter..."),    "p",       gtkui_pcap_filter,   0, "<StockItem>", GTK_STOCK_PREFERENCES },
+      { N_("/_Options"),                    "<shift>O", NULL, 0, "<Branch>" },
+      { N_("/Options/Unoffensive"), NULL, toggle_unoffensive, 0, "<ToggleItem>" },
+      { N_("/Options/Promisc mode"), NULL, toggle_nopromisc,  0, "<ToggleItem>" },
+      { N_("/Options/Set netmask"), "n", gtkui_set_netmask,   0, "<Item>"}
 #ifndef OS_WINDOWS
-     ,{"/_?",          NULL,         NULL,             0, "<Branch>" },
-      {"/?/Contents", " ",           gtkui_help,       0, "<StockItem>", GTK_STOCK_HELP }
+     ,{N_("/_?"),          NULL,         NULL,             0, "<Branch>" },
+      {N_("/?/Contents"), " ",           gtkui_help,       0, "<StockItem>", GTK_STOCK_HELP }
 #endif
    };
    gint nmenu_items = sizeof (file_menu) / sizeof (file_menu[0]);
@@ -722,7 +722,7 @@ static void gtkui_file_open(void)
 
    DEBUG_MSG("gtk_file_open");
 
-   dialog = gtk_file_selection_new ("Select a pcap file...");
+   dialog = gtk_file_selection_new (_("Select a pcap file..."));
 
    response = gtk_dialog_run (GTK_DIALOG (dialog));
 
@@ -777,7 +777,7 @@ static void gtkui_file_write(void)
 
    SAFE_CALLOC(GBL_OPTIONS->pcapfile_out, FILE_LEN, sizeof(char));
 
-   gtkui_input("Output file :", GBL_OPTIONS->pcapfile_out, FILE_LEN, write_pcapfile);
+   gtkui_input(_("Output file :"), GBL_OPTIONS->pcapfile_out, FILE_LEN, write_pcapfile);
 }
 
 static void write_pcapfile(void)
@@ -789,7 +789,7 @@ static void write_pcapfile(void)
    /* check if the file is writeable */
    f = fopen(GBL_OPTIONS->pcapfile_out, "w");
    if (f == NULL) {
-      ui_error("Cannot write %s", GBL_OPTIONS->pcapfile_out);
+      ui_error(_("Cannot write %s"), GBL_OPTIONS->pcapfile_out);
       SAFE_FREE(GBL_OPTIONS->pcapfile_out);
       return;
    }
@@ -817,7 +817,7 @@ static void gtkui_unified_sniff(void)
 
    DEBUG_MSG("gtk_unified_sniff");
 
-   dialog = gtk_dialog_new_with_buttons(EC_PROGRAM" Input", GTK_WINDOW (window),
+   dialog = gtk_dialog_new_with_buttons(_(" Input"), GTK_WINDOW (window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_dialog_set_has_separator(GTK_DIALOG (dialog), FALSE);
@@ -830,7 +830,7 @@ static void gtkui_unified_sniff(void)
    gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
    gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
 
-   label = gtk_label_new ("Network interface : ");
+   label = gtk_label_new (_("Network interface : "));
    gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
    gtk_label_set_selectable (GTK_LABEL (label), TRUE);
    gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
@@ -924,7 +924,7 @@ static void gtkui_bridged_sniff(void)
 
    DEBUG_MSG("gtk_bridged_sniff");
 
-   dialog = gtk_dialog_new_with_buttons("Bridged Sniffing", GTK_WINDOW (window),
+   dialog = gtk_dialog_new_with_buttons(_("Bridged Sniffing"), GTK_WINDOW (window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_container_set_border_width(GTK_CONTAINER (dialog), 5);
@@ -948,7 +948,7 @@ static void gtkui_bridged_sniff(void)
    gtk_box_pack_start(GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
    gtk_widget_show(hbox);
 
-   label = gtk_label_new ("First network interface  : ");
+   label = gtk_label_new (_("First network interface  : "));
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_box_pack_start(GTK_BOX (hbox), label, TRUE, TRUE, 0);
    gtk_widget_show(label);
@@ -969,7 +969,7 @@ static void gtkui_bridged_sniff(void)
    gtk_box_pack_start(GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
    gtk_widget_show(hbox);
 
-   label = gtk_label_new ("Second network interface : ");
+   label = gtk_label_new (_("Second network interface : "));
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_box_pack_start(GTK_BOX (hbox), label, TRUE, TRUE, 0);
    gtk_widget_show(label);
@@ -1059,7 +1059,7 @@ static void gtkui_pcap_filter(void)
     * no callback, the filter is set but we have to return to
     * the interface for other user input
     */
-   gtkui_input("Pcap filter :", GBL_PCAP->filter, PCAP_FILTER_LEN, NULL);
+   gtkui_input(_("Pcap filter :"), GBL_PCAP->filter, PCAP_FILTER_LEN, NULL);
 }
 
 /*
@@ -1078,11 +1078,11 @@ static void gtkui_set_netmask(void)
     * no callback, the filter is set but we have to return to
     * the interface for other user input
     */
-   gtkui_input("Netmask :", GBL_OPTIONS->netmask, IP_ASCII_ADDR_LEN, NULL);
+   gtkui_input(_("Netmask :"), GBL_OPTIONS->netmask, IP_ASCII_ADDR_LEN, NULL);
 
    /* sanity check */
    if (strcmp(GBL_OPTIONS->netmask, "") && inet_aton(GBL_OPTIONS->netmask, &net) == 0)
-      ui_error("Invalid netmask %s", GBL_OPTIONS->netmask);
+      ui_error(_("Invalid netmask %s"), GBL_OPTIONS->netmask);
 
    /* if no netmask was specified, free it */
    if (!strcmp(GBL_OPTIONS->netmask, ""))
@@ -1348,7 +1348,7 @@ void gtkui_filename_browse(GtkWidget *widget, gpointer data)
    gint response = 0;
    const char *filename = NULL;
 
-   dialog = gtk_file_selection_new ("Select a file...");
+   dialog = gtk_file_selection_new (_("Select a file..."));
 
    response = gtk_dialog_run (GTK_DIALOG (dialog));
 

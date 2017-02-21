@@ -64,14 +64,14 @@ void gtkui_log_all(void)
    SAFE_FREE(logfile);
    SAFE_CALLOC(logfile, FILE_LEN, sizeof(char));
 
-   gtkui_input("Log File :", logfile, FILE_LEN, log_all);
+   gtkui_input(_("Log File :"), logfile, FILE_LEN, log_all);
 }
 
 static void log_all(void)
 {
    /* a check on the input */
    if (strlen(logfile) == 0) {
-      ui_error("Please specify a filename");
+      ui_error(_("Please specify a filename"));
       return;
    }
 
@@ -90,14 +90,14 @@ void gtkui_log_info(void)
    SAFE_FREE(logfile);
    SAFE_CALLOC(logfile, FILE_LEN, sizeof(char));
 
-   gtkui_input("Log File :", logfile, FILE_LEN, log_info);
+   gtkui_input(_("Log File :"), logfile, FILE_LEN, log_info);
 }
 
 static void log_info(void)
 {
    /* a check on the input */
    if (strlen(logfile) == 0) {
-      ui_error("Please specify a filename");
+      ui_error(_("Please specify a filename"));
       return;
    }
 
@@ -108,7 +108,7 @@ static void log_info(void)
 void gtkui_stop_log(void)
 {
    set_loglevel(LOG_STOP, "");
-   gtkui_message("Logging was stopped.");
+   gtkui_message(_("Logging was stopped."));
 }
 
 /*
@@ -122,14 +122,14 @@ void gtkui_log_msg(void)
    SAFE_FREE(logfile);
    SAFE_CALLOC(logfile, FILE_LEN, sizeof(char));
 
-   gtkui_input("Log File :", logfile, FILE_LEN, log_msg);
+   gtkui_input(_("Log File :"), logfile, FILE_LEN, log_msg);
 }
 
 static void log_msg(void)
 {
    /* a check on the input */
    if (strlen(logfile) == 0) {
-      ui_error("Please specify a filename");
+      ui_error(_("Please specify a filename"));
       return;
    }
 
@@ -140,7 +140,7 @@ static void log_msg(void)
 void gtkui_stop_msg(void)
 {
    set_msg_loglevel(LOG_FALSE, NULL);
-   gtkui_message("Message logging was stopped.");
+   gtkui_message(_("Message logging was stopped."));
 }
 
 /* EOF */

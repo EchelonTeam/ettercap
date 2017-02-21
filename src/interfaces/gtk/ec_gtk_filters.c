@@ -47,7 +47,7 @@ void gtkui_load_filter(void)
 
    DEBUG_MSG("gtk_load_filter");
 
-   dialog = gtk_file_selection_new ("Select a precompiled filter file...");
+   dialog = gtk_file_selection_new (_("Select a precompiled filter file..."));
    gtk_file_selection_set_filename(GTK_FILE_SELECTION(dialog), path);
 
    SAFE_FREE(path);
@@ -76,7 +76,7 @@ void gtkui_stop_filter(void)
 
    filter_unload(GBL_FILTERS);
 
-   gtkui_message("Filters were unloaded");
+   gtkui_message(_("Filters were unloaded"));
 }
 
 /* EOF */

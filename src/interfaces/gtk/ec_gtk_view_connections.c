@@ -123,7 +123,7 @@ void gtkui_show_connections(void)
       return;
    }
 
-   conns_window = gtkui_page_new("Connections", &gtkui_kill_connections, &gtkui_connections_detach);
+   conns_window = gtkui_page_new(_("Connections"), &gtkui_kill_connections, &gtkui_connections_detach);
 
    vbox = gtk_vbox_new(FALSE, 0);
    gtk_container_add(GTK_CONTAINER (conns_window), vbox);
@@ -150,12 +150,12 @@ void gtkui_show_connections(void)
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Host       ", renderer, "text", 1, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Host       "), renderer, "text", 1, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 1);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Port", renderer, "text", 2, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Port"), renderer, "text", 2, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 2);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
@@ -164,27 +164,27 @@ void gtkui_show_connections(void)
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Host       ", renderer, "text", 4, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Host       "), renderer, "text", 4, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 4);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Port", renderer, "text", 5, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Port"), renderer, "text", 5, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 5);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Proto", renderer, "text", 6, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Proto"), renderer, "text", 6, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 6);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("State", renderer, "text", 7, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("State"), renderer, "text", 7, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 7);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Bytes", renderer, "text", 8, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Bytes"), renderer, "text", 8, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 8);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
@@ -192,17 +192,17 @@ void gtkui_show_connections(void)
    gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
    gtk_widget_show(hbox);
 
-   button = gtk_button_new_with_mnemonic("View _Details");
+   button = gtk_button_new_with_mnemonic(_("View _Details"));
    g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_detail), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
 
-   button = gtk_button_new_with_mnemonic("_Kill Connection");
+   button = gtk_button_new_with_mnemonic(_("_Kill Connection"));
    g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_kill), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
 
-   button = gtk_button_new_with_mnemonic("E_xpunge Connections");
+   button = gtk_button_new_with_mnemonic(_("E_xpunge Connections"));
    g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_purge), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
@@ -210,12 +210,12 @@ void gtkui_show_connections(void)
    /* context menu */
    context_menu = gtk_menu_new();
 
-   items = gtk_menu_item_new_with_label("View Details");
+   items = gtk_menu_item_new_with_label(_("View Details"));
    gtk_menu_shell_append (GTK_MENU_SHELL (context_menu), items);
    g_signal_connect (G_OBJECT (items), "activate", G_CALLBACK (gtkui_connection_detail), NULL);
    gtk_widget_show (items);
 
-   items = gtk_menu_item_new_with_label("Kill Connection");
+   items = gtk_menu_item_new_with_label(_("Kill Connection"));
    gtk_menu_shell_append (GTK_MENU_SHELL (context_menu), items);
    g_signal_connect (G_OBJECT (items), "activate", G_CALLBACK (gtkui_connection_kill), NULL);
    gtk_widget_show (items);
@@ -238,7 +238,7 @@ void gtkui_show_connections(void)
 void gtkui_connections_detach(GtkWidget *child)
 {
    conns_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title(GTK_WINDOW (conns_window), "Live connections");
+   gtk_window_set_title(GTK_WINDOW (conns_window), _("Live connections"));
    gtk_window_set_default_size(GTK_WINDOW (conns_window), 500, 250);
    g_signal_connect(G_OBJECT(conns_window), "delete_event", G_CALLBACK(gtkui_kill_connections), NULL);
 
@@ -507,9 +507,9 @@ static void gtkui_connection_detail(void)
    if(!c || !c->co)
       return;
 
-   textbuf = gtkui_details_window("Connection Details");
+   textbuf = gtkui_details_window(_("Connection Details"));
 
-   snprintf(line, 200, "Source MAC address      :  %s\n", mac_addr_ntoa(c->co->L2_addr1, tmp));
+   snprintf(line, 200, _("Source MAC address      :  %s\n"), mac_addr_ntoa(c->co->L2_addr1, tmp));
    gtkui_details_print(textbuf, line);
 
    snprintf(line, 200, "Destination MAC address :  %s\n\n", mac_addr_ntoa(c->co->L2_addr2, tmp));
@@ -544,10 +544,10 @@ static void gtkui_connection_detail(void)
          break;
    }
 
-   snprintf(line, 200, "Protocol: \t\t\t%s\n", proto);
+   snprintf(line, 200, _("Protocol: \t\t\t%s\n"), proto);
    gtkui_details_print(textbuf, line);
 
-   snprintf(line, 200, "Source port: \t\t%-5d  %s\n", ntohs(c->co->L4_addr1), service_search(c->co->L4_addr1, c->co->L4_proto));
+   snprintf(line, 200, _("Source port: \t\t%-5d  %s\n"), ntohs(c->co->L4_addr1), service_search(c->co->L4_addr1, c->co->L4_proto));
    gtkui_details_print(textbuf, line);
 
    snprintf(line, 200, "Destination port: \t%-5d  %s\n\n", ntohs(c->co->L4_addr2), service_search(c->co->L4_addr2, c->co->L4_proto));
@@ -628,7 +628,7 @@ static void gtkui_connection_data_split(void)
       joinedbuf = NULL;
       endmark3 = NULL;
    } else {
-      data_window = gtkui_page_new("Connection data", &gtkui_destroy_conndata, &gtkui_connection_data_detach);
+      data_window = gtkui_page_new(_("Connection data"), &gtkui_destroy_conndata, &gtkui_connection_data_detach);
    }
 
    /* don't timeout this connection */
@@ -679,12 +679,12 @@ static void gtkui_connection_data_split(void)
    gtk_box_pack_start(GTK_BOX(vbox), hbox_small, FALSE, FALSE, 0);
    gtk_widget_show(hbox_small);
 
-   button = gtk_button_new_with_mnemonic("_Join Views");
+   button = gtk_button_new_with_mnemonic(_("_Join Views"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_data_join), NULL);
    gtk_box_pack_start(GTK_BOX(hbox_small), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
 
-   button = gtk_button_new_with_mnemonic("_Inject Data");
+   button = gtk_button_new_with_mnemonic(_("_Inject Data"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_inject), NULL);
    gtk_box_pack_start(GTK_BOX(hbox_small), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
@@ -730,12 +730,12 @@ static void gtkui_connection_data_split(void)
    gtk_box_pack_start(GTK_BOX(vbox), hbox_small, FALSE, FALSE, 0);
    gtk_widget_show(hbox_small);
 
-   button = gtk_button_new_with_mnemonic("Inject _File");
+   button = gtk_button_new_with_mnemonic(_("Inject _File"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_inject_file), NULL);
    gtk_box_pack_start(GTK_BOX(hbox_small), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
 
-   button = gtk_button_new_with_mnemonic("_Kill Connection");
+   button = gtk_button_new_with_mnemonic(_("_Kill Connection"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_kill_curr_conn), NULL);
    gtk_box_pack_start(GTK_BOX(hbox_small), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
@@ -761,7 +761,7 @@ static void gtkui_connection_data_split(void)
 static void gtkui_connection_data_detach(GtkWidget *child)
 {
    data_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title(GTK_WINDOW (data_window), "Connection data");
+   gtk_window_set_title(GTK_WINDOW (data_window), _("Connection data"));
    gtk_window_set_default_size(GTK_WINDOW (data_window), 600, 400);
    gtk_container_set_border_width(GTK_CONTAINER (data_window), 5);
    g_signal_connect(G_OBJECT(data_window), "delete_event", G_CALLBACK(gtkui_destroy_conndata), NULL);
@@ -938,7 +938,7 @@ static void gtkui_connection_data_join(void)
       endmark1 = NULL;
       endmark2 = NULL;
    } else {
-      data_window = gtkui_page_new("Connection data", &gtkui_destroy_conndata, &gtkui_connection_data_detach);
+      data_window = gtkui_page_new(_("Connection data"), &gtkui_destroy_conndata, &gtkui_connection_data_detach);
    }
 
    /* don't timeout this connection */
@@ -984,12 +984,12 @@ static void gtkui_connection_data_join(void)
    gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
    gtk_widget_show(hbox);
 
-   button = gtk_button_new_with_mnemonic("_Split View");
+   button = gtk_button_new_with_mnemonic(_("_Split View"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_data_split), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
 
-   button = gtk_button_new_with_mnemonic("_Kill Connection");
+   button = gtk_button_new_with_mnemonic(_("_Kill Connection"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_kill_curr_conn), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
@@ -1121,10 +1121,10 @@ static void gtkui_connection_kill(void *conn)
       case ESUCCESS:
          /* set the status */
          c->co->status = CONN_KILLED;
-         gtkui_message("The connection was killed !!");
+         gtkui_message(_("The connection was killed !!"));
          break;
       case -EFATAL:
-         gtkui_message("Cannot kill UDP connections !!");
+         gtkui_message(_("Cannot kill UDP connections !!"));
          break;
    }
 }
@@ -1142,10 +1142,10 @@ static void gtkui_connection_kill_curr_conn(void)
       case ESUCCESS:
          /* set the status */
          curr_conn->status = CONN_KILLED;
-         gtkui_message("The connection was killed !!");
+         gtkui_message(_("The connection was killed !!"));
          break;
       case -EFATAL:
-         gtkui_message("Cannot kill UDP connections !!");
+         gtkui_message(_("Cannot kill UDP connections !!"));
          break;
    }
 }
@@ -1167,7 +1167,7 @@ static void gtkui_connection_inject(void)
    if(curr_conn == NULL)
       return;
 
-   dialog = gtk_dialog_new_with_buttons("Character Injection", GTK_WINDOW (window),
+   dialog = gtk_dialog_new_with_buttons(_("Character Injection"), GTK_WINDOW (window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_window_set_default_size(GTK_WINDOW (dialog), 400, 200);
@@ -1175,7 +1175,7 @@ static void gtkui_connection_inject(void)
    gtk_container_set_border_width(GTK_CONTAINER (dialog), 5);
    vbox = GTK_DIALOG (dialog)->vbox;
 
-   label = gtk_label_new ("Packet destination:");
+   label = gtk_label_new (_("Packet destination:"));
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
    gtk_widget_show(label);
@@ -1193,7 +1193,7 @@ static void gtkui_connection_inject(void)
    gtk_box_pack_start(GTK_BOX(hbox), button2, FALSE, FALSE, 0);
    gtk_widget_show(button2);
 
-   label = gtk_label_new ("Characters to be injected:");
+   label = gtk_label_new (_("Characters to be injected:"));
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
    gtk_widget_show(label);
@@ -1264,7 +1264,7 @@ static void gtkui_connection_inject_file(void)
    if(curr_conn == NULL)
       return;
 
-   dialog = gtk_dialog_new_with_buttons("Character Injection", GTK_WINDOW (window),
+   dialog = gtk_dialog_new_with_buttons(_("Character Injection"), GTK_WINDOW (window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_window_set_default_size(GTK_WINDOW (dialog), 400, 150);
@@ -1272,7 +1272,7 @@ static void gtkui_connection_inject_file(void)
    gtk_container_set_border_width(GTK_CONTAINER (dialog), 5);
    vbox = GTK_DIALOG (dialog)->vbox;
 
-   label = gtk_label_new ("Packet destination:");
+   label = gtk_label_new (_("Packet destination:"));
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
    gtk_widget_show(label);
@@ -1290,7 +1290,7 @@ static void gtkui_connection_inject_file(void)
    gtk_box_pack_start(GTK_BOX(hbox), button2, FALSE, FALSE, 0);
    gtk_widget_show(button2);
 
-   label = gtk_label_new ("File to inject:");
+   label = gtk_label_new (_("File to inject:"));
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
    gtk_widget_show(label);
@@ -1335,7 +1335,7 @@ static void gtkui_inject_file(char *filename, int side)
 
    /* open the file */
    if ((fd = open(filename, O_RDONLY | O_BINARY)) == -1) {
-      ui_error("Can't load the file");
+      ui_error(_("Can't load the file"));
       return;
    }
 
@@ -1353,7 +1353,7 @@ static void gtkui_inject_file(char *filename, int side)
    close(fd);
 
    if (ret != size) {
-      ui_error("Cannot read the file into memory");
+      ui_error(_("Cannot read the file into memory"));
       return;
    }
 

@@ -48,10 +48,10 @@ int text_plugin(char *plugin)
       /* delete any previous message */
       ui_msg_purge_all();
 
-      INSTANT_USER_MSG("\nAvailable plugins :\n\n");
+      INSTANT_USER_MSG(_("\nAvailable plugins :\n\n"));
       type = plugin_list_walk(PLP_MIN, PLP_MAX, &text_plugin_list);
       if (type == -ENOTFOUND)
-         FATAL_MSG("No plugin found !\n");
+         FATAL_MSG(_("No plugin found !\n"));
 
       INSTANT_USER_MSG("\n\n");
       /*
@@ -68,9 +68,9 @@ int text_plugin(char *plugin)
 
 
    if (plugin_is_activated(plugin) == 0)
-      INSTANT_USER_MSG("Activating %s plugin...\n\n", plugin);
+      INSTANT_USER_MSG(_("Activating %s plugin...\n\n"), plugin);
    else
-      INSTANT_USER_MSG("Deactivating %s plugin...\n\n", plugin);
+      INSTANT_USER_MSG(_("Deactivating %s plugin...\n\n"), plugin);
 
    /*
     * pay attention on this !

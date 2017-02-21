@@ -63,7 +63,7 @@ void gtkui_plugin_load(void)
 
    DEBUG_MSG("gtk_plugin_load");
 
-   dialog = gtk_file_selection_new ("Select a plugin...");
+   dialog = gtk_file_selection_new (_("Select a plugin..."));
    gtk_file_selection_set_filename(GTK_FILE_SELECTION(dialog), path);
 
 #ifdef OS_WINDOWS
@@ -109,17 +109,17 @@ static void gtkui_load_plugin(char *full)
    /* check the return code */
    switch (ret) {
       case ESUCCESS:
-         gtkui_message("Plugin loaded successfully");
+         gtkui_message(_("Plugin loaded successfully"));
          break;
       case -EDUPLICATE:
-         ui_error("plugin %s already loaded...", file);
+         ui_error(_("plugin %s already loaded..."), file);
          break;
       case -EVERSION:
-         ui_error("plugin %s was compiled for a different ettercap version...", file);
+         ui_error(_("plugin %s was compiled for a different ettercap version..."), file);
          break;
       case -EINVALID:
       default:
-         ui_error("Cannot load the plugin...\nthe file may be an invalid plugin\nor you don't have the permission to open it");
+         ui_error(_("Cannot load the plugin...\nthe file may be an invalid plugin\nor you don't have the permission to open it"));
          break;
    }
 }
@@ -144,7 +144,7 @@ void gtkui_plugin_mgmt(void)
       return;
    }
 
-   plugins_window = gtkui_page_new("Plugins", &gtkui_plug_destroy, &gtkui_plugins_detach);
+   plugins_window = gtkui_page_new(_("Plugins"), &gtkui_plug_destroy, &gtkui_plugins_detach);
 
    vbox = gtk_vbox_new(FALSE, 0);
    gtk_container_add(GTK_CONTAINER (plugins_window), vbox);
@@ -171,17 +171,17 @@ void gtkui_plugin_mgmt(void)
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Name", renderer, "text", 1, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Name"), renderer, "text", 1, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 1);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Version", renderer, "text", 2, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Version"), renderer, "text", 2, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 2);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
    renderer = gtk_cell_renderer_text_new ();
-   column = gtk_tree_view_column_new_with_attributes ("Info", renderer, "text", 3, NULL);
+   column = gtk_tree_view_column_new_with_attributes (_("Info"), renderer, "text", 3, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 3);
    gtk_tree_view_append_column (GTK_TREE_VIEW(treeview), column);
 
@@ -196,7 +196,7 @@ void gtkui_plugin_mgmt(void)
 static void gtkui_plugins_detach(GtkWidget *child)
 {
    plugins_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title(GTK_WINDOW (plugins_window), "Select a plugin...");
+   gtk_window_set_title(GTK_WINDOW (plugins_window), _("Select a plugin..."));
    gtk_window_set_default_size(GTK_WINDOW (plugins_window), 400, 300);
    g_signal_connect (G_OBJECT (plugins_window), "delete_event", G_CALLBACK (gtkui_plug_destroy), NULL);
 
@@ -243,7 +243,7 @@ static void gtkui_create_plug_array(void)
    if (res == -ENOTFOUND) {
       blocked = g_signal_handlers_block_by_func (G_OBJECT (treeview), G_CALLBACK (gtkui_select_plugin), NULL);
       gtk_list_store_append (ls_plugins, &iter);
-      gtk_list_store_set (ls_plugins, &iter, 0, " ", 1, "No Plugins Loaded", -1);
+      gtk_list_store_set (ls_plugins, &iter, 0, " ", 1, _("No Plugins Loaded"), -1);
    } else if(blocked > 0) {
       g_signal_handlers_unblock_by_func (G_OBJECT (treeview), G_CALLBACK (gtkui_select_plugin), NULL);
       blocked = 0;
@@ -290,9 +290,9 @@ static void gtkui_select_plugin(void)
 
    /* print the message */
    if (plugin_is_activated(plugin) == 0)
-      INSTANT_USER_MSG("Activating %s plugin...\n", plugin);
+      INSTANT_USER_MSG(_("Activating %s plugin...\n"), plugin);
    else
-      INSTANT_USER_MSG("Deactivating %s plugin...\n", plugin);
+      INSTANT_USER_MSG(_("Deactivating %s plugin...\n"), plugin);
 
    /*
     * pay attention on this !

@@ -88,17 +88,17 @@ static void curses_load_plugin(char *path, char *file)
    /* check the return code */
    switch (ret) {
       case ESUCCESS:
-         curses_message("Plugin loaded successfully");
+         curses_message(_("Plugin loaded successfully"));
          break;
       case -EDUPLICATE:
-         ui_error("plugin %s already loaded...", file);
+         ui_error(_("plugin %s already loaded..."), file);
          break;
       case -EVERSION:
-         ui_error("plugin %s was compiled for a different ettercap version...", file);
+         ui_error(_("plugin %s was compiled for a different ettercap version..."), file);
          break;
       case -EINVALID:
       default:
-         ui_error("Cannot load the plugin...\nthe file may be an invalid plugin\nor you don't have the permission to open it");
+         ui_error(_("Cannot load the plugin...\nthe file may be an invalid plugin\nor you don't have the permission to open it"));
          break;
    }
 }
@@ -229,9 +229,9 @@ static void curses_select_plugin(void *plugin)
 
    /* print the message */
    if (plugin_is_activated(plugin) == 0)
-      INSTANT_USER_MSG("Activating %s plugin...\n", plugin);
+      INSTANT_USER_MSG(_("Activating %s plugin...\n"), plugin);
    else
-      INSTANT_USER_MSG("Deactivating %s plugin...\n", plugin);
+      INSTANT_USER_MSG(_("Deactivating %s plugin...\n"), plugin);
 
    /*
     * pay attention on this !

@@ -636,7 +636,7 @@ static void inject_file(char *path, char *file)
 
    /* open the file */
    if ((fd = open(filename, O_RDONLY | O_BINARY)) == -1) {
-      ui_error("Can't load the file");
+      ui_error(_("Can't load the file"));
       return;
    }
 
@@ -656,7 +656,7 @@ static void inject_file(char *path, char *file)
    close(fd);
 
    if (ret != size) {
-      ui_error("Cannot read the file into memory");
+      ui_error(_("Cannot read the file into memory"));
       return;
    }
 

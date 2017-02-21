@@ -538,7 +538,7 @@ static void write_pcapfile(void)
    /* check if the file is writeable */
    f = fopen(GBL_OPTIONS->pcapfile_out, "w");
    if (f == NULL) {
-      ui_error("Cannot write %s", GBL_OPTIONS->pcapfile_out);
+      ui_error(_("Cannot write %s"), GBL_OPTIONS->pcapfile_out);
       SAFE_FREE(GBL_OPTIONS->pcapfile_out);
       return;
    }
@@ -662,7 +662,7 @@ static void curses_set_netmask(void)
 
    /* sanity check */
    if (strcmp(GBL_OPTIONS->netmask, "") && inet_aton(GBL_OPTIONS->netmask, &net) == 0)
-      ui_error("Invalid netmask %s", GBL_OPTIONS->netmask);
+      ui_error(_("Invalid netmask %s"), GBL_OPTIONS->netmask);
 
    /* if no netmask was specified, free it */
    if (!strcmp(GBL_OPTIONS->netmask, ""))

@@ -156,7 +156,7 @@ static void save_hosts(void)
    /* check if the file is writeable */
    f = fopen(GBL_OPTIONS->hostsfile, "w");
    if (f == NULL) {
-      ui_error("Cannot write %s", GBL_OPTIONS->hostsfile);
+      ui_error(_("Cannot write %s"), GBL_OPTIONS->hostsfile);
       SAFE_FREE(GBL_OPTIONS->hostsfile);
       return;
    }
@@ -325,7 +325,7 @@ static void curses_host_target1(void *host)
    /* add the ip to the target */
    add_ip_list(&hl->ip, GBL_TARGET1);
 
-   USER_MSG("Host %s added to TARGET1\n", ip_addr_ntoa(&hl->ip, tmp));
+   USER_MSG(_("Host %s added to TARGET1\n"), ip_addr_ntoa(&hl->ip, tmp));
 }
 
 /*
@@ -344,7 +344,7 @@ static void curses_host_target2(void *host)
    /* add the ip to the target */
    add_ip_list(&hl->ip, GBL_TARGET2);
 
-   USER_MSG("Host %s added to TARGET2\n", ip_addr_ntoa(&hl->ip, tmp));
+   USER_MSG(_("Host %s added to TARGET2\n"), ip_addr_ntoa(&hl->ip, tmp));
 }
 
 /* EOF */

@@ -88,7 +88,7 @@ void gtkui_show_stats(void)
       return;
    }
 
-   stats_window = gtkui_page_new("Statistics", &gtkui_stop_stats, &gtkui_stats_detach);
+   stats_window = gtkui_page_new(_("Statistics"), &gtkui_stop_stats, &gtkui_stats_detach);
 
    /* alright, this is a lot of code but it'll keep everything lined up nicely */
    /* if you need to add a row, don't forget to increase the number in gtk_table_new */
@@ -100,7 +100,7 @@ void gtkui_show_stats(void)
    gtk_label_set_selectable(GTK_LABEL (packets_recv), TRUE);
    gtk_misc_set_alignment(GTK_MISC (packets_recv), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), packets_recv, 1, 2, 0, 1);
-   label        = gtk_label_new( "Received packets:");
+   label        = gtk_label_new(_("Received packets:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 0, 1);
@@ -109,7 +109,7 @@ void gtkui_show_stats(void)
    gtk_label_set_selectable(GTK_LABEL (packets_drop), TRUE);
    gtk_misc_set_alignment(GTK_MISC (packets_drop), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), packets_drop, 1, 2, 1, 2);
-   label        = gtk_label_new("Dropped packets:");
+   label        = gtk_label_new(_("Dropped packets:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 1, 2);
@@ -118,7 +118,7 @@ void gtkui_show_stats(void)
    gtk_label_set_selectable(GTK_LABEL (packets_forw), TRUE);
    gtk_misc_set_alignment(GTK_MISC (packets_forw), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), packets_forw, 1, 2, 2, 3);
-   label        = gtk_label_new("Forwarded packets:");
+   label        = gtk_label_new(_("Forwarded packets:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 2, 3);
@@ -127,7 +127,7 @@ void gtkui_show_stats(void)
    gtk_label_set_selectable(GTK_LABEL (queue_len), TRUE);
    gtk_misc_set_alignment(GTK_MISC (queue_len), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), queue_len, 1, 2, 3, 4);
-   label        = gtk_label_new("Current queue length:");
+   label        = gtk_label_new(_("Current queue length:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 3, 4);
@@ -136,7 +136,7 @@ void gtkui_show_stats(void)
    gtk_label_set_selectable(GTK_LABEL (sample_rate), TRUE);
    gtk_misc_set_alignment(GTK_MISC (sample_rate), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), sample_rate, 1, 2, 4, 5);
-   label        = gtk_label_new("Sampling rate:");
+   label        = gtk_label_new(_("Sampling rate:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 4, 5);
@@ -145,7 +145,7 @@ void gtkui_show_stats(void)
    gtk_label_set_selectable(GTK_LABEL (recv_bottom), TRUE);
    gtk_misc_set_alignment(GTK_MISC (recv_bottom), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), recv_bottom, 1, 2, 5, 6);
-   label        = gtk_label_new("Bottom Half received packet:");
+   label        = gtk_label_new(_("Bottom Half received packet:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 5, 6);
@@ -154,7 +154,7 @@ void gtkui_show_stats(void)
    gtk_label_set_selectable(GTK_LABEL (recv_top), TRUE);
    gtk_misc_set_alignment(GTK_MISC (recv_top), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), recv_top, 1, 2, 6, 7);
-   label        = gtk_label_new("Top Half received packet:");
+   label        = gtk_label_new(_("Top Half received packet:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 6, 7);
@@ -163,43 +163,43 @@ void gtkui_show_stats(void)
    gtk_label_set_selectable(GTK_LABEL (interesting), TRUE);
    gtk_misc_set_alignment(GTK_MISC (interesting), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), interesting, 1, 2, 7, 8);
-   label        = gtk_label_new("Interesting packets:");
+   label        = gtk_label_new(_("Interesting packets:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 7, 8);
 
-   rate_bottom  = gtk_label_new("worst:        0  adv:        0 b/s");
+   rate_bottom  = gtk_label_new(_("worst:        0  adv:        0 b/s"));
    gtk_label_set_selectable(GTK_LABEL (rate_bottom), TRUE);
    gtk_misc_set_alignment(GTK_MISC (rate_bottom), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), rate_bottom, 1, 2, 8, 9);
-   label        = gtk_label_new("Bottom Half packet rate:");
+   label        = gtk_label_new(_("Bottom Half packet rate:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 8, 9);
 
-   rate_top     = gtk_label_new("worst:        0  adv:        0 b/s");
+   rate_top     = gtk_label_new(_("worst:        0  adv:        0 b/s"));
    gtk_label_set_selectable(GTK_LABEL (rate_top), TRUE);
    gtk_misc_set_alignment(GTK_MISC (rate_top), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), rate_top, 1, 2, 9, 10);
-   label        = gtk_label_new("Top Half packet rate:");
+   label        = gtk_label_new(_("Top Half packet rate:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 9, 10);
 
-   through_bottom = gtk_label_new("worst:        0  adv:        0 b/s");
+   through_bottom = gtk_label_new(_("worst:        0  adv:        0 b/s"));
    gtk_label_set_selectable(GTK_LABEL (through_bottom), TRUE);
    gtk_misc_set_alignment(GTK_MISC (through_bottom), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), through_bottom, 1, 2, 10, 11);
-   label        = gtk_label_new("Bottom Half throughput:");
+   label        = gtk_label_new(_("Bottom Half throughput:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 10, 11);
 
-   through_top  = gtk_label_new("worst:        0  adv:        0 b/s");
+   through_top  = gtk_label_new(_("worst:        0  adv:        0 b/s"));
    gtk_label_set_selectable(GTK_LABEL (through_top), TRUE);
    gtk_misc_set_alignment(GTK_MISC (through_top), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), through_top, 1, 2, 11, 12);
-   label        = gtk_label_new("Top Half throughput:");
+   label        = gtk_label_new(_("Top Half throughput:"));
    gtk_label_set_selectable(GTK_LABEL (label), TRUE);
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 11, 12);
@@ -218,7 +218,7 @@ void gtkui_show_stats(void)
 static void gtkui_stats_detach(GtkWidget *child)
 {
    stats_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title(GTK_WINDOW (stats_window), "Statistics");
+   gtk_window_set_title(GTK_WINDOW (stats_window), _("Statistics"));
    gtk_container_set_border_width(GTK_CONTAINER (stats_window), 10);
    g_signal_connect (G_OBJECT (stats_window), "delete_event", G_CALLBACK (gtkui_stop_stats), NULL);
 
@@ -260,7 +260,7 @@ static gboolean refresh_stats(gpointer data)
    snprintf(line, 50, "%8lld  %.2f %%", GBL_STATS->ps_drop,
          (GBL_STATS->ps_recv) ? (float)GBL_STATS->ps_drop * 100 / GBL_STATS->ps_recv : 0 );
    gtk_label_set_text(GTK_LABEL (packets_drop), line);
-   snprintf(line, 50, "%8lld  bytes: %8lld ", GBL_STATS->ps_sent, GBL_STATS->bs_sent);
+   snprintf(line, 50, _("%8lld  bytes: %8lld "), GBL_STATS->ps_sent, GBL_STATS->bs_sent);
    gtk_label_set_text(GTK_LABEL (packets_forw), line);
    snprintf(line, 50, "%d/%d ", GBL_STATS->queue_curr, GBL_STATS->queue_max);
    gtk_label_set_text(GTK_LABEL (queue_len), line);
@@ -307,7 +307,7 @@ void gtkui_vis_method(void)
 
    DEBUG_MSG("gtk_vis_method");
 
-   dialog = gtk_dialog_new_with_buttons("Visualization method...", GTK_WINDOW (window),
+   dialog = gtk_dialog_new_with_buttons(_("Visualization method..."), GTK_WINDOW (window),
                GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                GTK_STOCK_OK, GTK_RESPONSE_OK,
                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
@@ -316,35 +316,35 @@ void gtkui_vis_method(void)
    vbox = GTK_DIALOG (dialog)->vbox;
 
    button = gtk_radio_button_new_with_label(NULL,
-               "hex     Print the packets in hex format.");
+               _("hex     Print the packets in hex format."));
    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), button, FALSE, FALSE, 0);
    if(strcmp(vmethod, "hex") == 0)
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (button), TRUE);
    prev = button;
 
    button = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON (prev),
-               "ascii   Print only \"printable\" characters, the others are displayed as dots '.'");
+               _("ascii   Print only \"printable\" characters, the others are displayed as dots '.'"));
    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), button, FALSE, FALSE, 0);
    if(strcmp(vmethod, "ascii") == 0)
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (button), TRUE);
    prev = button;
 
    button = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON (prev),
-               "text    Print only the \"printable\" characters and skip the others.");
+               _("text    Print only the \"printable\" characters and skip the others."));
    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), button, FALSE, FALSE, 0);
    if(strcmp(vmethod, "text") == 0)
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (button), TRUE);
    prev = button;
 
    button = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON (prev),
-               "ebcdic  Convert an EBCDIC text to ASCII.");
+               _("ebcdic  Convert an EBCDIC text to ASCII."));
    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), button, FALSE, FALSE, 0);
    if(strcmp(vmethod, "ebcdic") == 0)
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (button), TRUE);
    prev = button;
 
    button = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON (prev),
-               "html    Strip all the html tags from the text. A tag is every string between < and >.");
+               _("html    Strip all the html tags from the text. A tag is every string between < and >."));
    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), button, FALSE, FALSE, 0);
    if(strcmp(vmethod, "html") == 0)
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (button), TRUE);
@@ -352,7 +352,7 @@ void gtkui_vis_method(void)
 
 /* start UTF8 */
    button = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON (prev),
-               "utf8    Convert the data from the encoding specified below to UTF8 before displaying it.");
+               _("utf8    Convert the data from the encoding specified below to UTF8 before displaying it."));
    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), button, FALSE, FALSE, 0);
    if(strcmp(vmethod, "utf8") == 0)
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (button), TRUE);
@@ -361,7 +361,7 @@ void gtkui_vis_method(void)
    hbox = gtk_hbox_new (FALSE, 6);
    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
 
-   label = gtk_label_new ("Character encoding : ");
+   label = gtk_label_new (_("Character encoding : "));
    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
    /* get the system's default encoding, and if it's not UTF8, add it to the list */
@@ -373,7 +373,7 @@ void gtkui_vis_method(void)
    /* some other common encodings */
    lang_list = g_list_append(lang_list, "UTF-8");
    lang_list = g_list_append(lang_list, "EBCDIC-US (IBM)");
-   lang_list = g_list_append(lang_list, "ISO-8859-15 (Western Europe)");
+   lang_list = g_list_append(lang_list, _("ISO-8859-15 (Western Europe)"));
    lang_list = g_list_append(lang_list, "ISO-8859-2 (Central Europe)");
    lang_list = g_list_append(lang_list, "ISO-8859-7 (Greek)");
    lang_list = g_list_append(lang_list, "ISO-8859-8 (Hebrew)");
@@ -442,7 +442,7 @@ void gtkui_vis_regex(void)
 {
    DEBUG_MSG("gtk_vis_regex");
 
-   gtkui_input("Visualization regex :", vregex, RLEN, gtkui_set_regex);
+   gtkui_input(_("Visualization regex :"), vregex, RLEN, gtkui_set_regex);
 }
 
 static void gtkui_set_regex(void)
@@ -457,7 +457,7 @@ void gtkui_wifi_key(void)
 {
    DEBUG_MSG("gtk_wifi_key");
 
-   gtkui_input("WiFi key :", wkey, WLEN, gtkui_set_wifikey);
+   gtkui_input(_("WiFi key :"), wkey, WLEN, gtkui_set_wifikey);
 }
 
 static void gtkui_set_wifikey(void)

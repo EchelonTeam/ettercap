@@ -86,7 +86,7 @@ static void log_all(void)
 {
    /* a check on the input */
    if (strlen(logfile) == 0) {
-      ui_error("Please specify a filename");
+      ui_error(_("Please specify a filename"));
       return;
    }
 
@@ -112,7 +112,7 @@ static void log_info(void)
 {
    /* a check on the input */
    if (strlen(logfile) == 0) {
-      ui_error("Please specify a filename");
+      ui_error(_("Please specify a filename"));
       return;
    }
 
@@ -123,7 +123,7 @@ static void log_info(void)
 static void curses_stop_log(void)
 {
    set_loglevel(LOG_STOP, "");
-   curses_message("Logging was stopped.");
+   curses_message(_("Logging was stopped."));
 }
 
 /*
@@ -144,7 +144,7 @@ static void log_msg(void)
 {
    /* a check on the input */
    if (strlen(logfile) == 0) {
-      ui_error("Please specify a filename");
+      ui_error(_("Please specify a filename"));
       return;
    }
 
@@ -155,7 +155,7 @@ static void log_msg(void)
 static void curses_stop_msg(void)
 {
    set_msg_loglevel(LOG_FALSE, NULL);
-   curses_message("Message logging was stopped.");
+   curses_message(_("Message logging was stopped."));
 }
 
 /* EOF */

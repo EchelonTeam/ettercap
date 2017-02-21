@@ -286,8 +286,8 @@ void text_interface(void)
 
    /* it is difficult to be interactive while reading from file... */
    if (!GBL_OPTIONS->read) {
-      USER_MSG("\nText only Interface activated...\n");
-      USER_MSG("Hit 'h' for inline help\n\n");
+      USER_MSG(_("\nText only Interface activated...\n"));
+      USER_MSG(_("Hit 'h' for inline help\n\n"));
    }
 
    /* flush all the messages */
@@ -359,7 +359,7 @@ void text_interface(void)
                break;
             case 'Q':
             case 'q':
-               USER_MSG("Closing text interface...\n\n");
+               USER_MSG(_("Closing text interface...\n\n"));
                return;
                break;
          }
