@@ -20,6 +20,7 @@
 */
 
 #include <ec.h>
+#include <ec_i18n.h>
 #include <ec_decode.h>
 #include <ec_dispatcher.h>
 #include <ec_threads.h>

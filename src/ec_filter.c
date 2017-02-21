@@ -20,6 +20,7 @@
 */
 
 #include <ec.h>
+#include <ec_i18n.h>
 #include <ec_filter.h>
 #include <ec_version.h>
 #include <ec_threads.h>

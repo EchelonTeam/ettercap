@@ -1,4 +1,5 @@
 #include <ec.h>
+#include <ec_i18n.h>
 #include <ec_capture.h>
 #include <ec_decode.h>
 #include <ec_queue.h>

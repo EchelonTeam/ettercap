@@ -20,6 +20,7 @@
 */
 
 #include <ec.h>
+#include <ec_i18n.h>
 
 #if defined(OS_DARWIN) || defined(OS_BSD)
    #include <net/bpf.h>

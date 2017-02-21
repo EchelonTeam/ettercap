@@ -20,6 +20,7 @@
 */
 
 #include <ec.h>
+#include <ec_i18n.h>
 #include <ec_encryption.h>
 #include <ec_checksum.h>
 #include <ec_threads.h>

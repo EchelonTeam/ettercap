@@ -53,6 +53,7 @@
  */
 
 #include <ec.h>
+#include <ec_i18n.h>
 #include <ec_file.h>
 #include <ec_hash.h>
 

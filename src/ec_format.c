@@ -21,6 +21,7 @@
 */
 
 #include <ec.h>
+#include <ec_i18n.h>
 #include <ec_format.h>
 #include <ec_ui.h>
 

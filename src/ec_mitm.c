@@ -20,6 +20,7 @@
 */
 
 #include <ec.h>
+#include <ec_i18n.h>
 #include <ec_mitm.h>
 #include <ec_poll.h>
 #include <ec_scan.h>
