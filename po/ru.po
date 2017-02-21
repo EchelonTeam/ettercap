@@ -1,0 +1,961 @@
+# Russian translations for PACKAGE package
+# Английские переводы для пакета PACKAGE.
+# Copyright (C) 2017 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#  <v.laur@npo-echelon.ru>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-21 20:15+0300\n"
+"PO-Revision-Date: 2017-02-21 20:18+0300\n"
+"Last-Translator: v.laur@npo-echelon.ru\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.8.11\n"
+
+#: ../src/interfaces/text/ec_text_plugin.c:51
+msgid ""
+"\n"
+"Available plugins :\n"
+"\n"
+msgstr ""
+"\n"
+"Доступные плагины :\n"
+"\n"
+
+#: ../src/interfaces/text/ec_text_plugin.c:54
+msgid "No plugin found !\n"
+msgstr "Плагины не найдены! \n"
+
+#: ../src/interfaces/text/ec_text_plugin.c:71
+#, c-format
+msgid ""
+"Activating %s plugin...\n"
+"\n"
+msgstr ""
+"Активирую плагин %s...\n"
+"\n"
+
+#: ../src/interfaces/text/ec_text_plugin.c:73
+#, c-format
+msgid ""
+"Deactivating %s plugin...\n"
+"\n"
+msgstr ""
+"Деактивирую плагин %s...\n"
+"\n"
+
+#: ../src/interfaces/text/ec_text.c:289
+msgid ""
+"\n"
+"Text only Interface activated...\n"
+msgstr ""
+
+#: ../src/interfaces/text/ec_text.c:290
+msgid ""
+"Hit 'h' for inline help\n"
+"\n"
+msgstr ""
+"Hit 'h' for inline help\n"
+"\n"
+
+#: ../src/interfaces/text/ec_text.c:362
+msgid ""
+"Closing text interface...\n"
+"\n"
+msgstr "Закрытие текстового интерфейса...\n"
+
+#: ../src/interfaces/text/ec_text_profile.c:89
+msgid "LOCAL hosts purged !\n"
+msgstr "Локальные хосты очищены!\n"
+
+#: ../src/interfaces/text/ec_text_profile.c:93
+msgid "REMOTE hosts purged !\n"
+msgstr "Удалённые хосты очищены!\n"
+
+#: ../src/interfaces/text/ec_text_profile.c:97
+msgid "Returning to main menu...\n"
+msgstr "Возврат в главное меню...\n"
+
+#: ../src/interfaces/curses/ec_curses_targets.c:117
+#: ../src/interfaces/gtk/ec_gtk_targets.c:103
+msgid "Invalid protocol"
+msgstr "Неверный протокол"
+
+#: ../src/interfaces/curses/ec_curses_logging.c:89
+#: ../src/interfaces/curses/ec_curses_logging.c:115
+#: ../src/interfaces/curses/ec_curses_logging.c:147
+#: ../src/interfaces/gtk/ec_gtk_logging.c:74
+#: ../src/interfaces/gtk/ec_gtk_logging.c:100
+#: ../src/interfaces/gtk/ec_gtk_logging.c:132
+msgid "Please specify a filename"
+msgstr "Пожалуйста, укажите имя для файла"
+
+#: ../src/interfaces/curses/ec_curses_logging.c:126
+#: ../src/interfaces/gtk/ec_gtk_logging.c:111
+msgid "Logging was stopped."
+msgstr "Логирование было остановлено."
+
+#: ../src/interfaces/curses/ec_curses_logging.c:158
+#: ../src/interfaces/gtk/ec_gtk_logging.c:143
+msgid "Message logging was stopped."
+msgstr "Логирование сообщений было отключено."
+
+#: ../src/interfaces/curses/ec_curses_view_connections.c:639
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1338
+msgid "Can't load the file"
+msgstr "Не могу загрузить файл"
+
+#: ../src/interfaces/curses/ec_curses_view_connections.c:659
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1356
+msgid "Cannot read the file into memory"
+msgstr "Не могу прочитать файл в память"
+
+#: ../src/interfaces/curses/ec_curses_plugins.c:91
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:112
+msgid "Plugin loaded successfully"
+msgstr "Плагин успешно загружен"
+
+#: ../src/interfaces/curses/ec_curses_plugins.c:94
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:115
+#, c-format
+msgid "plugin %s already loaded..."
+msgstr "плагин %s уже загружен..."
+
+#: ../src/interfaces/curses/ec_curses_plugins.c:97
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:118
+#, c-format
+msgid "plugin %s was compiled for a different ettercap version..."
+msgstr "плагин %s был скомпилирован для другой версии сетевого анализатора..."
+
+#: ../src/interfaces/curses/ec_curses_plugins.c:101
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:122
+msgid ""
+"Cannot load the plugin...\n"
+"the file may be an invalid plugin\n"
+"or you don't have the permission to open it"
+msgstr ""
+"Не удалось загрузить плагин...\n"
+"возможно файл не является плагином\n"
+"или недостаточно прав для его открытия"
+
+#: ../src/interfaces/curses/ec_curses_plugins.c:232
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:293
+#, c-format
+msgid "Activating %s plugin...\n"
+msgstr "Активирую плагин %s...\n"
+
+#: ../src/interfaces/curses/ec_curses_plugins.c:234
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:295
+#, c-format
+msgid "Deactivating %s plugin...\n"
+msgstr "Выключаю плагин %s...\n"
+
+#: ../src/interfaces/curses/ec_curses_hosts.c:159
+#: ../src/interfaces/curses/ec_curses.c:541 ../src/interfaces/gtk/ec_gtk.c:792
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:150
+#, c-format
+msgid "Cannot write %s"
+msgstr "Не могу записать %s"
+
+#: ../src/interfaces/curses/ec_curses_hosts.c:328
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:346
+#, c-format
+msgid "Host %s added to TARGET1\n"
+msgstr "Хост %s добавлен к цели 1\n"
+
+#: ../src/interfaces/curses/ec_curses_hosts.c:347
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:354
+#, c-format
+msgid "Host %s added to TARGET2\n"
+msgstr "Хост %s добавлен к цели 2\n"
+
+#: ../src/interfaces/curses/ec_curses.c:665 ../src/interfaces/gtk/ec_gtk.c:1085
+#, c-format
+msgid "Invalid netmask %s"
+msgstr "Неверная маска подсети: %s"
+
+#: ../src/interfaces/gtk/ec_gtk_filters.c:50
+msgid "Select a precompiled filter file..."
+msgstr "Выберите файл фильтра..."
+
+#: ../src/interfaces/gtk/ec_gtk_filters.c:79
+msgid "Filters were unloaded"
+msgstr "Фильтры были выгружены"
+
+#: ../src/interfaces/gtk/ec_gtk_logging.c:67
+#: ../src/interfaces/gtk/ec_gtk_logging.c:93
+#: ../src/interfaces/gtk/ec_gtk_logging.c:125
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:359
+msgid "Log File :"
+msgstr "Файл журнала:"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:79
+msgid "TARGETS were reset to ANY/ANY/ANY"
+msgstr "ЦЕЛИ были сброшены до ANY/ANY/ANY"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:95
+msgid "Protocol :"
+msgstr "Протокол:"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:119
+msgid "Enter Targets"
+msgstr "Введите цели"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:125
+msgid "Target 1: "
+msgstr "Цель 1:"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:142
+msgid "Target 2: "
+msgstr "Цель 2:"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:221
+msgid "Targets"
+msgstr "Цели"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:247
+msgid "Target 1"
+msgstr "Цель 1"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:267
+msgid "Target 2"
+msgstr "Цель 2"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:275
+#: ../src/interfaces/gtk/ec_gtk_targets.c:281
+msgid "Delete"
+msgstr "Удалить"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:278
+#: ../src/interfaces/gtk/ec_gtk_targets.c:284
+msgid "Add"
+msgstr "Добавить"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:295
+msgid "Current Targets"
+msgstr "Текущие цели"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:365
+#: ../src/interfaces/gtk/ec_gtk_targets.c:372
+msgid "IP address :"
+msgstr "IP адрес:"
+
+#: ../src/interfaces/gtk/ec_gtk_targets.c:381
+#: ../src/interfaces/gtk/ec_gtk_targets.c:399
+msgid "Invalid ip address"
+msgstr "Неверный IP-адрес"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:28
+msgid "/_Start"
+msgstr "/_Начало"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:29
+msgid "/Start/Start sniffing"
+msgstr "/Начало/Начать мониторинг"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:30
+msgid "/Start/Stop sniffing"
+msgstr "/Начало/Остановить мониторинг"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:32
+msgid "/Start/E_xit"
+msgstr "/Начало/В_ыход"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:36
+msgid "/_Targets"
+msgstr "/_Цели"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:37
+msgid "/Targets/Current _Targets"
+msgstr "/Цели/Текущие цели"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:38
+msgid "/Targets/Select TARGET(s)"
+msgstr "/Цели/Выбор целей"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:40
+msgid "/Targets/_Protocol..."
+msgstr "/Цели/_Протокол..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:41
+msgid "/Targets/Reverse matching"
+msgstr "/Цели/Обратное согласование"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:43
+msgid "/Targets/_Wipe targets"
+msgstr "/Цели/_Очистить список целей"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:47
+msgid "/_Hosts"
+msgstr "/_Хосты"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:48
+msgid "/Hosts/_Hosts list"
+msgstr "/Хосты/Список хостов"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:50
+msgid "/Hosts/_Scan for hosts"
+msgstr "/Хосты/Сканирование хостов"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:51
+msgid "/Hosts/Load from file..."
+msgstr "/Хосты/Загрузить из файла..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:52
+msgid "/Hosts/Save to file..."
+msgstr "/Хосты/Сохранить в файл..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:56
+msgid "/_View"
+msgstr "/_Вид"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:57
+msgid "/View/_Connections"
+msgstr "/Вид/_Соединения"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:58
+msgid "/View/Pr_ofiles"
+msgstr "/Вид/Пр_офили"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:59
+msgid "/View/_Statistics"
+msgstr "/Вид/Статистика"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:61
+msgid "/View/Resolve IP addresses"
+msgstr "/Вид/Разрешение IP-адресов"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:62
+msgid "/View/_Visualization method..."
+msgstr "/Вид/Способ визуализации..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:63
+msgid "/View/Visualization _regex..."
+msgstr "/Вид/_Регулярное выражение визуализации:"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:65
+msgid "/View/Set the _WiFi key..."
+msgstr "/Вид/Установить ключ _WEP..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:69
+msgid "/_Mitm"
+msgstr "/MITM"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:70
+msgid "/Mitm/Arp poisoning..."
+msgstr "/MITM/Атака \"ARP poisoning\"..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:71
+msgid "/Mitm/Icmp redirect..."
+msgstr "/MITM/Атака \"ICMP redirect\"..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:72
+msgid "/Mitm/Port stealing..."
+msgstr "/MITM/Атака \"port stealing\"..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:73
+msgid "/Mitm/Dhcp spoofing..."
+msgstr "/MITM/Атака \"DHCP spoofing\"..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:75
+msgid "/Mitm/Stop mitm attack(s)"
+msgstr "/MITM/Остановить MITM атаку..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:79
+msgid "/_Filters"
+msgstr "/_Фильтры"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:80
+msgid "/Filters/Load a filter..."
+msgstr "/Фильтры/Загрузить фильтр..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:81
+msgid "/Filters/Stop _filtering"
+msgstr "/Фильтры/Остановить фильтрацию"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:85
+msgid "/_Logging"
+msgstr "/_Журналирование"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:86
+msgid "/Logging/Log all packets and infos..."
+msgstr "/Журналирование/Запись всех пакетов и иноформации..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:87
+msgid "/Logging/Log only infos..."
+msgstr "/Журналирование/Запись только информации..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:88
+msgid "/Logging/Stop logging infos"
+msgstr "/Журналирование/Остановить запись информации"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:90
+msgid "/Logging/Log user messages..."
+msgstr "/Журналирование/Запись сообщений пользователя..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:91
+msgid "/Logging/Stop logging messages"
+msgstr "/Журналирование/Остановить запись сообщений"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:93
+msgid "/Logging/Compressed file"
+msgstr "/Журналирование/Сжатый файл"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:97
+msgid "/_Plugins"
+msgstr "/_Плагины"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:98
+msgid "/Plugins/Manage the plugins"
+msgstr "/Плагины/Менеджер плагинов"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:99
+msgid "/Plugins/Load a plugin..."
+msgstr "/Плагины/Загрузить плагин..."
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:104 ../src/interfaces/gtk/ec_gtk.c:613
+msgid "/_?"
+msgstr ""
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:105 ../src/interfaces/gtk/ec_gtk.c:614
+msgid "/?/Contents"
+msgstr "/?/Содержание"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:110
+msgid "/Detach page"
+msgstr "/"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:111
+msgid "/Close page"
+msgstr "/Закрыть страницу"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:113
+msgid "/Next page"
+msgstr "/Следующая страница"
+
+#: ../src/interfaces/gtk/ec_gtk_menus.c:114
+msgid "/Previous page"
+msgstr "/Предыдущая страница"
+
+#: ../src/interfaces/gtk/ec_gtk.c:411 ../src/interfaces/gtk/ec_gtk.c:820
+msgid " Input"
+msgstr "Ввод"
+
+#: ../src/interfaces/gtk/ec_gtk.c:598
+msgid "/_File"
+msgstr "/_Файл"
+
+#: ../src/interfaces/gtk/ec_gtk.c:599
+msgid "/File/_Open"
+msgstr "/Файл/_Открыть"
+
+#: ../src/interfaces/gtk/ec_gtk.c:600
+msgid "/File/_Save"
+msgstr "/Файл/_Сохранить"
+
+#: ../src/interfaces/gtk/ec_gtk.c:602
+msgid "/File/E_xit"
+msgstr "/Файл/В_ыход"
+
+#: ../src/interfaces/gtk/ec_gtk.c:603
+msgid "/_Sniff"
+msgstr "/_Мониторинг"
+
+#: ../src/interfaces/gtk/ec_gtk.c:604
+msgid "/Sniff/Unified sniffing..."
+msgstr "/Мониторинг/Обычная сеть..."
+
+#: ../src/interfaces/gtk/ec_gtk.c:605
+msgid "/Sniff/Bridged sniffing..."
+msgstr "/Мониторинг/Коммутируемая сеть..."
+
+#: ../src/interfaces/gtk/ec_gtk.c:607
+msgid "/Sniff/Set pcap filter..."
+msgstr "/Мониторинг/Задать фильтр pcap..."
+
+#: ../src/interfaces/gtk/ec_gtk.c:608
+msgid "/_Options"
+msgstr "/_Настройки"
+
+#: ../src/interfaces/gtk/ec_gtk.c:609
+msgid "/Options/Unoffensive"
+msgstr "/Настройки/Пассивный режим"
+
+#: ../src/interfaces/gtk/ec_gtk.c:610
+msgid "/Options/Promisc mode"
+msgstr "/Настройки/Захват всех пакетов"
+
+#: ../src/interfaces/gtk/ec_gtk.c:611
+msgid "/Options/Set netmask"
+msgstr "/Настройки/Маска подсети"
+
+#: ../src/interfaces/gtk/ec_gtk.c:725
+msgid "Select a pcap file..."
+msgstr "Выберите файл pcap..."
+
+#: ../src/interfaces/gtk/ec_gtk.c:780 ../src/interfaces/gtk/ec_gtk_hosts.c:140
+msgid "Output file :"
+msgstr "Выходной файл:"
+
+#: ../src/interfaces/gtk/ec_gtk.c:833
+msgid "Network interface : "
+msgstr "Сетевой интерфейс:"
+
+#: ../src/interfaces/gtk/ec_gtk.c:927
+msgid "Bridged Sniffing"
+msgstr "Коммутируемая сеть..."
+
+#: ../src/interfaces/gtk/ec_gtk.c:951
+msgid "First network interface  : "
+msgstr "Первый сетевой интерфейс:"
+
+#: ../src/interfaces/gtk/ec_gtk.c:972
+msgid "Second network interface : "
+msgstr "Второй сетевой интерфейс:"
+
+#: ../src/interfaces/gtk/ec_gtk.c:1062
+msgid "Pcap filter :"
+msgstr "Фильтр pcap:"
+
+#: ../src/interfaces/gtk/ec_gtk.c:1081
+msgid "Netmask :"
+msgstr "Маска подсети:"
+
+#: ../src/interfaces/gtk/ec_gtk.c:1351
+msgid "Select a file..."
+msgstr "Выберите файл..."
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:79
+msgid "Select a hosts file..."
+msgstr "Выберите файл hosts..."
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:181
+msgid "Host List"
+msgstr "Список хостов"
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:201
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:165
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:104
+msgid "IP Address"
+msgstr "IP адрес"
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:206
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:155
+msgid "MAC Address"
+msgstr "MAC адрес"
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:211
+msgid "Description"
+msgstr "Описание"
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:225
+msgid "_Delete Host"
+msgstr "Удалить хост"
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:230
+msgid "Add to Target _1"
+msgstr "Добавить к Цель 1"
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:235
+msgid "Add to Target _2"
+msgstr "Добавить к Цель 2"
+
+#: ../src/interfaces/gtk/ec_gtk_hosts.c:246
+msgid "Hosts list"
+msgstr "Список хостов"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:126
+msgid "Connections"
+msgstr "Соединения"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:153
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:167
+msgid "Host       "
+msgstr "Хост       "
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:158
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:172
+msgid "Port"
+msgstr "Порт"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:177
+msgid "Proto"
+msgstr "Протокол"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:182
+msgid "State"
+msgstr "Состояние"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:187
+msgid "Bytes"
+msgstr "Байты"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:195
+msgid "View _Details"
+msgstr "Показать подробности"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:200
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:738
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:992
+msgid "_Kill Connection"
+msgstr "Разорвать соединение"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:205
+msgid "E_xpunge Connections"
+msgstr "Вычеркнуть соединения"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:213
+msgid "View Details"
+msgstr "Показать подробности"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:218
+msgid "Kill Connection"
+msgstr "Разорвать соединение"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:241
+msgid "Live connections"
+msgstr "Активные соединения"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:510
+msgid "Connection Details"
+msgstr "Подробности соединения"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:512
+#, c-format
+msgid "Source MAC address      :  %s\n"
+msgstr "MAC адрес источника      :  %s\n"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:547
+#, c-format
+msgid "Protocol: \t\t\t%s\n"
+msgstr "Протокол: \t\t\t%s\n"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:550
+#, c-format
+msgid "Source port: \t\t%-5d  %s\n"
+msgstr "Порт источника: \t\t%-5d  %s\n"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:631
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:764
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:941
+msgid "Connection data"
+msgstr "Данные о соединении"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:682
+msgid "_Join Views"
+msgstr ""
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:687
+msgid "_Inject Data"
+msgstr ""
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:733
+msgid "Inject _File"
+msgstr ""
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:987
+msgid "_Split View"
+msgstr ""
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1124
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1145
+msgid "The connection was killed !!"
+msgstr "Соединение было разорвано!"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1127
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1148
+msgid "Cannot kill UDP connections !!"
+msgstr "Нельзя разрывать UDP соединения!"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1170
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1267
+msgid "Character Injection"
+msgstr ""
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1178
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1275
+msgid "Packet destination:"
+msgstr "Назначение пакета:"
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1196
+msgid "Characters to be injected:"
+msgstr ""
+
+#: ../src/interfaces/gtk/ec_gtk_view_connections.c:1293
+msgid "File to inject:"
+msgstr "Файл для инъекции:"
+
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:66
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:199
+msgid "Select a plugin..."
+msgstr "Выберите плагин"
+
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:147
+msgid "Plugins"
+msgstr "Плагины"
+
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:174
+msgid "Name"
+msgstr "Имя"
+
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:179
+msgid "Version"
+msgstr "Версия"
+
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:184
+msgid "Info"
+msgstr "Информация"
+
+#: ../src/interfaces/gtk/ec_gtk_plugins.c:246
+msgid "No Plugins Loaded"
+msgstr "Нет загруженных плагинов"
+
+#: ../src/interfaces/gtk/ec_gtk_help.c:68
+msgid " Help"
+msgstr "Справка"
+
+#: ../src/interfaces/gtk/ec_gtk_help.c:93
+msgid "Contents"
+msgstr "Содержание"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:55
+msgid "MITM Attack: ARP Poisoning"
+msgstr "MITM атака: ARP Poisoning"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:70
+msgid "Optional parameters"
+msgstr "Дополнительные параметры"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:80
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:227
+msgid "Sniff remote connections."
+msgstr "Мониториyu удалённых соединений."
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:84
+msgid "Only poison one-way."
+msgstr "Выполнять \"Poisoning\" только в одном направлении."
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:107
+msgid "You must select at least one ARP mode"
+msgstr "Необходимо выбрать хотя бы один режим ARP"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:128
+msgid "MITM Attack: ICMP Redirect"
+msgstr "MITM атака: перенаправление ICMP"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:143
+msgid "Gateway Information"
+msgstr "Информация о шлюзе"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:202
+msgid "MITM Attack: Port Stealing"
+msgstr "MITM атака: Port Stealing"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:231
+msgid "Propagate to other switches."
+msgstr "Распространить на другие коммутаторы."
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:270
+msgid "MITM Attack: DHCP Spoofing"
+msgstr "MITM атака: DHCP Spoofing"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:285
+msgid "Server Information"
+msgstr "Информация о сервере"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:297
+msgid "IP Pool (optional)"
+msgstr "Пул IP-адресов (необязательно)"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:306
+msgid "Netmask"
+msgstr "Маска подсети"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:316
+msgid "DNS Server IP"
+msgstr "IP-адрес DNS-сервера"
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:369
+msgid "Stopping the mitm attack..."
+msgstr "Останов MITM атаки..."
+
+#: ../src/interfaces/gtk/ec_gtk_mitm.c:384
+msgid "MITM attack(s) stopped"
+msgstr "MITM атака остановлена"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:91
+#: ../src/interfaces/gtk/ec_gtk_view.c:221
+msgid "Statistics"
+msgstr "Статистика"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:103
+msgid "Received packets:"
+msgstr "Полученные пакеты:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:112
+msgid "Dropped packets:"
+msgstr "Отброшенные пакеты:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:121
+msgid "Forwarded packets:"
+msgstr "Переданные пакеты:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:130
+msgid "Current queue length:"
+msgstr "Текущая длина очереди:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:139
+msgid "Sampling rate:"
+msgstr "Частота замеров:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:148
+msgid "Bottom Half received packet:"
+msgstr "Получено пакетов в нижней половине:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:157
+msgid "Top Half received packet:"
+msgstr "Получено пакетов в верхней половине:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:166
+msgid "Interesting packets:"
+msgstr "Интересные пакеты:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:171
+#: ../src/interfaces/gtk/ec_gtk_view.c:180
+#: ../src/interfaces/gtk/ec_gtk_view.c:189
+#: ../src/interfaces/gtk/ec_gtk_view.c:198
+msgid "worst:        0  adv:        0 b/s"
+msgstr "худший:        0  рек:        0 b/s"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:175
+msgid "Bottom Half packet rate:"
+msgstr "Пакетов в секунду в нижней половине:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:184
+msgid "Top Half packet rate:"
+msgstr "Пакетов в секунду в верхней половине:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:193
+msgid "Bottom Half throughput:"
+msgstr "Пропускная способность в нижней половине:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:202
+msgid "Top Half throughput:"
+msgstr "Пропускная способность в верхней половине:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:263
+#, c-format
+msgid "%8lld  bytes: %8lld "
+msgstr "%8lld  байт: %8lld "
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:310
+msgid "Visualization method..."
+msgstr "Способ визуализации"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:319
+msgid "hex     Print the packets in hex format."
+msgstr "hex     Выводить пакеты в шестнадцатеричном формате."
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:326
+msgid ""
+"ascii   Print only \"printable\" characters, the others are displayed as "
+"dots '.'"
+msgstr ""
+"ascii   Выводить только печататаемые символы, остальные будут отображаться "
+"точкой '.'"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:333
+msgid "text    Print only the \"printable\" characters and skip the others."
+msgstr "text    Выводить только печатаемые символы, остальные пропускать."
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:340
+msgid "ebcdic  Convert an EBCDIC text to ASCII."
+msgstr "ebcdic  Переводить из EBCDIC в ASCII."
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:347
+msgid ""
+"html    Strip all the html tags from the text. A tag is every string between "
+"< and >."
+msgstr ""
+"html    Убирать из текста все тэги. Тэгом считается любая последовательность "
+"между < и >."
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:355
+msgid ""
+"utf8    Convert the data from the encoding specified below to UTF8 before "
+"displaying it."
+msgstr ""
+"utf8    Преобразовывать текст перед выводом из выбранной ниже кодировки в "
+"UTF-8."
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:364
+msgid "Character encoding : "
+msgstr "Кодировка: "
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:376
+msgid "ISO-8859-15 (Western Europe)"
+msgstr "ISO-8859-15 (Западная Европа)"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:445
+msgid "Visualization regex :"
+msgstr "Регулярное выражение визуализации:"
+
+#: ../src/interfaces/gtk/ec_gtk_view.c:460
+msgid "WiFi key :"
+msgstr "Ключ WEP:"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:77
+msgid "Profiles"
+msgstr "Профили"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:109
+msgid "Hostname"
+msgstr "Имя хоста"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:119
+msgid "Purge _Local"
+msgstr "Очистить _локальные"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:123
+msgid "Purge _Remote"
+msgstr "Очистить удалённые"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:147
+msgid "Collected passive profiles"
+msgstr "Профили пассивной прослушки"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:255
+msgid "Profile Details"
+msgstr "Детали профиля"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:259
+#, c-format
+msgid " IP Address: \t%s \n"
+msgstr "IP адрес: \t%s \n"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:348
+msgid "The hosts list was populated with local profiles"
+msgstr "Список хостов был наполнен локальными профилями"
+
+#: ../src/interfaces/gtk/ec_gtk_view_profiles.c:367
+msgid "Profiles dumped to file"
+msgstr "Профили, сохранённые в файл"
+
+#, fuzzy
+#~ msgid "/Targets/sep1"
+#~ msgstr "Цели"
+
+#, fuzzy
+#~ msgid "/Targets/sep2"
+#~ msgstr "Цели"
+
+#~ msgid "Cannot find man page for "
+#~ msgstr "Невозможно найти ман-страницу для "
