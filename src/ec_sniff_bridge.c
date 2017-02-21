@@ -47,11 +47,11 @@ void start_bridge_sniff(void)
    DEBUG_MSG("start_bridge_sniff");
 
    if (GBL_SNIFF->active == 1) {
-      USER_MSG("Bridged sniffing already started...\n");
+      USER_MSG(_("Bridged sniffing already started...\n"));
       return;
    }
 
-   USER_MSG("Starting Bridged sniffing...\n\n");
+   USER_MSG(_("Starting Bridged sniffing...\n\n"));
 
    /* create the timeouter thread */
    if (!GBL_OPTIONS->read) {
@@ -79,7 +79,7 @@ void stop_bridge_sniff(void)
    DEBUG_MSG("stop_bridge_sniff");
 
    if (GBL_SNIFF->active == 0) {
-      USER_MSG("Bridged sniffing is not running...\n");
+      USER_MSG(_("Bridged sniffing is not running...\n"));
       return;
    }
 
@@ -87,7 +87,7 @@ void stop_bridge_sniff(void)
    capture_stop(GBL_IFACE);
    capture_stop(GBL_BRIDGE);
 
-   USER_MSG("Bridged sniffing was stopped.\n");
+   USER_MSG(_("Bridged sniffing was stopped.\n"));
 
    GBL_SNIFF->active = 0;
 }

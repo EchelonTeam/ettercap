@@ -43,11 +43,11 @@ void start_unified_sniff(void)
 {
    DEBUG_MSG("start_unified_sniff");
    if (GBL_SNIFF->active == 1) {
-      USER_MSG("Unified sniffing already started...\n");
+      USER_MSG(_("Unified sniffing already started...\n"));
       return;
    }
 
-   USER_MSG("Starting Unified sniffing...\n\n");
+   USER_MSG(_("Starting Unified sniffing...\n\n"));
 
    /* create the timeouter thread */
    if (!GBL_OPTIONS->read) {
@@ -82,7 +82,7 @@ void stop_unified_sniff(void)
    DEBUG_MSG("stop_unified_sniff");
 
    if (GBL_SNIFF->active == 0) {
-      USER_MSG("Unified sniffing is not running...\n");
+      USER_MSG(_("Unified sniffing is not running...\n"));
       return;
    }
 
@@ -96,7 +96,7 @@ void stop_unified_sniff(void)
    if (!pthread_equal(pid, EC_PTHREAD_NULL))
       ec_thread_destroy(pid);
 
-   USER_MSG("Unified sniffing was stopped.\n");
+   USER_MSG(_("Unified sniffing was stopped.\n"));
 
    GBL_SNIFF->active = 0;
 }

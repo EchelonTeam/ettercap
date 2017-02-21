@@ -134,10 +134,10 @@ int mitm_start(void)
 
          /* cant use -R with mitm methods */
          if (GBL_OPTIONS->reversed)
-            SEMIFATAL_ERROR("Reverse target matching can't be used with MITM attacks");
+            SEMIFATAL_ERROR(_("Reverse target matching can't be used with MITM attacks"));
 
          if (!GBL_IFACE->is_ready)
-            SEMIFATAL_ERROR("MITM attacks can't be used on unconfigured interfaces");
+            SEMIFATAL_ERROR(_("MITM attacks can't be used on unconfigured interfaces"));
 
          DEBUG_MSG("mitm_start: starting %s", e->mm->name);
 
@@ -191,7 +191,7 @@ void only_mitm(void)
    /* start the mitm attack */
    mitm_start();
 
-   INSTANT_USER_MSG("Activated the mitm attack only... (press 'q' to exit)\n");
+   INSTANT_USER_MSG(_("Activated the mitm attack only... (press 'q' to exit)\n"));
 
    if (GBL_UI->type == UI_DAEMONIZE)
        LOOP {
@@ -210,7 +210,7 @@ void only_mitm(void)
       }
    }
 
-   INSTANT_USER_MSG("Exiting...\n\n");
+   INSTANT_USER_MSG(_("Exiting...\n\n"));
 
    /* stop the process */
    mitm_stop();

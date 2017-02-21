@@ -107,7 +107,7 @@ int services_init(void)
    }
 
    DEBUG_MSG("serv_init -- %d services loaded", i);
-   USER_MSG("%4d known services\n", i);
+   USER_MSG(_("%4d known services\n"), i);
 
    fclose(f);
 

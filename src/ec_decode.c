@@ -121,7 +121,7 @@ void ec_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u_char *pk
 
    /* bad packet */
    if (pkthdr->caplen > UINT16_MAX) {
-      USER_MSG("Bad packet detected, skipping...\n");
+      USER_MSG(_("Bad packet detected, skipping...\n"));
       return;
    }
 
@@ -144,7 +144,7 @@ void ec_decode(u_char *param, const struct pcap_pkthdr *pkthdr, const u_char *pk
     * too small we have to skip the packet (is not interesting for us)
     */
    if (GBL_PCAP->snaplen <= datalen) {
-      USER_MSG("Truncated packet detected, skipping...\n");
+      USER_MSG(_("Truncated packet detected, skipping...\n"));
       return;
    }
 

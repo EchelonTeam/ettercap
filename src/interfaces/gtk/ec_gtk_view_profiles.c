@@ -125,11 +125,11 @@ void gtkui_show_profiles(void)
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show_all(hbox);
 
-   button = gtk_button_new_with_mnemonic("_Convert to Host List");
+   button = gtk_button_new_with_mnemonic(_("_Convert to Host List"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_profiles_convert), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
 
-   button = gtk_button_new_with_mnemonic("_Dump to File");
+   button = gtk_button_new_with_mnemonic(_("_Dump to File"));
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_profiles_dump), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show_all(hbox);

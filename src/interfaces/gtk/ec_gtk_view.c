@@ -374,16 +374,16 @@ void gtkui_vis_method(void)
    lang_list = g_list_append(lang_list, "UTF-8");
    lang_list = g_list_append(lang_list, "EBCDIC-US (IBM)");
    lang_list = g_list_append(lang_list, _("ISO-8859-15 (Western Europe)"));
-   lang_list = g_list_append(lang_list, "ISO-8859-2 (Central Europe)");
-   lang_list = g_list_append(lang_list, "ISO-8859-7 (Greek)");
-   lang_list = g_list_append(lang_list, "ISO-8859-8 (Hebrew)");
-   lang_list = g_list_append(lang_list, "ISO-8859-9 (Turkish)");
-   lang_list = g_list_append(lang_list, "ISO-2022-JP (Japanese)");
-   lang_list = g_list_append(lang_list, "SJIS (Japanese)");
-   lang_list = g_list_append(lang_list, "CP949 (Korean)");
-   lang_list = g_list_append(lang_list, "CP1251 (Cyrillic)");
-   lang_list = g_list_append(lang_list, "CP1256 (Arabic)");
-   lang_list = g_list_append(lang_list, "GB18030 (Chinese)");
+   lang_list = g_list_append(lang_list, _("ISO-8859-2 (Central Europe)"));
+   lang_list = g_list_append(lang_list, _("ISO-8859-7 (Greek)"));
+   lang_list = g_list_append(lang_list, _("ISO-8859-8 (Hebrew)"));
+   lang_list = g_list_append(lang_list, _("ISO-8859-9 (Turkish)"));
+   lang_list = g_list_append(lang_list, _("ISO-2022-JP (Japanese)"));
+   lang_list = g_list_append(lang_list, _("SJIS (Japanese)"));
+   lang_list = g_list_append(lang_list, _("CP949 (Korean)"));
+   lang_list = g_list_append(lang_list, _("CP1251 (Cyrillic)"));
+   lang_list = g_list_append(lang_list, _("CP1256 (Arabic)"));
+   lang_list = g_list_append(lang_list, _("GB18030 (Chinese)"));
 
    /* make a drop down box and assign the list to it */
    lang_combo = gtk_combo_new();

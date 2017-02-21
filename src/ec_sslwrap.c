@@ -224,7 +224,7 @@ void ssl_wrap_init(void)
    /* a valid script for the redirection must be set */
    if (!GBL_CONF->redir_command_on) {
       DEBUG_MSG("ssl_wrap_init: no redirect script");
-      USER_MSG("SSL dissection needs a valid 'redir_command_on' script in the etter.conf file\n");
+      USER_MSG(_("SSL dissection needs a valid 'redir_command_on' script in the etter.conf file\n"));
       return;
    }
 
@@ -393,7 +393,7 @@ static int sslw_insert_redirect(u_int16 sport, u_int16 dport)
    /* the script is not defined */
    if (GBL_CONF->redir_command_on == NULL)
    {
-      USER_MSG("SSLStrip: cannot setup the redirect, did you uncomment the redir_command_on command on your etter.conf file?");
+      USER_MSG(_("SSLStrip: cannot setup the redirect, did you uncomment the redir_command_on command on your etter.conf file?"));
       return -EFATAL;
    }
    snprintf(asc_sport, 16, "%u", sport);
@@ -460,7 +460,7 @@ static int sslw_remove_redirect(u_int16 sport, u_int16 dport)
    /* the script is not defined */
    if (GBL_CONF->redir_command_off == NULL)
    {
-      USER_MSG("SSLStrip: cannot remove the redirect, did you uncomment the redir_command_off command on your etter.conf file?");
+      USER_MSG(_("SSLStrip: cannot remove the redirect, did you uncomment the redir_command_off command on your etter.conf file?"));
       return -EFATAL;
    }
 

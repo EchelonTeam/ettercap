@@ -768,7 +768,7 @@ static int func_inject(struct filter_op *fop, struct packet_object *po)
 
    /* open the file */
    if ((fd = open((const char*)fop->op.func.string, O_RDONLY | O_BINARY)) == -1) {
-      USER_MSG("filter engine: inject(): File not found (%s)\n", fop->op.func.string);
+      USER_MSG(_("filter engine: inject(): File not found (%s)\n"), fop->op.func.string);
       return -EFATAL;
    }
 
@@ -825,7 +825,7 @@ static int func_log(struct filter_op *fop, struct packet_object *po)
    /* open the file */
    fd = open((const char*)fop->op.func.string, O_CREAT | O_APPEND | O_RDWR | O_BINARY, 0600);
    if (fd == -1) {
-      USER_MSG("filter engine: Cannot open file %s\n", fop->op.func.string);
+      USER_MSG(_("filter engine: Cannot open file %s\n"), fop->op.func.string);
       return -EFATAL;
    }
 
@@ -833,11 +833,11 @@ static int func_log(struct filter_op *fop, struct packet_object *po)
    switch(fop->op.func.level) {
       case 5:
          if (write(fd, po->DATA.data, po->DATA.len) < 0)
-            USER_MSG("filter engine: Cannot write to file...%d\n", errno);
+            USER_MSG(_("filter engine: Cannot write to file...%d\n"), errno);
          break;
       case 6:
          if (write(fd, po->DATA.disp_data, po->DATA.disp_len) < 0)
-            USER_MSG("filter engine: Cannot write to file...\n");
+            USER_MSG(_("filter engine: Cannot write to file...\n"));
          break;
       default:
          JIT_FAULT("unsupported log level [%d]", fop->op.func.level);
@@ -1066,7 +1066,7 @@ int filter_load_file(char *filename, struct filter_list **list, uint8_t enabled)
    if (compile_regex(fenv, &fh) != ESUCCESS)
       return -EFATAL;
 
-   USER_MSG("Content filters loaded from %s...\n", filename);
+   USER_MSG(_("Content filters loaded from %s...\n"), filename);
 
    return ESUCCESS;
 }

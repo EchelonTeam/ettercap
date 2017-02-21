@@ -214,7 +214,7 @@ void gtkui_port_stealing(void)
    gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 5);
    gtk_widget_show(image);
 
-   frame = gtk_frame_new("Optional parameters");
+   frame = gtk_frame_new(_("Optional parameters"));
    gtk_container_set_border_width(GTK_CONTAINER (frame), 5);
    gtk_box_pack_start (GTK_BOX (hbox), frame, TRUE, TRUE, 0);
    gtk_widget_show(frame);

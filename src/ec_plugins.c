@@ -181,29 +181,29 @@ void plugin_load_all(void)
             t++;
             break;
          case -EDUPLICATE:
-            USER_MSG("plugin %s already loaded...\n", namelist[i]->d_name);
+            USER_MSG(_("plugin %s already loaded...\n"), namelist[i]->d_name);
             DEBUG_MSG("plugin %s already loaded...", namelist[i]->d_name);
             break;
          case -EVERSION:
-            USER_MSG("plugin %s was compiled for a different ettercap version...\n", namelist[i]->d_name);
+            USER_MSG(_("plugin %s was compiled for a different ettercap version...\n"), namelist[i]->d_name);
             DEBUG_MSG("plugin %s was compiled for a different ettercap version...", namelist[i]->d_name);
             break;
          case -EINVALID:
          default:
-            USER_MSG("plugin %s cannot be loaded...\n", namelist[i]->d_name);
+            USER_MSG(_("plugin %s cannot be loaded...\n"), namelist[i]->d_name);
             DEBUG_MSG("plugin %s cannot be loaded...", namelist[i]->d_name);
             break;
       }
       SAFE_FREE(namelist[i]);
    }
 
-   USER_MSG("%4d plugins\n", t);
+   USER_MSG(_("%4d plugins\n"), t);
 
    SAFE_FREE(namelist);
 
    atexit(plugin_unload_all);
 #else
-   USER_MSG("   0 plugins (disabled by configure...)\n");
+   USER_MSG(_("   0 plugins (disabled by configure...)\n"));
 #endif
 }
 

@@ -128,7 +128,7 @@ EC_THREAD_FUNC(top_half)
        */
       if (e->po->flags & PO_EOF) {
          DEBUG_MSG("End of dump file...");
-         USER_MSG("\nEnd of dump file...\n");
+         USER_MSG(_("\nEnd of dump file...\n"));
          if ((GBL_UI->type == UI_TEXT || GBL_UI->type == UI_DAEMONIZE) && GBL_CONF->close_on_eof)
             clean_exit(0);
          else {

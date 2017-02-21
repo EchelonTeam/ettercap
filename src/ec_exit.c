@@ -37,7 +37,7 @@ void clean_exit(int errcode)
 {
    DEBUG_MSG("clean_exit: %d", errcode);
 
-   INSTANT_USER_MSG("\nTerminating %s...\n", GBL_PROGRAM);
+   INSTANT_USER_MSG(_("\nTerminating %s...\n"), GBL_PROGRAM);
 
 #ifdef HAVE_EC_LUA
    /* Cleanup lua */

@@ -122,7 +122,7 @@ int send_to_L3(struct packet_object *po)
    c = libnet_write(l);
    //ON_ERROR(c, -1, "libnet_write %d (%d): %s", po->fwd_len, c, libnet_geterror(l));
    if (c == -1)
-      USER_MSG("SEND L3 ERROR: %d byte packet (%04x:%02x) destined to %s was not forwarded (%s)\n",
+      USER_MSG(_("SEND L3 ERROR: %d byte packet (%04x:%02x) destined to %s was not forwarded (%s)\n"),
             po->fwd_len, ntohs(po->L3.proto), po->L4.proto, ip_addr_ntoa(&po->L3.dst, tmp),
             libnet_geterror(l));
 

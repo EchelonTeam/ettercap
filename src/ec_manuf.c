@@ -143,7 +143,7 @@ int manuf_init(void)
    }
 
    DEBUG_MSG("manuf_init -- %d fingers loaded", i);
-   USER_MSG("%4d mac vendor fingerprint\n", i);
+   USER_MSG(_("%4d mac vendor fingerprint\n"), i);
 
    fclose(f);
 

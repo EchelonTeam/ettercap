@@ -129,7 +129,7 @@ static void source_print(struct iface_env *source)
    struct net_list *ip6;
 
    if(source->is_live) {
-      USER_MSG("Listening on:\n");
+      USER_MSG(_("Listening on:\n"));
       USER_MSG("%6s -> %s\n", source->name, mac_addr_ntoa(source->mac, strbuf));
       if(source->has_ipv4) {
          USER_MSG("\t  %s/", ip_addr_ntoa(&source->ip, strbuf));
@@ -144,7 +144,7 @@ static void source_print(struct iface_env *source)
          USER_MSG("\n\n");
       }
    } else {
-      USER_MSG("Reading from %s\n", source->name);
+      USER_MSG(_("Reading from %s\n"), source->name);
    }
 
 }
@@ -384,7 +384,7 @@ static void l3_init(void)
    l4 = libnet_init(LIBNET_RAW4_ADV, NULL, lnet_errbuf);
    if (l4 == NULL) {
       DEBUG_MSG("send_init: libnet_init(LIBNET_RAW4_ADV) failed: %s", lnet_errbuf);
-      USER_MSG("Libnet failed IPv4 initialization. Don't send IPv4 packets.\n");
+      USER_MSG(_("Libnet failed IPv4 initialization. Don't send IPv4 packets.\n"));
    }
 
    GBL_LNET->lnet_IP4 = l4;
@@ -394,7 +394,7 @@ static void l3_init(void)
    l6 = libnet_init(LIBNET_RAW6_ADV, NULL, lnet_errbuf);
    if(l6 == NULL) {
       DEBUG_MSG("%s: libnet_init(LIBNET_RAW6_ADV) failed: %s", __func__, lnet_errbuf);
-      USER_MSG("Libnet failed IPv6 initialization. Don't send IPv6 packets.\n");
+      USER_MSG(_("Libnet failed IPv6 initialization. Don't send IPv6 packets.\n"));
    }
 
    GBL_LNET->lnet_IP6 = l6;

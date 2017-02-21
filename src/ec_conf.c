@@ -451,8 +451,8 @@ static void set_dissector(char *name, char *values, int lineno)
  */
 void conf_dissectors(void)
 {
-   USER_MSG("%4d protocol dissectors\n", number_of_dissectors);
-   USER_MSG("%4d ports monitored\n", number_of_ports);
+   USER_MSG(_("%4d protocol dissectors\n"), number_of_dissectors);
+   USER_MSG(_("%4d ports monitored\n"), number_of_ports);
 }
 
 /* EOF */

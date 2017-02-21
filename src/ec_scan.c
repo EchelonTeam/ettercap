@@ -88,7 +88,7 @@ void build_hosts_list(void)
       LIST_FOREACH(hl, &GBL_HOSTLIST, next)
          nhosts++;
 
-      INSTANT_USER_MSG("%d hosts added to the hosts list...\n", nhosts);
+      INSTANT_USER_MSG(_("%d hosts added to the hosts list...\n"), nhosts);
 
       return;
    }
@@ -210,7 +210,7 @@ static EC_THREAD_FUNC(scan_thread)
       nhosts++;
    }
 
-   INSTANT_USER_MSG("%d hosts added to the hosts list...\n", nhosts);
+   INSTANT_USER_MSG(_("%d hosts added to the hosts list...\n"), nhosts);
 
    /* update host list*/
    ui_update(UI_UPDATE_HOSTLIST);
@@ -238,7 +238,7 @@ static EC_THREAD_FUNC(scan_thread)
 
          /* user has requested to stop the task */
          if (ret == UI_PROGRESS_INTERRUPTED) {
-            INSTANT_USER_MSG("Interrupted by user. Partial results may have been recorded...\n");
+            INSTANT_USER_MSG(_("Interrupted by user. Partial results may have been recorded...\n"));
             ec_thread_exit();
          }
       }
@@ -389,7 +389,7 @@ static void scan_netmask(pthread_t pid)
 
    DEBUG_MSG("scan_netmask: %d hosts", nhosts);
 
-   INSTANT_USER_MSG("Randomizing %d hosts for scanning...\n", nhosts);
+   INSTANT_USER_MSG(_("Randomizing %d hosts for scanning...\n"), nhosts);
 
    /* scan the netmask */
    for (i = 1; i <= nhosts; i++) {
@@ -421,7 +421,7 @@ static void scan_netmask(pthread_t pid)
 
       /* user has requested to stop the task */
       if (ret == UI_PROGRESS_INTERRUPTED) {
-         INSTANT_USER_MSG("Scan interrupted by user. Partial results may have been recorded...\n");
+         INSTANT_USER_MSG(_("Scan interrupted by user. Partial results may have been recorded...\n"));
          /* destroy the capture thread and remove the hook function */
          ec_thread_destroy(pid);
          hook_del(HOOK_PACKET_ARP, &get_response);
@@ -574,7 +574,7 @@ static void scan_targets(pthread_t pid)
 
       /* user has requested to stop the task */
       if (ret == UI_PROGRESS_INTERRUPTED) {
-         INSTANT_USER_MSG("Scan interrupted by user. Partial results may have been recorded...\n");
+         INSTANT_USER_MSG(_("Scan interrupted by user. Partial results may have been recorded...\n"));
          /* destroy the capture thread and remove the hook function */
          ec_thread_destroy(pid);
          hook_del(HOOK_PACKET_ARP, &get_response);
@@ -626,7 +626,7 @@ int scan_load_hosts(char *filename)
    if (hf == NULL)
       SEMIFATAL_ERROR("Cannot open %s", filename);
 
-   INSTANT_USER_MSG("Loading hosts list from file %s\n", filename);
+   INSTANT_USER_MSG(_("Loading hosts list from file %s\n"), filename);
 
    /* XXX - adapt to IPv6 */
    /* read the file */
@@ -695,7 +695,7 @@ int scan_save_hosts(char *filename)
    /* close the file */
    fclose(hf);
 
-   INSTANT_USER_MSG("%d hosts saved to file %s\n", nhosts, filename);
+   INSTANT_USER_MSG(_("%d hosts saved to file %s\n"), nhosts, filename);
 
    return ESUCCESS;
 }

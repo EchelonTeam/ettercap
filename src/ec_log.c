@@ -90,9 +90,9 @@ int set_loglevel(int level, char *filename)
    /* all the host type will be unknown, warn the user */
    if (GBL_OPTIONS->read) {
       USER_MSG("*********************************************************\n");
-      USER_MSG("WARNING: while reading form file we cannot determine    \n");
-      USER_MSG("if an host is local or not because the ip address of     \n");
-      USER_MSG("the NIC may have been changed from the time of the dump. \n");
+      USER_MSG(_("WARNING: while reading form file we cannot determine    \n"));
+      USER_MSG(_("if an host is local or not because the ip address of     \n"));
+      USER_MSG(_("the NIC may have been changed from the time of the dump. \n"));
       USER_MSG("*********************************************************\n\n");
    }
 

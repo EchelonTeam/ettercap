@@ -121,7 +121,7 @@ int fingerprint_init(void)
    }
 
    DEBUG_MSG("fingerprint_init -- %d fingers loaded", i);
-   USER_MSG("%4d tcp OS fingerprint\n", i);
+   USER_MSG(_("%4d tcp OS fingerprint\n"), i);
 
    fclose(f);
 
@@ -314,7 +314,7 @@ int fingerprint_submit(const char *finger, char *os)
    if (strlen(finger) > FINGER_LEN || strlen(os) > OS_LEN)
       return -EINVALID;
 
-   USER_MSG("Connecting to http://%s...\n", host);
+   USER_MSG(_("Connecting to http://%s...\n"), host);
 
    /* prepare the socket */
    sock = open_socket(host, 80);
@@ -349,7 +349,7 @@ int fingerprint_submit(const char *finger, char *os)
 
    SAFE_FREE(os_encoded);
 
-   USER_MSG("Submitting the fingerprint to %s...\n", page);
+   USER_MSG(_("Submitting the fingerprint to %s...\n"), page);
 
    /* send the request to the server */
    socket_send(sock, (const u_char*)getmsg, strlen(getmsg));
@@ -359,7 +359,7 @@ int fingerprint_submit(const char *finger, char *os)
    /* ignore the server response */
    close_socket(sock);
 
-   USER_MSG("New fingerprint submitted to the ettercap website...\n");
+   USER_MSG(_("New fingerprint submitted to the ettercap website...\n"));
 
    return ESUCCESS;
 }
