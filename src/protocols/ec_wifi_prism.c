@@ -1,5 +1,5 @@
 /*
-    ettercap -- Prism2 header for WiFi packets 
+    ettercap -- Prism2 header for WiFi packets
 
     Copyright (C) ALoR & NaGA
 
@@ -50,7 +50,7 @@ FUNC_DECODER(decode_prism)
    /* Simply skip the first 0x90 Bytes (the Prism2 header) and pass
     * the whole packet on to the wifi layer */
    DECODED_LEN = 0x90;
-   
+
    next_decoder =  get_decoder(LINK_LAYER, IL_TYPE_WIFI);
    EXECUTE_DECODER(next_decoder);
 

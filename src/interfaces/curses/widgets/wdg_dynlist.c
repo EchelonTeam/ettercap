@@ -67,13 +67,13 @@ void wdg_dynlist_reset(wdg_t *wo);
 
 /*******************************************/
 
-/* 
+/*
  * called to create a window
  */
 void wdg_create_dynlist(struct wdg_object *wo)
 {
    WDG_DEBUG_MSG("wdg_create_dynlist");
-   
+
    /* set the callbacks */
    wo->destroy = wdg_dynlist_destroy;
    wo->resize = wdg_dynlist_resize;
@@ -85,14 +85,14 @@ void wdg_create_dynlist(struct wdg_object *wo)
    WDG_SAFE_CALLOC(wo->extend, 1, sizeof(struct wdg_dynlist));
 }
 
-/* 
+/*
  * called to destroy a window
  */
 static int wdg_dynlist_destroy(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_dynlist, ww);
    struct wdg_dynlist_call *c;
-   
+
    WDG_DEBUG_MSG("wdg_dynlist_destroy (%p)", wo);
 
    /* erase the window */
@@ -102,11 +102,11 @@ static int wdg_dynlist_destroy(struct wdg_object *wo)
    werase(ww->win);
    wnoutrefresh(ww->sub);
    wnoutrefresh(ww->win);
-   
+
    /* dealloc the structures */
    delwin(ww->sub);
    delwin(ww->win);
-   
+
    /* free the callback list */
    while (SLIST_FIRST(&ww->callbacks) != NULL) {
       c = SLIST_FIRST(&ww->callbacks);
@@ -119,7 +119,7 @@ static int wdg_dynlist_destroy(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to resize a window
  */
 static int wdg_dynlist_resize(struct wdg_object *wo)
@@ -129,7 +129,7 @@ static int wdg_dynlist_resize(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to redraw a window
  */
 static int wdg_dynlist_redraw(struct wdg_object *wo)
@@ -139,9 +139,9 @@ static int wdg_dynlist_redraw(struct wdg_object *wo)
    size_t l = wdg_get_nlines(wo);
    size_t x = wdg_get_begin_x(wo);
    size_t y = wdg_get_begin_y(wo);
-   
+
    WDG_DEBUG_MSG("wdg_dynlist_redraw");
- 
+
    /* the window already exist */
    if (ww->win) {
       /* erase the border */
@@ -149,12 +149,12 @@ static int wdg_dynlist_redraw(struct wdg_object *wo)
       werase(ww->win);
       touchwin(ww->win);
       wnoutrefresh(ww->win);
-      
+
       /* resize the window and draw the new border */
       mvwin(ww->win, y, x);
       wresize(ww->win, l, c);
       wdg_dynlist_border(wo);
-      
+
       /* resize the actual window and touch it */
       mvwin(ww->sub, y + 2, x + 2);
       wresize(ww->sub, l - 4, c - 4);
@@ -174,7 +174,7 @@ static int wdg_dynlist_redraw(struct wdg_object *wo)
       /* create the inner (actual) window */
       if ((ww->sub = newwin(l - 4, c - 4, y + 2, x + 2)) == NULL)
          return -WDG_EFATAL;
-      
+
       /* set the window color */
       wbkgd(ww->sub, COLOR_PAIR(wo->window_color));
       werase(ww->sub);
@@ -185,19 +185,19 @@ static int wdg_dynlist_redraw(struct wdg_object *wo)
 
       scrollok(ww->sub, FALSE);
    }
-   
+
    /* refresh the window */
    redrawwin(ww->sub);
    redrawwin(ww->win);
    wnoutrefresh(ww->win);
    wnoutrefresh(ww->sub);
-   
+
    wo->flags |= WDG_OBJ_VISIBLE;
 
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the window gets the focus
  */
 static int wdg_dynlist_get_focus(struct wdg_object *wo)
@@ -207,25 +207,25 @@ static int wdg_dynlist_get_focus(struct wdg_object *wo)
 
    /* redraw the window */
    wdg_dynlist_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the window looses the focus
  */
 static int wdg_dynlist_lost_focus(struct wdg_object *wo)
 {
    /* set the flag */
    wo->flags &= ~WDG_OBJ_FOCUSED;
-   
+
    /* redraw the window */
    wdg_dynlist_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called by the messages dispatcher when the window is focused
  */
 static int wdg_dynlist_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_event *mouse)
@@ -241,28 +241,28 @@ static int wdg_dynlist_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_
                wdg_dynlist_mouse(wo, key, mouse);
             else
                wdg_set_focus(wo);
-         } else 
+         } else
             return -WDG_ENOTHANDLED;
          break;
-      
+
       case KEY_UP:
       case KEY_DOWN:
       case KEY_PPAGE:
       case KEY_NPAGE:
          wdg_dynlist_move(wo, key);
          break;
-         
+
       case KEY_RETURN:
          if (ww->current)
             WDG_EXECUTE(ww->select_callback, ww->current);
          break;
-         
+
       /* message not handled */
       default:
          return wdg_dynlist_callback(wo, key);
          break;
    }
-  
+
    return WDG_ESUCCESS;
 }
 
@@ -273,7 +273,7 @@ static void wdg_dynlist_border(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_dynlist, ww);
    size_t c = wdg_get_ncols(wo);
-      
+
    /* the object was focused */
    if (wo->flags & WDG_OBJ_FOCUSED) {
       wattron(ww->win, A_BOLD);
@@ -283,10 +283,10 @@ static void wdg_dynlist_border(struct wdg_object *wo)
 
    /* draw the borders */
    box(ww->win, 0, 0);
-   
+
    /* set the title color */
    wbkgdset(ww->win, COLOR_PAIR(wo->title_color));
-   
+
    /* there is a title: print it */
    if (wo->title) {
       switch (wo->align) {
@@ -302,7 +302,7 @@ static void wdg_dynlist_border(struct wdg_object *wo)
       }
       wprintw(ww->win, wo->title);
    }
-   
+
    /* restore the attribute */
    if (wo->flags & WDG_OBJ_FOCUSED)
       wattroff(ww->win, A_BOLD);
@@ -315,7 +315,7 @@ static void wdg_dynlist_border(struct wdg_object *wo)
 void wdg_dynlist_print_callback(wdg_t *wo, void * func(int mode, void *list, char **desc, size_t len))
 {
    WDG_WO_EXT(struct wdg_dynlist, ww);
-   
+
    WDG_DEBUG_MSG("wdg_dynlist_print_callback %p", func);
 
    ww->func = func;
@@ -327,7 +327,7 @@ void wdg_dynlist_print_callback(wdg_t *wo, void * func(int mode, void *list, cha
 void wdg_dynlist_select_callback(wdg_t *wo, void (*callback)(void *))
 {
    WDG_WO_EXT(struct wdg_dynlist, ww);
-   
+
    WDG_DEBUG_MSG("wdg_dynlist_select_callback %p", callback);
 
    ww->select_callback = callback;
@@ -342,7 +342,7 @@ void wdg_dynlist_add_callback(wdg_t *wo, int key, void (*callback)(void *))
    struct wdg_dynlist_call *c;
 
    WDG_SAFE_CALLOC(c, 1, sizeof(struct wdg_dynlist_call));
-   
+
    c->key = key;
    c->callback = callback;
 
@@ -359,13 +359,13 @@ static int wdg_dynlist_callback(struct wdg_object *wo, int key)
 
    SLIST_FOREACH(c, &ww->callbacks, next) {
       if (c->key == key) {
-         
+
          WDG_DEBUG_MSG("wdg_dynlist_callback");
-         
+
          /* execute the callback only if current is not NULL */
          if (ww->current)
             WDG_EXECUTE(c->callback, ww->current);
-         
+
          return WDG_ESUCCESS;
       }
    }
@@ -385,15 +385,15 @@ void wdg_dynlist_refresh(wdg_t *wo)
    size_t i = 0, found = 0;
    void *list, *next;
    char *desc;
-  
+
    /* sanity check */
    if (ww->func == NULL)
       return;
-   
+
    /* erase the window */
    werase(ww->sub);
 
-   /* 
+   /*
     * update the top (on the first element) in two case:
     *    top is not set
     *    bottom is not set (to update the list over the current element)
@@ -406,24 +406,24 @@ void wdg_dynlist_refresh(wdg_t *wo)
    /* no elements */
    if (ww->top == NULL)
       return;
-   
+
    WDG_SAFE_CALLOC(desc, 100, sizeof(char));
-   
+
    /* no current item, set it to the first element */
    if (ww->current == NULL)
       ww->current = ww->top;
-  
+
    /* if the top does not exist any more, set it to the first */
    if (ww->func(0, ww->top, NULL, 0) == NULL)
       ww->top = ww->func(0, NULL, NULL, 0);
-  
+
    /* start from the top element */
    list = ww->top;
 
    /* print all the entry until the bottom of the window */
    while (list) {
       next = ww->func(+1, list, &desc, 99);
-      
+
       /* dont print string longer than the window */
       if (strlen(desc) > c)
          desc[c] = 0;
@@ -446,13 +446,13 @@ void wdg_dynlist_refresh(wdg_t *wo)
          ww->bottom = list;
          break;
       } else {
-         /* 
-          * set to null, to have the bottom set only if the list 
+         /*
+          * set to null, to have the bottom set only if the list
           * is as long as the window
           */
          ww->bottom = NULL;
       }
-      
+
       /* move the pointer */
       list = next;
    }
@@ -460,7 +460,7 @@ void wdg_dynlist_refresh(wdg_t *wo)
    /* if the current element does not exist anymore, set it to 'top' */
    if (!found)
       ww->current = ww->top;
-   
+
    WDG_SAFE_FREE(desc);
 
    wnoutrefresh(ww->sub);
@@ -478,40 +478,40 @@ static void wdg_dynlist_move(struct wdg_object *wo, int key)
 
    /* retrieve the first element of the list */
    first = ww->func(0, NULL, NULL, 0);
-   
+
    switch (key) {
       case KEY_UP:
          prev = ww->func(-1, ww->current, NULL, 0);
          /* we are on the first element */
          if (ww->current == first)
             return;
-        
+
          /* move up the list if we are on the top */
          if (ww->current == ww->top)
             ww->top = prev;
-         
+
          /* update the current element */
          ww->current = prev;
-         
+
          break;
-         
+
       case KEY_DOWN:
          next = ww->func(+1, ww->current, NULL, 0);
          /* we are on the last element */
          if (next == NULL)
             return;
-        
+
          /* move the top if we are on the bottom (scroll the list) */
          if (ww->current == ww->bottom)
             ww->top = ww->func(+1, ww->top, NULL, 0);
 
          /* update the current element */
          ww->current = next;
-         
+
          break;
 
       case KEY_PPAGE:
-         
+
          while (ww->current != first) {
             prev = ww->func(-1, ww->current, NULL, 0);
             /* move up the list if we are on the top */
@@ -523,11 +523,11 @@ static void wdg_dynlist_move(struct wdg_object *wo, int key)
             if (++i == l-1)
                break;
          }
-         
+
          break;
-         
+
       case KEY_NPAGE:
-         
+
          while ((next = ww->func(+1, ww->current, NULL, 0)) != NULL) {
             /* move the top if we are on the bottom (scroll the list) */
             if (ww->current == ww->bottom) {
@@ -540,7 +540,7 @@ static void wdg_dynlist_move(struct wdg_object *wo, int key)
             if (++i == l-1)
                break;
          }
-         
+
          break;
    }
 
@@ -557,13 +557,13 @@ static void wdg_dynlist_mouse(struct wdg_object *wo, int key, struct wdg_mouse_e
    size_t y = wdg_get_begin_y(wo) + 2;
    size_t line, i = 0;
    void *next;
-   
+
    /* calculate which line was selected */
    line = mouse->y - y;
 
    /* calculate the distance from the top */
    ww->current = ww->top;
-  
+
    while (line != 0 && (next = ww->func(+1, ww->current, NULL, 0)) != NULL) {
       /* update the current element */
       ww->current = next;
@@ -581,7 +581,7 @@ static void wdg_dynlist_mouse(struct wdg_object *wo, int key, struct wdg_mouse_e
 }
 
 /*
- * reset the focus pointer 
+ * reset the focus pointer
  */
 void wdg_dynlist_reset(wdg_t *wo)
 {
@@ -590,7 +590,7 @@ void wdg_dynlist_reset(wdg_t *wo)
    ww->top = NULL;
    ww->current = NULL;
    ww->bottom = NULL;
-   
+
    wdg_dynlist_refresh(wo);
 }
 

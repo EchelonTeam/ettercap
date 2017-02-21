@@ -58,7 +58,7 @@ struct wdg_menu menu_hosts[] = { {"Hosts",             'H',       "",    NULL},
 /*******************************************/
 
 /*
- * scan the lan for hosts 
+ * scan the lan for hosts
  */
 static void curses_scan(void)
 {
@@ -72,7 +72,7 @@ static void curses_scan(void)
       GBL_TARGET1->scan_all = 1;
       GBL_TARGET2->scan_all = 1;
    }
-   
+
    /* perform a new scan */
    build_hosts_list();
 }
@@ -83,11 +83,11 @@ static void curses_scan(void)
 static void curses_load_hosts(void)
 {
    wdg_t *fop;
-   
+
    DEBUG_MSG("curses_load_hosts");
-   
+
    wdg_create_object(&fop, WDG_FILE, WDG_OBJ_WANT_FOCUS | WDG_OBJ_FOCUS_MODAL);
-   
+
    wdg_set_title(fop, "Select an hosts file...", WDG_ALIGN_LEFT);
    wdg_set_color(fop, WDG_COLOR_SCREEN, EC_COLOR);
    wdg_set_color(fop, WDG_COLOR_WINDOW, EC_COLOR_MENU);
@@ -95,9 +95,9 @@ static void curses_load_hosts(void)
    wdg_set_color(fop, WDG_COLOR_TITLE, EC_COLOR_TITLE);
 
    wdg_file_set_callback(fop, load_hosts);
-   
+
    wdg_draw_object(fop);
-   
+
    wdg_set_focus(fop);
 }
 
@@ -105,9 +105,9 @@ static void load_hosts(char *path, char *file)
 {
    char *tmp;
    char current[PATH_MAX];
-   
+
    DEBUG_MSG("load_hosts %s/%s", path, file);
-   
+
    SAFE_CALLOC(tmp, strlen(path)+strlen(file)+2, sizeof(char));
 
    /* get the current working directory */
@@ -128,9 +128,9 @@ static void load_hosts(char *path, char *file)
 
    /* load the hosts list */
    scan_load_hosts(tmp);
-   
+
    SAFE_FREE(tmp);
-   
+
    curses_host_list();
 }
 
@@ -140,19 +140,19 @@ static void load_hosts(char *path, char *file)
 static void curses_save_hosts(void)
 {
 #define FILE_LEN  40
-   
+
    DEBUG_MSG("curses_save_hosts");
 
    SAFE_FREE(GBL_OPTIONS->hostsfile);
    SAFE_CALLOC(GBL_OPTIONS->hostsfile, FILE_LEN, sizeof(char));
-   
+
    curses_input("Output file :", GBL_OPTIONS->hostsfile, FILE_LEN, save_hosts);
 }
 
 static void save_hosts(void)
 {
    FILE *f;
-   
+
    /* check if the file is writeable */
    f = fopen(GBL_OPTIONS->hostsfile, "w");
    if (f == NULL) {
@@ -160,28 +160,28 @@ static void save_hosts(void)
       SAFE_FREE(GBL_OPTIONS->hostsfile);
       return;
    }
- 
+
    /* if ok, delete it */
    fclose(f);
    unlink(GBL_OPTIONS->hostsfile);
-   
+
    scan_save_hosts(GBL_OPTIONS->hostsfile);
 }
 
 /*
- * display the host list 
+ * display the host list
  */
 static void curses_host_list(void)
 {
    DEBUG_MSG("curses_host_list");
-   
+
    /* if the object already exist, recreate it */
    if (wdg_hosts) {
       wdg_destroy_object(&wdg_hosts);
    }
-   
+
    wdg_create_object(&wdg_hosts, WDG_LIST, WDG_OBJ_WANT_FOCUS);
-   
+
    wdg_set_size(wdg_hosts, 1, 2, -1, SYSMSG_WIN_SIZE - 1);
    wdg_set_title(wdg_hosts, "Hosts list...", WDG_ALIGN_LEFT);
    wdg_set_color(wdg_hosts, WDG_COLOR_SCREEN, EC_COLOR);
@@ -192,21 +192,21 @@ static void curses_host_list(void)
 
    /* create the array for the list widget */
    curses_create_hosts_array();
-  
+
    /* set the elements */
    wdg_list_set_elements(wdg_hosts, wdg_hosts_elements);
-   
+
    /* add the destroy callback */
    wdg_add_destroy_key(wdg_hosts, CTRL('Q'), curses_hosts_destroy);
-  
+
    /* add the callbacks */
    wdg_list_add_callback(wdg_hosts, 'd', curses_delete_host);
    wdg_list_add_callback(wdg_hosts, '1', curses_host_target1);
    wdg_list_add_callback(wdg_hosts, '2', curses_host_target2);
    wdg_list_add_callback(wdg_hosts, ' ', curses_hosts_help);
-   
+
    wdg_draw_object(wdg_hosts);
-   
+
    wdg_set_focus(wdg_hosts);
 }
 
@@ -234,7 +234,7 @@ static void curses_hosts_help(void *dummy)
 
 /*
  * create the array for the widget.
- * erase any previously alloc'd array 
+ * erase any previously alloc'd array
  */
 static void curses_create_hosts_array(void)
 {
@@ -246,9 +246,9 @@ static void curses_create_hosts_array(void)
    size_t nhosts;
 
 #define MAX_DESC_LEN 70
-   
+
    DEBUG_MSG("curses_create_hosts_array");
-   
+
    /* free the array (if alloc'ed) */
    while (wdg_hosts_elements && wdg_hosts_elements[i].desc != NULL) {
       SAFE_FREE(wdg_hosts_elements[i].desc);
@@ -256,31 +256,31 @@ static void curses_create_hosts_array(void)
    }
    SAFE_FREE(wdg_hosts_elements);
    nhosts = 0;
-   
+
    /* walk the hosts list */
    LIST_FOREACH(hl, &GBL_HOSTLIST, next) {
-      /* enlarge the array */ 
+      /* enlarge the array */
       SAFE_REALLOC(wdg_hosts_elements, (nhosts + 1) * sizeof(struct wdg_list));
 
       /* fill the element */
       SAFE_CALLOC(wdg_hosts_elements[nhosts].desc, MAX_DESC_LEN + 1, sizeof(char));
       /* print the description in the array */
       if (hl->hostname) {
-         snprintf(wdg_hosts_elements[nhosts].desc, MAX_DESC_LEN, "%-15s  %17s  %s", 
-            ip_addr_ntoa(&hl->ip, tmp), mac_addr_ntoa(hl->mac, tmp2), hl->hostname);  
+         snprintf(wdg_hosts_elements[nhosts].desc, MAX_DESC_LEN, "%-15s  %17s  %s",
+            ip_addr_ntoa(&hl->ip, tmp), mac_addr_ntoa(hl->mac, tmp2), hl->hostname);
       } else {
          /* resolve the hostname (using the cache) */
          host_iptoa(&hl->ip, name);
-         snprintf(wdg_hosts_elements[nhosts].desc, MAX_DESC_LEN, "%-15s  %17s  %s", 
-            ip_addr_ntoa(&hl->ip, tmp), mac_addr_ntoa(hl->mac, tmp2), name);  
+         snprintf(wdg_hosts_elements[nhosts].desc, MAX_DESC_LEN, "%-15s  %17s  %s",
+            ip_addr_ntoa(&hl->ip, tmp), mac_addr_ntoa(hl->mac, tmp2), name);
       }
-      
+
       wdg_hosts_elements[nhosts].value = hl;
-   
+
       nhosts++;
    }
-   
-   /* null terminate the array */ 
+
+   /* null terminate the array */
    SAFE_REALLOC(wdg_hosts_elements, (nhosts + 1) * sizeof(struct wdg_list));
    wdg_hosts_elements[nhosts].desc = NULL;
    wdg_hosts_elements[nhosts].value = NULL;
@@ -292,7 +292,7 @@ static void curses_create_hosts_array(void)
 static void curses_delete_host(void *host)
 {
    struct hosts_list *hl;
- 
+
    /* sanity check */
    if (host == NULL)
       return;
@@ -316,12 +316,12 @@ static void curses_host_target1(void *host)
 {
    struct hosts_list *hl;
    char tmp[MAX_ASCII_ADDR_LEN];
-  
+
    DEBUG_MSG("curses_host_target1");
-   
+
    /* cast the parameter */
    hl = (struct hosts_list *)host;
-  
+
    /* add the ip to the target */
    add_ip_list(&hl->ip, GBL_TARGET1);
 
@@ -335,15 +335,15 @@ static void curses_host_target2(void *host)
 {
    struct hosts_list *hl;
    char tmp[MAX_ASCII_ADDR_LEN];
-   
+
    DEBUG_MSG("curses_host_target2");
-   
+
    /* cast the parameter */
    hl = (struct hosts_list *)host;
-  
+
    /* add the ip to the target */
    add_ip_list(&hl->ip, GBL_TARGET2);
-   
+
    USER_MSG("Host %s added to TARGET2\n", ip_addr_ntoa(&hl->ip, tmp));
 }
 

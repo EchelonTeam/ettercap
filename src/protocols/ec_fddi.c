@@ -72,9 +72,9 @@ FUNC_DECODER(decode_fddi)
    struct fddi_header *fddi;
 
    DECODED_LEN = sizeof(struct fddi_header);
-   
+
    fddi = (struct fddi_header *)DECODE_DATA;
-   
+
    /* org_code != encapsulated ethernet not yet supported */
    if (memcmp(fddi->llc_org_code, FDDI_ORG_CODE, 3))
       NOT_IMPLEMENTED();
@@ -83,25 +83,25 @@ FUNC_DECODER(decode_fddi)
    PACKET->L2.header = (u_char *)DECODE_DATA;
    PACKET->L2.proto = IL_TYPE_FDDI;
    PACKET->L2.len = DECODED_LEN;
-   
+
    memcpy(PACKET->L2.src, fddi->sha, FDDI_ADDR_LEN);
    memcpy(PACKET->L2.dst, fddi->dha, FDDI_ADDR_LEN);
 
    /* HOOK POINT : HOOK_PACKET_fddi */
    hook_point(HOOK_PACKET_FDDI, po);
-   
-   /* leave the control to the next decoder */   
+
+   /* leave the control to the next decoder */
    next_decoder = get_decoder(NET_LAYER, ntohs(fddi->proto));
 
    EXECUTE_DECODER(next_decoder);
-      
+
    /* fddi header does not care about modification of upper layer */
-   
+
    return NULL;
 }
 
 /*
- * function to create a token ring header 
+ * function to create a token ring header
  */
 FUNC_BUILDER(build_fddi)
 {

@@ -63,7 +63,7 @@ FUNC_DECODER(dissector_mountd)
    /* skip packets which are not useful */
    if (PACKET->DATA.len < 24)
       return NULL;
-   
+
    DEBUG_MSG("mountd --> dissector_mountd");
 
    /* Offsets differs from TCP to UDP (?) */
@@ -80,7 +80,7 @@ FUNC_DECODER(dissector_mountd)
       version = pntol(ptr + 16);
       proc    = pntol(ptr + 20);
 
-      if (type != 0 || program != 100005 || proc != 1 ) 
+      if (type != 0 || program != 100005 || proc != 1 )
          return NULL;
 
       /* Take remote dir (with some checks) */	
@@ -90,16 +90,16 @@ FUNC_DECODER(dissector_mountd)
       flen  = pntol(ptr + 40 + cred);
       if (flen > 100)
          return NULL;
-	 
+	
       dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_mountd));
       SAFE_CALLOC(s->data, 1, sizeof(mountd_session));
       pe = (mountd_session *)s->data;
       pe->xid = xid;
       pe->ver = version;
       SAFE_CALLOC(pe->rem_dir, 1, flen + 1);
-      memcpy(pe->rem_dir, ptr + 44 + cred, flen); 
+      memcpy(pe->rem_dir, ptr + 44 + cred, flen);
       session_put(s);
-      
+
       return NULL;
    }
 
@@ -116,13 +116,13 @@ FUNC_DECODER(dissector_mountd)
    PACKET->DISSECTOR.banner = strdup("mountd");
 
    /* Unsuccess or not a reply */
-   if (!pe || !(pe->rem_dir) || pe->xid != xid || pntol(ptr + 24) != 0 || type != 1) 
+   if (!pe || !(pe->rem_dir) || pe->xid != xid || pntol(ptr + 24) != 0 || type != 1)
       return NULL;
 
    /* Take the handle */
    if (pe->ver == 3) {
       flen = pntol(ptr + 28);
-      if (flen > 64) 
+      if (flen > 64)
          flen = 64;
       offs = 32;
    } else {
@@ -133,9 +133,9 @@ FUNC_DECODER(dissector_mountd)
    SAFE_CALLOC(fhandle, (flen*3) + 10, 1);
    for (i=0; i<flen; i++)
       snprintf(fhandle, (flen*3) + 10, "%s%.2x ", fhandle, ptr[i + offs]);
-   
+
    DISSECT_MSG("mountd : Server:%s Handle %s: [%s]\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                                       pe->rem_dir, 
+                                                       pe->rem_dir,
                                                        fhandle);
 
    SAFE_FREE(pe->rem_dir);

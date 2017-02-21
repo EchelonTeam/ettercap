@@ -200,7 +200,7 @@ else(NOT LIBRARY_BUILD)
 	target_link_libraries(lib_ettercap ${EC_LIBS})
 endif(NOT LIBRARY_BUILD)
 
-set_target_properties(lib_ettercap PROPERTIES 
+set_target_properties(lib_ettercap PROPERTIES
   ENABLE_EXPORTS On
   LINK_INTERFACE_LIBRARIES ""
   #  INSTALL_RPATH ${INSTALL_LIBDIR}
@@ -209,7 +209,7 @@ set_target_properties(lib_ettercap PROPERTIES
 
 if (NOT LIBRARY_BUILD)
 	target_link_libraries(ettercap lib_ettercap)
-	set_target_properties(ettercap PROPERTIES 
+	set_target_properties(ettercap PROPERTIES
   	INSTALL_RPATH ${INSTALL_LIBDIR}
   	)
 endif(NOT LIBRARY_BUILD)

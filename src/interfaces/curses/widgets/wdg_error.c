@@ -57,7 +57,7 @@ void wdg_error_msg(char *file, const char *function, int line, char *message, ..
 
    /* close the interface and display the error */
    wdg_cleanup();
-  
+
    fprintf(stderr, "WDG ERROR : %d, %s\n[%s:%s:%d]\n\n %s \n\n",  err_code, strerror(err_code),
                    file, function, line, errmsg );
 
@@ -72,7 +72,7 @@ void wdg_bug(char *file, const char *function, int line, char *message)
 {
    /* close the interface and display the error */
    wdg_cleanup();
-  
+
    fprintf(stderr, "\n\nWDG BUG at [%s:%s:%d]\n\n %s \n\n", file, function, line, message );
 
    exit(-666);

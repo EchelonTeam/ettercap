@@ -25,7 +25,7 @@
 #include <stdarg.h>
 
 /* GLOBALS */
-   
+
 struct wdg_button {
    char *label;
    char selected;
@@ -66,7 +66,7 @@ void wdg_dialog_add_callback(wdg_t *wo, size_t flag, void (*callback)(void));
 
 /*******************************************/
 
-/* 
+/*
  * called to create a window
  */
 void wdg_create_dialog(struct wdg_object *wo)
@@ -74,7 +74,7 @@ void wdg_create_dialog(struct wdg_object *wo)
    struct wdg_dialog *ww;
 
    WDG_DEBUG_MSG("wdg_create_dialog");
-   
+
    /* set the callbacks */
    wo->destroy = wdg_dialog_destroy;
    wo->resize = wdg_dialog_resize;
@@ -86,7 +86,7 @@ void wdg_create_dialog(struct wdg_object *wo)
    WDG_SAFE_CALLOC(wo->extend, 1, sizeof(struct wdg_dialog));
 
    ww = (struct wdg_dialog *)wo->extend;
-  
+
    /* initialize the labels, the other fields are zeroed by the calloc */
    ww->buttons[0].label = " Ok ";
    ww->buttons[1].label = " Yes ";
@@ -94,13 +94,13 @@ void wdg_create_dialog(struct wdg_object *wo)
    ww->buttons[3].label = " Cancel ";
 }
 
-/* 
+/*
  * called to destroy a window
  */
 static int wdg_dialog_destroy(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_dialog, ww);
-   
+
    WDG_DEBUG_MSG("wdg_dialog_destroy");
 
    /* erase the window */
@@ -110,7 +110,7 @@ static int wdg_dialog_destroy(struct wdg_object *wo)
    werase(ww->win);
    wnoutrefresh(ww->sub);
    wnoutrefresh(ww->win);
-   
+
    /* dealloc the structures */
    delwin(ww->sub);
    delwin(ww->win);
@@ -124,7 +124,7 @@ static int wdg_dialog_destroy(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to resize a window
  */
 static int wdg_dialog_resize(struct wdg_object *wo)
@@ -134,7 +134,7 @@ static int wdg_dialog_resize(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to redraw a window
  */
 static int wdg_dialog_redraw(struct wdg_object *wo)
@@ -142,9 +142,9 @@ static int wdg_dialog_redraw(struct wdg_object *wo)
    WDG_WO_EXT(struct wdg_dialog, ww);
    size_t c, l, x, y;
    size_t lines, cols;
-   
+
    WDG_DEBUG_MSG("wdg_dialog_redraw");
- 
+
    /* calculate the dimension and position */
    wdg_dialog_get_size(wo, &lines, &cols);
 
@@ -153,21 +153,21 @@ static int wdg_dialog_redraw(struct wdg_object *wo)
       wo->x1 = 0;
    else
       wo->x1 = (current_screen.cols - (cols + 4)) / 2;
-   
+
    wo->y1 = (current_screen.lines - (lines + 4)) / 2;
    wo->x2 = -wo->x1;
    wo->y2 = -wo->y1;
-   
+
    /* get the cohorditates as usual */
    c = wdg_get_ncols(wo);
    l = wdg_get_nlines(wo);
    x = wdg_get_begin_x(wo);
    y = wdg_get_begin_y(wo);
-   
+
    /* deal with rouding */
    if (l != lines + 4) l = lines + 4;
    if (c != cols + 4) c = cols + 4;
- 
+
    /* the window already exist */
    if (ww->win) {
       /* erase the border */
@@ -175,13 +175,13 @@ static int wdg_dialog_redraw(struct wdg_object *wo)
       werase(ww->win);
       touchwin(ww->win);
       wnoutrefresh(ww->win);
-      
+
       /* resize the window and draw the new border */
       mvwin(ww->win, y, x);
       wresize(ww->win, l, c);
       wdg_dialog_border(wo);
       wdg_dialog_buttons(wo);
-      
+
       /* resize the actual window and touch it */
       mvwin(ww->sub, y + 2, x + 2);
       wresize(ww->sub, l - 4, c - 4);
@@ -202,30 +202,30 @@ static int wdg_dialog_redraw(struct wdg_object *wo)
       /* create the inner (actual) window */
       if ((ww->sub = newwin(l - 4, c - 4, y + 2, x + 2)) == NULL)
          return -WDG_EFATAL;
-      
+
       /* set the window color */
       wbkgdset(ww->sub, COLOR_PAIR(wo->window_color));
       werase(ww->sub);
       redrawwin(ww->sub);
 
    }
-  
+
    /* print the message text */
    wmove(ww->sub, 0, 0);
    wprintw(ww->sub, ww->text);
-   
+
    /* refresh the window */
    redrawwin(ww->sub);
    redrawwin(ww->win);
    wnoutrefresh(ww->win);
    wnoutrefresh(ww->sub);
-   
+
    wo->flags |= WDG_OBJ_VISIBLE;
 
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the window gets the focus
  */
 static int wdg_dialog_get_focus(struct wdg_object *wo)
@@ -235,25 +235,25 @@ static int wdg_dialog_get_focus(struct wdg_object *wo)
 
    /* redraw the window */
    wdg_dialog_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the window looses the focus
  */
 static int wdg_dialog_lost_focus(struct wdg_object *wo)
 {
    /* set the flag */
    wo->flags &= ~WDG_OBJ_FOCUSED;
-   
+
    /* redraw the window */
    wdg_dialog_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called by the messages dispatcher when the window is focused
  */
 static int wdg_dialog_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_event *mouse)
@@ -269,7 +269,7 @@ static int wdg_dialog_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_e
             /* if the mouse click was over a button */
             if (wdg_dialog_mouse_move(wo, mouse) == WDG_ESUCCESS)
                wdg_dialog_callback(wo);
-         } else 
+         } else
             return -WDG_ENOTHANDLED;
          break;
 
@@ -282,13 +282,13 @@ static int wdg_dialog_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_e
       case KEY_RETURN:
          wdg_dialog_callback(wo);
          break;
-         
+
       /* message not handled */
       default:
          return -WDG_ENOTHANDLED;
          break;
    }
-  
+
    return WDG_ESUCCESS;
 }
 
@@ -299,24 +299,24 @@ static void wdg_dialog_border(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_dialog, ww);
    size_t c = wdg_get_ncols(wo);
-      
+
    /* fill the window with color */
    wbkgdset(ww->win, COLOR_PAIR(wo->window_color));
    werase(ww->win);
-   
+
    /* the object was focused */
    if (wo->flags & WDG_OBJ_FOCUSED) {
       wattron(ww->win, A_BOLD);
       wbkgdset(ww->win, COLOR_PAIR(wo->focus_color));
    } else
       wbkgdset(ww->win, COLOR_PAIR(wo->border_color));
-   
+
    /* draw the borders */
    box(ww->win, 0, 0);
-   
+
    /* set the title color */
    wbkgdset(ww->win, COLOR_PAIR(wo->title_color));
-   
+
    /* there is a title: print it */
    if (wo->title) {
       switch (wo->align) {
@@ -332,7 +332,7 @@ static void wdg_dialog_border(struct wdg_object *wo)
       }
       wprintw(ww->win, wo->title);
    }
-   
+
    /* restore the attribute */
    if (wo->flags & WDG_OBJ_FOCUSED)
       wattroff(ww->win, A_BOLD);
@@ -349,7 +349,7 @@ void wdg_dialog_text(wdg_t *wo, size_t flags, const char *text)
 
    ww->flags = flags;
    WDG_SAFE_STRDUP(ww->text, text);
-   
+
    /* mark the buttons to be used */
    if (ww->flags & WDG_OK) {
       ww->buttons[0].selected = 1;
@@ -393,8 +393,8 @@ static void wdg_dialog_get_size(struct wdg_object *wo, size_t *lines, size_t *co
    /* initialize them */
    *lines = 1;
    *cols = 0;
-   
-   /* 
+
+   /*
     * parse the text message and find how many '\n' are present.
     * also calculate the longest string between two '\n'
     */
@@ -415,7 +415,7 @@ static void wdg_dialog_get_size(struct wdg_object *wo, size_t *lines, size_t *co
    /* if there were no '\n' */
    if (*cols == 0)
       *cols = t;
- 
+
    if (ww->flags != WDG_NO_BUTTONS)
       /* add the lines for the buttons */
       *lines += 2;
@@ -433,39 +433,39 @@ static void wdg_dialog_buttons(struct wdg_object *wo)
    /* no button to be displayed */
    if (ww->flags == WDG_NO_BUTTONS)
       return;
-   
+
    /* get the line of the message */
    wdg_dialog_get_size(wo, &l, &c);
 
    /* calculate the length of the buttons */
-   for (i = 0; i < WDG_DIALOG_MAX_BUTTON; i++) 
+   for (i = 0; i < WDG_DIALOG_MAX_BUTTON; i++)
       if (ww->buttons[i].selected)
          c -= strlen(ww->buttons[i].label);
 
    /* move the cursor to the right position (centered) */
    wmove(ww->sub, l - 1, c / 2);
-   
+
    /* print the buttons */
    for (i = 0; i < WDG_DIALOG_MAX_BUTTON; i++) {
       if (ww->buttons[i].selected) {
          if (ww->focus_button == i)
             wattron(ww->sub, A_REVERSE);
-         
+
          wprintw(ww->sub, "%s", ww->buttons[i].label);
-         
+
          wattroff(ww->sub, A_REVERSE);
       }
    }
 }
 
 /*
- * move the focus thru menu units 
+ * move the focus thru menu units
  */
 static void wdg_dialog_move(struct wdg_object *wo, int key)
 {
    WDG_WO_EXT(struct wdg_dialog, ww);
    int i = ww->focus_button;
-   
+
    switch(key) {
       case KEY_RIGHT:
          /* move until we found a selected button */
@@ -474,7 +474,7 @@ static void wdg_dialog_move(struct wdg_object *wo, int key)
          if ( i < WDG_DIALOG_MAX_BUTTON && ww->buttons[i].selected)
             ww->focus_button = i;
          break;
-         
+
       case KEY_LEFT:
          /* move until we found a selected button */
          while (!ww->buttons[--i].selected);
@@ -494,7 +494,7 @@ static int wdg_dialog_mouse_move(struct wdg_object *wo, struct wdg_mouse_event *
    size_t y = wdg_get_begin_y(wo);
    size_t x = wdg_get_begin_x(wo);
    size_t i, l, c;
-   
+
    /* get the line of the message */
    wdg_dialog_get_size(wo, &l, &c);
 
@@ -503,23 +503,23 @@ static int wdg_dialog_mouse_move(struct wdg_object *wo, struct wdg_mouse_event *
       return -WDG_ENOTHANDLED;
 
    /* calculate the length of the buttons */
-   for (i = 0; i < WDG_DIALOG_MAX_BUTTON; i++) 
+   for (i = 0; i < WDG_DIALOG_MAX_BUTTON; i++)
       if (ww->buttons[i].selected)
          c -= strlen(ww->buttons[i].label);
 
    /* buttons start here */
    x += c / 2;
-  
+
    for (i = 0; i < WDG_DIALOG_MAX_BUTTON; i++) {
       /* if the mouse is over a title */
       if (mouse->x >= x && mouse->x < x + strlen(ww->buttons[i].label) ) {
          ww->focus_button = i;
          return WDG_ESUCCESS;
       }
-      /* move the pointer */   
+      /* move the pointer */
       x += strlen(ww->buttons[i].label);
-   }    
-   
+   }
+
    return -WDG_ENOTHANDLED;
 }
 
@@ -531,9 +531,9 @@ static void wdg_dialog_callback(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_dialog, ww);
    void (*callback)(void);
-   
+
    WDG_DEBUG_MSG("wdg_dialog_callback");
-   
+
    callback = ww->buttons[ww->focus_button].callback;
    wdg_destroy_object(&wo);
    wdg_redraw_all();
@@ -549,13 +549,13 @@ void wdg_dialog_add_callback(wdg_t *wo, size_t flag, void (*callback)(void))
 
    if (flag & WDG_OK)
       ww->buttons[0].callback = callback;
-   
+
    if (flag & WDG_YES)
       ww->buttons[1].callback = callback;
-   
+
    if (flag & WDG_NO)
       ww->buttons[2].callback = callback;
-   
+
    if (flag & WDG_CANCEL)
       ww->buttons[3].callback = callback;
 }

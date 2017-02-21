@@ -106,24 +106,24 @@ FUNC_DECODER(dissector_dns)
    int32 ttl;
 
    DEBUG_MSG("DNS --> UDP 53  dissector_dns");
-   
+
    dns = (struct dns_header *)po->DATA.data;
    data = (u_char *)(dns + 1);
    end = (u_char *)dns + po->DATA.len;
-   
+
    /* initialize the name */
    memset(name, 0, sizeof(name));
    memset(alias, 0, sizeof(alias));
-   
+
    /* extract the name from the packet */
    name_len = dn_expand((u_char *)dns, end, data, name, sizeof(name));
-   
+
    /* thre was an error */
    if (name_len < 0)
       return NULL;
 
    q = data + name_len;
-  
+
    /* get the type and class */
    NS_GET16(type, q);
    NS_GET16(class, q);
@@ -134,21 +134,21 @@ FUNC_DECODER(dissector_dns)
 
    /* HOOK POINT: HOOK_PROTO_DNS */
    hook_point(HOOK_PROTO_DNS, PACKET);
-   
+
    /* this is a DNS answer */
    if (dns->qr && dns->rcode == ns_r_noerror && htons(dns->num_answer) > 0) {
-  
+
       for (i = 0; i <= ntohs(dns->num_answer); i++) {
-         
-         /* 
-          * decode the answer 
+
+         /*
+          * decode the answer
           * keep the name separated from aliases...
           */
          if (i == 0)
             name_len = dn_expand((u_char *)dns, end, q, name, sizeof(name));
-         else 
+         else
             name_len = dn_expand((u_char *)dns, end, q, alias, sizeof(alias));
-         
+
          /* thre was an error */
          if (name_len < 0)
             return NULL;
@@ -160,41 +160,41 @@ FUNC_DECODER(dissector_dns)
          NS_GET16(class, q);
          NS_GET32(ttl, q);
          NS_GET16(a_len, q);
-         
+
          /* only internet class */
          if (class != ns_c_in)
             return NULL;
-        
+
          /* alias */
          if (type == ns_t_cname || type == ns_t_ptr) {
             name_len = dn_expand((u_char *)dns, end, q, alias, sizeof(alias));
             q += a_len;
-         } 
-         
+         }
+
          /* name to ip */
          if (type == ns_t_a) {
             int32 addr;
             struct ip_addr ip;
             char aip[MAX_ASCII_ADDR_LEN];
-              
+
             /* get the address */
             NS_GET32(addr, q);
             /* convert to network order */
             addr = htonl(addr);
             ip_addr_init(&ip, AF_INET, (u_char *)&addr);
-           
+
             /* insert the answer in the resolv cache */
             resolv_cache_insert(&ip, name);
 
             /* display the user message */
             ip_addr_ntoa(&ip, aip);
-            
+
             //DISSECT_MSG("DNS: %s ->> %s ->> %s\n", name, alias, aip);
             DEBUG_MSG("DNS: %s ->> %s ->> %s\n", name, alias, aip);
          }
       }
    }
-      
+
    return NULL;
 }
 

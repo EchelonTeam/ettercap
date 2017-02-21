@@ -68,7 +68,7 @@ void toggle_reverse(void)
 void wipe_targets(void)
 {
    DEBUG_MSG("wipe_targets");
-   
+
    reset_display_filter(GBL_TARGET1);
    reset_display_filter(GBL_TARGET2);
 
@@ -110,10 +110,10 @@ static void set_protocol(void)
  */
 void gtkui_select_targets(void)
 {
-   GtkWidget *dialog, *hbox, *label, *entry1, *entry2;  
-   
+   GtkWidget *dialog, *hbox, *label, *entry1, *entry2;
+
 #define TARGET_LEN 50
-   
+
    DEBUG_MSG("gtk_select_targets");
 
    dialog = gtk_dialog_new_with_buttons("Enter Targets", GTK_WINDOW(window),
@@ -123,16 +123,16 @@ void gtkui_select_targets(void)
 
    hbox = gtk_hbox_new(FALSE, 0);
    label = gtk_label_new ("Target 1: ");
-   
+
    gtk_box_pack_start(GTK_BOX (hbox), label, TRUE, TRUE, 0);
    gtk_widget_show(label);
 
    entry1 = gtk_entry_new_with_max_length(TARGET_LEN);
    gtk_entry_set_width_chars (GTK_ENTRY (entry1), TARGET_LEN);
-   
+
    if (GBL_OPTIONS->target1)
-      gtk_entry_set_text(GTK_ENTRY (entry1), GBL_OPTIONS->target1); 
-   
+      gtk_entry_set_text(GTK_ENTRY (entry1), GBL_OPTIONS->target1);
+
    gtk_box_pack_start(GTK_BOX (hbox), entry1, FALSE, FALSE, 0);
    gtk_widget_show(entry1);
    gtk_box_pack_start(GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, TRUE, TRUE, 5);
@@ -145,10 +145,10 @@ void gtkui_select_targets(void)
 
    entry2 = gtk_entry_new_with_max_length(TARGET_LEN);
    gtk_entry_set_width_chars (GTK_ENTRY (entry2), TARGET_LEN);
-   
+
    if (GBL_OPTIONS->target2)
-      gtk_entry_set_text(GTK_ENTRY (entry2), GBL_OPTIONS->target2); 
-   
+      gtk_entry_set_text(GTK_ENTRY (entry2), GBL_OPTIONS->target2);
+
    gtk_box_pack_start(GTK_BOX (hbox), entry2, FALSE, FALSE, 0);
    gtk_widget_show(entry2);
    gtk_box_pack_start(GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, TRUE, TRUE, 5);
@@ -172,7 +172,7 @@ void gtkui_select_targets(void)
 }
 
 /*
- * set the targets 
+ * set the targets
  */
 static void set_targets(void)
 {
@@ -183,11 +183,11 @@ static void set_targets(void)
    /* free empty filters */
    if (!strcmp(GBL_OPTIONS->target1, ""))
       SAFE_FREE(GBL_OPTIONS->target1);
-   
+
    /* free empty filters */
    if (!strcmp(GBL_OPTIONS->target2, ""))
       SAFE_FREE(GBL_OPTIONS->target2);
-   
+
    /* compile the filters */
    compile_display_filter();
 
@@ -209,7 +209,7 @@ void gtkui_current_targets(void)
 
    /* prepare the liststores for the target lists */
    gtkui_create_targets_array();
-  
+
    if(targets_window) {
       if(GTK_IS_WINDOW (targets_window))
          gtk_window_present(GTK_WINDOW (targets_window));
@@ -318,7 +318,7 @@ static void gtkui_targets_destroy(void)
 
 /*
  * create the array for the widget.
- * erase any previously alloc'd array 
+ * erase any previously alloc'd array
  */
 void gtkui_create_targets_array(void)
 {
@@ -332,7 +332,7 @@ void gtkui_create_targets_array(void)
       gtk_list_store_clear(GTK_LIST_STORE (liststore1));
    else
       liststore1 = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
-   
+
    /* walk TARGET 1 */
    LIST_FOREACH(il, &GBL_TARGET1->ips, next) {
       /* enlarge the array */
@@ -345,7 +345,7 @@ void gtkui_create_targets_array(void)
       gtk_list_store_clear(GTK_LIST_STORE (liststore2));
    else
       liststore2 = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
-   
+
    /* walk TARGET 2 */
    LIST_FOREACH(il, &GBL_TARGET2->ips, next) {
       /* enlarge the array */
@@ -376,16 +376,16 @@ static void add_target1(void)
 {
    struct in_addr ip;
    struct ip_addr host;
-   
+
    if (inet_aton(thost, &ip) == 0) {
       gtkui_message("Invalid ip address");
       return;
    }
-   
+
    ip_addr_init(&host, AF_INET, (char *)&ip);
 
    add_ip_list(&host, GBL_TARGET1);
-   
+
    /* refresh the list */
    gtkui_create_targets_array();
 }
@@ -394,16 +394,16 @@ static void add_target2(void)
 {
    struct in_addr ip;
    struct ip_addr host;
-   
+
    if (inet_aton(thost, &ip) == 0) {
       gtkui_message("Invalid ip address");
       return;
    }
-   
+
    ip_addr_init(&host, AF_INET, (char *)&ip);
 
    add_ip_list(&host, GBL_TARGET2);
-   
+
    /* refresh the list */
    gtkui_create_targets_array();
 }
@@ -450,7 +450,7 @@ static void gtkui_delete_targets(GtkWidget *widget, gpointer data) {
          }
          break;
    }
-   
+
    /* free the list of selections */
    if(list) {
       g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);

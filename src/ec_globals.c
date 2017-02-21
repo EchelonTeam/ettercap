@@ -39,15 +39,15 @@ void globals_free(void);
 
 void globals_alloc(void)
 {
-   
+
    SAFE_CALLOC(gbls, 1, sizeof(struct globals));
-   SAFE_CALLOC(gbls->conf, 1, sizeof(struct ec_conf)); 
-   SAFE_CALLOC(gbls->options, 1, sizeof(struct ec_options));         
+   SAFE_CALLOC(gbls->conf, 1, sizeof(struct ec_conf));
+   SAFE_CALLOC(gbls->options, 1, sizeof(struct ec_options));
    SAFE_CALLOC(gbls->stats, 1, sizeof(struct gbl_stats));
    SAFE_CALLOC(gbls->ui, 1, sizeof(struct ui_ops));
-   SAFE_CALLOC(gbls->env, 1, sizeof(struct program_env)); 
+   SAFE_CALLOC(gbls->env, 1, sizeof(struct program_env));
    SAFE_CALLOC(gbls->pcap, 1, sizeof(struct pcap_env));
-   SAFE_CALLOC(gbls->lnet, 1, sizeof(struct lnet_env)); 
+   SAFE_CALLOC(gbls->lnet, 1, sizeof(struct lnet_env));
    SAFE_CALLOC(gbls->iface, 1, sizeof(struct iface_env));
    SAFE_CALLOC(gbls->bridge, 1, sizeof(struct iface_env));
    SAFE_CALLOC(gbls->sm, 1, sizeof(struct sniffing_method));
@@ -60,14 +60,14 @@ void globals_alloc(void)
    /* init the structures */
    TAILQ_INIT(&GBL_PROFILES);
    LIST_INIT(&GBL_HOSTLIST);
-   
+
    return;
 }
 
 
 void globals_free(void)
 {
- 
+
    GBL_FREE(gbls->pcap);
    GBL_FREE(gbls->lnet);
    GBL_FREE(gbls->iface);
@@ -79,12 +79,12 @@ void globals_free(void)
    GBL_FREE(gbls->t1);
    free_ip_list(gbls->t2);
    GBL_FREE(gbls->t2);
-   
+
    GBL_FREE(gbls->env->name);
    GBL_FREE(gbls->env->version);
    GBL_FREE(gbls->env->debug_file);
    GBL_FREE(gbls->env);
-   
+
    GBL_FREE(gbls->options->plugin);
    GBL_FREE(gbls->options->proto);
    GBL_FREE(gbls->options->pcapfile_in);
@@ -98,9 +98,9 @@ void globals_free(void)
    GBL_FREE(gbls->conf);
    /* destroy the list structure */
    filter_clear();
-   
+
    GBL_FREE(gbls);
-   
+
    return;
 }
 

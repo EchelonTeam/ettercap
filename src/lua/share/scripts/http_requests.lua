@@ -9,7 +9,7 @@ local http = require("http")
 local packet = require("packet")
 local bin = require("bit")
 
-hook_point = http.hook 
+hook_point = http.hook
 
 packetrule = function(packet_object)
 
@@ -26,9 +26,9 @@ end
 
 
 -- Here's your action.
-action = function(packet_object) 
+action = function(packet_object)
    local p = packet_object
-   
+
    -- Parse the http data into an HTTP object
    local hobj = http.parse_http(p)
 
@@ -50,9 +50,9 @@ action = function(packet_object)
 
    -- If it's a request, save the request to the registry
    -- We'll need this for the response
-   if hobj.request then 
+   if hobj.request then
       reg.request = hobj
-   
+
    -- we have a response object, let't put the log together
    elseif hobj.response then
 
@@ -71,12 +71,12 @@ action = function(packet_object)
       if code >= 200 and code < 300 or code >= 400 then
          ettercap.log("HTTP_REQ: %s:%d -> %s:%d %s %s %d (%s)\n",
             packet.dst_ip(p),
-            packet.dst_port(p), 
-            packet.src_ip(p), 
-            packet.src_port(p), 
+            packet.dst_port(p),
+            packet.src_ip(p),
+            packet.src_port(p),
             reg.request.verb ,reg.request.url , hobj.status_code, hobj.status_msg)
 
-      -- These codes require redirect, so log the redirect as well 
+      -- These codes require redirect, so log the redirect as well
       elseif code >= 300 and code <= 303 then
          local redir = ""
 
@@ -88,9 +88,9 @@ action = function(packet_object)
          -- Log the request/response with the redirect
          ettercap.log("HTTP_REQ: %s:%d -> %s:%d %s %s -> %s  %d (%s)\n",
             packet.dst_ip(p),
-            packet.dst_port(p), 
-            packet.src_ip(p), 
-            packet.src_port(p), 
+            packet.dst_port(p),
+            packet.src_ip(p),
+            packet.src_port(p),
             reg.request.verb ,reg.request.url, redir, hobj.status_code, hobj.status_msg)
       end
 

@@ -51,13 +51,13 @@ void wdg_panel_print(wdg_t *wo, size_t x, size_t y, char *fmt, ...);
 
 /*******************************************/
 
-/* 
+/*
  * called to create a window
  */
 void wdg_create_panel(struct wdg_object *wo)
 {
    WDG_DEBUG_MSG("wdg_create_panel");
-   
+
    /* set the callbacks */
    wo->destroy = wdg_panel_destroy;
    wo->resize = wdg_panel_resize;
@@ -69,14 +69,14 @@ void wdg_create_panel(struct wdg_object *wo)
    WDG_SAFE_CALLOC(wo->extend, 1, sizeof(struct wdg_panel));
 }
 
-/* 
+/*
  * called to destroy a window
  */
 static int wdg_panel_destroy(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_panel, ww);
    WINDOW *win, *sub;
-   
+
    WDG_DEBUG_MSG("wdg_panel_destroy");
 
    /* erase the window */
@@ -84,7 +84,7 @@ static int wdg_panel_destroy(struct wdg_object *wo)
    wbkgd(W(ww->win), COLOR_PAIR(wo->screen_color));
    werase(W(ww->sub));
    werase(W(ww->win));
-   
+
    /* dealloc the structures */
    win = W(ww->win);
    sub = W(ww->sub);
@@ -101,7 +101,7 @@ static int wdg_panel_destroy(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to resize a window
  */
 static int wdg_panel_resize(struct wdg_object *wo)
@@ -111,7 +111,7 @@ static int wdg_panel_resize(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to redraw a window
  */
 static int wdg_panel_redraw(struct wdg_object *wo)
@@ -121,15 +121,15 @@ static int wdg_panel_redraw(struct wdg_object *wo)
    size_t l = wdg_get_nlines(wo);
    size_t x = wdg_get_begin_x(wo);
    size_t y = wdg_get_begin_y(wo);
-   
+
    WDG_DEBUG_MSG("wdg_panel_redraw");
- 
+
    /* the window already exist */
    if (ww->win) {
       /* erase the border */
       wbkgd(W(ww->win), COLOR_PAIR(wo->screen_color));
       werase(W(ww->win));
-    
+
       /* XXX - try to keep the window on screen */
       if (c <= 2) c = 3;
       if (l <= 2) l = 3;
@@ -141,7 +141,7 @@ static int wdg_panel_redraw(struct wdg_object *wo)
       WDG_WRESIZE(W(ww->win), l, c);
       replace_panel(ww->win, W(ww->win));
       wdg_panel_border(wo);
-      
+
       /* resize the actual window and touch it */
       WDG_MOVE_PANEL(ww->sub, y + 1, x + 1);
       WDG_WRESIZE(W(ww->sub), l - 2, c - 2);
@@ -163,10 +163,10 @@ static int wdg_panel_redraw(struct wdg_object *wo)
       /* create the inner (actual) window */
       if ((ww->sub = new_panel(newwin(l - 2, c - 2, y + 1, x + 1))) == NULL)
          return -WDG_EFATAL;
-      
+
       /* set the window color */
       wbkgd(W(ww->sub), COLOR_PAIR(wo->window_color));
-      
+
       /* initialize the pointer */
       wmove(W(ww->sub), 0, 0);
 
@@ -176,16 +176,16 @@ static int wdg_panel_redraw(struct wdg_object *wo)
       top_panel(ww->win);
       top_panel(ww->sub);
    }
-   
-   /* refresh the screen */   
+
+   /* refresh the screen */
    update_panels();
-   
+
    wo->flags |= WDG_OBJ_VISIBLE;
 
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the window gets the focus
  */
 static int wdg_panel_get_focus(struct wdg_object *wo)
@@ -195,25 +195,25 @@ static int wdg_panel_get_focus(struct wdg_object *wo)
 
    /* redraw the window */
    wdg_panel_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the window looses the focus
  */
 static int wdg_panel_lost_focus(struct wdg_object *wo)
 {
    /* set the flag */
    wo->flags &= ~WDG_OBJ_FOCUSED;
-   
+
    /* redraw the window */
    wdg_panel_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called by the messages dispatcher when the window is focused
  */
 static int wdg_panel_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_event *mouse)
@@ -225,7 +225,7 @@ static int wdg_panel_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_ev
          /* is the mouse event within our edges ? */
          if (wenclose(W(ww->win), mouse->y, mouse->x))
             wdg_set_focus(wo);
-         else 
+         else
             return -WDG_ENOTHANDLED;
          break;
 
@@ -234,7 +234,7 @@ static int wdg_panel_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_ev
          return -WDG_ENOTHANDLED;
          break;
    }
-  
+
    return WDG_ESUCCESS;
 }
 
@@ -245,19 +245,19 @@ static void wdg_panel_border(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_panel, ww);
    size_t c = wdg_get_ncols(wo);
-      
+
    /* the object was focused */
    if (wo->flags & WDG_OBJ_FOCUSED) {
       wattron(W(ww->win), A_BOLD);
       wbkgdset(W(ww->win), COLOR_PAIR(wo->focus_color));
       top_panel(ww->win);
       top_panel(ww->sub);
-   } else 
+   } else
       wbkgdset(W(ww->win), COLOR_PAIR(wo->border_color));
-   
+
    /* draw the borders */
    box(W(ww->win), 0, 0);
-   
+
    /* set the border color */
    wbkgdset(W(ww->win), COLOR_PAIR(wo->title_color));
 
@@ -276,7 +276,7 @@ static void wdg_panel_border(struct wdg_object *wo)
       }
       wprintw(W(ww->win), wo->title);
    }
-   
+
    /* restore the attribute */
    if (wo->flags & WDG_OBJ_FOCUSED)
       wattroff(W(ww->win), A_BOLD);
@@ -289,7 +289,7 @@ void wdg_panel_print(wdg_t *wo, size_t x, size_t y, char *fmt, ...)
 {
    WDG_WO_EXT(struct wdg_panel, ww);
    va_list ap;
-   
+
    WDG_DEBUG_MSG("wdg_panel_print");
 
    /* move the pointer */

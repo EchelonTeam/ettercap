@@ -37,7 +37,7 @@ void unified_set_forwardable(struct packet_object *po);
 /*******************************************/
 
 /*
- * creates the threads for capturing 
+ * creates the threads for capturing
  */
 void start_unified_sniff(void)
 {
@@ -46,13 +46,13 @@ void start_unified_sniff(void)
       USER_MSG("Unified sniffing already started...\n");
       return;
    }
-   
+
    USER_MSG("Starting Unified sniffing...\n\n");
-   
+
    /* create the timeouter thread */
-   if (!GBL_OPTIONS->read) { 
+   if (!GBL_OPTIONS->read) {
       pthread_t pid;
-      
+
       pid = ec_thread_getpid("timer");
       if (pthread_equal(pid, EC_PTHREAD_NULL))
          ec_thread_new("timer", "conntrack timeouter", &conntrack_timeouter, NULL);
@@ -78,20 +78,20 @@ void start_unified_sniff(void)
 void stop_unified_sniff(void)
 {
    pthread_t pid;
-   
+
    DEBUG_MSG("stop_unified_sniff");
-   
+
    if (GBL_SNIFF->active == 0) {
       USER_MSG("Unified sniffing is not running...\n");
       return;
    }
-  
+
    /* kill it */
    capture_stop(GBL_IFACE);
 
    if(GBL_OPTIONS->secondary)
       secondary_sources_foreach(capture_stop);
-   
+
    pid = ec_thread_getpid("sslwrap");
    if (!pthread_equal(pid, EC_PTHREAD_NULL))
       ec_thread_destroy(pid);
@@ -119,12 +119,12 @@ void forward_unified_sniff(struct packet_object *po)
             return;
          break;
    }
-   
+
    /* if unoffensive is set, don't forward any packet */
    if (GBL_OPTIONS->unoffensive || GBL_OPTIONS->read)
       return;
 
-   /* 
+   /*
     * forward the packet to Layer 3, the kernel
     * will route them to the correct destination (host or gw)
     */
@@ -133,26 +133,26 @@ void forward_unified_sniff(struct packet_object *po)
    if ((po->flags & PO_DROPPED) == 0)
       send_to_L3(po);
 
-    /* 
+    /*
      * if the packet was modified and it exceeded the mtu,
      * we have to inject the exceeded data
      */
-    if (po->DATA.inject) 
-       inject_buffer(po); 
+    if (po->DATA.inject)
+       inject_buffer(po);
 }
 
 /*
  * check if the packet has been forwarded by us
  * the source mac address is our, but the ip address is different
  */
-void unified_check_forwarded(struct packet_object *po) 
+void unified_check_forwarded(struct packet_object *po)
 {
    /* the interface was not configured, the packets are not forwardable */
    if (!GBL_IFACE->is_ready)
       return;
-   
-   /* 
-    * dont sniff forwarded packets (equal mac, different ip) 
+
+   /*
+    * dont sniff forwarded packets (equal mac, different ip)
     * but only if we are on live connections
     */
    if (GBL_CONF->skip_forwarded && !GBL_OPTIONS->read &&
@@ -162,7 +162,7 @@ void unified_check_forwarded(struct packet_object *po)
    }
 }
 
-/* 
+/*
  * if the dest mac address of the packet is
  * the same of GBL_IFACE->mac but the dest ip is
  * not the same as GBL_IFACE->ip, the packet is not
@@ -170,7 +170,7 @@ void unified_check_forwarded(struct packet_object *po)
  */
 void unified_set_forwardable(struct packet_object *po)
 {
-   /* 
+   /*
     * if the mac is our, but the ip is not...
     * it has to be forwarded
     */
@@ -179,7 +179,7 @@ void unified_set_forwardable(struct packet_object *po)
        ip_addr_is_ours(&po->L3.dst) != EFOUND) {
       po->flags |= PO_FORWARDABLE;
    }
-   
+
 }
 
 

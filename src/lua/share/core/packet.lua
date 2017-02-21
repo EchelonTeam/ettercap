@@ -133,8 +133,8 @@ end
 l4_summary = function(po)
   return string.format("%s:%s -> %s:%s",
       packet.src_ip(po),
-      packet.src_port(po), 
-      packet.dst_ip(po), 
+      packet.src_port(po),
+      packet.dst_ip(po),
       packet.dst_port(po))
 end
 

@@ -82,13 +82,13 @@ FUNC_DECODER(dissector_cvs)
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    /* not a login packet */
    if ( strncmp((const char*)ptr, CVS_LOGIN, strlen(CVS_LOGIN)) )
       return NULL;
-   
+
    DEBUG_MSG("CVS --> TCP dissector_cvs");
-   
+
    /* move over the cvsroot path */
    ptr += strlen(CVS_LOGIN) + 1;
 
@@ -97,50 +97,50 @@ FUNC_DECODER(dissector_cvs)
    if (ptr == end) return NULL;
 
    PACKET->DISSECTOR.user = strdup((const char*)++ptr);
-   
+
    /* cut the username on \n */
    if ( (p = strchr(PACKET->DISSECTOR.user, '\n')) != NULL )
       *p = '\0';
-   
+
    /* go until \n */
    while(*ptr != '\n' && ptr != end) ptr++;
    if (ptr == end) return NULL;
- 
+
    /* unsupported scramble method */
    if (*(++ptr) != 'A')
       return NULL;
-   
+
    PACKET->DISSECTOR.pass = strdup((const char*)ptr);
-   
+
    /* cut the username on \n */
    if ( (p = strchr(PACKET->DISSECTOR.pass, '\n')) != NULL )
       *p = '\0';
-  
+
    /* no password */
    if (strlen(PACKET->DISSECTOR.pass) == 1 && PACKET->DISSECTOR.pass[0] == 'A') {
       SAFE_FREE(PACKET->DISSECTOR.pass);
       PACKET->DISSECTOR.pass = strdup("(empty)");
    } else {
-   
+
       p = PACKET->DISSECTOR.pass;
-   
+
       /* descramble the password */
-      for (i = 1; i < sizeof(cvs_shifts) - 1 && p[i]; i++)                        
+      for (i = 1; i < sizeof(cvs_shifts) - 1 && p[i]; i++)
          p[i] = cvs_shifts[(size_t)p[i]];
 
       /* shift it to the left to eliminate the 'A' */
       for (i = 0; p[i]; i++)
          p[i] = p[i + 1];
-      
+
    }
-   
+
    /* final message */
    DISSECT_MSG("CVS : %s:%d -> USER: %s  PASS: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass);
 
-   
+
    return NULL;
 }
 

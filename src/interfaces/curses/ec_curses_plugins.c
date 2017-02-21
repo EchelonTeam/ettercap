@@ -58,11 +58,11 @@ struct wdg_menu menu_plugins[] = { {"Plugins",            'P',       "",    NULL
 static void curses_plugin_load(void)
 {
    wdg_t *fop;
-   
+
    DEBUG_MSG("curses_plugin_load");
-   
+
    wdg_create_object(&fop, WDG_FILE, WDG_OBJ_WANT_FOCUS | WDG_OBJ_FOCUS_MODAL);
-   
+
    wdg_set_title(fop, "Select a plugin...", WDG_ALIGN_LEFT);
    wdg_set_color(fop, WDG_COLOR_SCREEN, EC_COLOR);
    wdg_set_color(fop, WDG_COLOR_WINDOW, EC_COLOR_MENU);
@@ -70,9 +70,9 @@ static void curses_plugin_load(void)
    wdg_set_color(fop, WDG_COLOR_TITLE, EC_COLOR_TITLE);
 
    wdg_file_set_callback(fop, curses_load_plugin);
-   
+
    wdg_draw_object(fop);
-   
+
    wdg_set_focus(fop);
 }
 
@@ -109,19 +109,19 @@ static void curses_load_plugin(char *path, char *file)
 static void curses_plugin_mgmt(void)
 {
    DEBUG_MSG("curses_plugin_mgmt");
-   
+
    /* create the array for the list widget */
    curses_create_plug_array();
-   
+
    /* if the object already exist, set the focus to it */
    if (wdg_plugin) {
       /* set the new array */
       wdg_list_set_elements(wdg_plugin, wdg_plugin_elements);
       return;
    }
-   
+
    wdg_create_object(&wdg_plugin, WDG_LIST, WDG_OBJ_WANT_FOCUS);
-   
+
    wdg_set_size(wdg_plugin, 1, 2, -1, SYSMSG_WIN_SIZE - 1);
    wdg_set_title(wdg_plugin, "Select a plugin...", WDG_ALIGN_LEFT);
    wdg_set_color(wdg_plugin, WDG_COLOR_SCREEN, EC_COLOR);
@@ -130,19 +130,19 @@ static void curses_plugin_mgmt(void)
    wdg_set_color(wdg_plugin, WDG_COLOR_FOCUS, EC_COLOR_FOCUS);
    wdg_set_color(wdg_plugin, WDG_COLOR_TITLE, EC_COLOR_TITLE);
 
-  
+
    /* set the elements */
    wdg_list_set_elements(wdg_plugin, wdg_plugin_elements);
-   
+
    /* add the destroy callback */
    wdg_add_destroy_key(wdg_plugin, CTRL('Q'), curses_plug_destroy);
-  
+
    /* add the callback */
    wdg_list_select_callback(wdg_plugin, curses_select_plugin);
    wdg_list_add_callback(wdg_plugin, ' ', curses_plugin_help);
-     
+
    wdg_draw_object(wdg_plugin);
-   
+
    wdg_set_focus(wdg_plugin);
 }
 
@@ -162,14 +162,14 @@ static void curses_plugin_help(void *dummy)
 
 /*
  * create the array for the widget.
- * erase any previously alloc'd array 
+ * erase any previously alloc'd array
  */
 static void curses_create_plug_array(void)
 {
    int res, i = 0;
-   
+
    DEBUG_MSG("curses_create_plug_array");
-   
+
    /* free the array (if alloc'ed) */
    while (wdg_plugin_elements && wdg_plugin_elements[i].desc != NULL) {
       SAFE_FREE(wdg_plugin_elements[i].desc);
@@ -177,10 +177,10 @@ static void curses_create_plug_array(void)
    }
    SAFE_FREE(wdg_plugin_elements);
    nplug = 0;
-   
+
    /* go thru the list of plugins */
    res = plugin_list_walk(PLP_MIN, PLP_MAX, &curses_wdg_plugin);
-   if (res == -ENOTFOUND) { 
+   if (res == -ENOTFOUND) {
       SAFE_CALLOC(wdg_plugin_elements, 1, sizeof(struct wdg_list));
       wdg_plugin_elements->desc = "No plugin found !";
    }
@@ -191,48 +191,48 @@ static void curses_create_plug_array(void)
  */
 static void curses_refresh_plug_array(char active, struct plugin_ops *ops)
 {
-   /* refresh the description */ 
-   snprintf(wdg_plugin_elements[nplug].desc, MAX_DESC_LEN, "[%d] %15s %4s  %s", active, ops->name, ops->version, ops->info);  
-   
+   /* refresh the description */
+   snprintf(wdg_plugin_elements[nplug].desc, MAX_DESC_LEN, "[%d] %15s %4s  %s", active, ops->name, ops->version, ops->info);
+
    nplug++;
 }
 
 /*
- * callback function for displaying the plugin list 
+ * callback function for displaying the plugin list
  */
 static void curses_wdg_plugin(char active, struct plugin_ops *ops)
 {
-   /* enlarge the array */ 
+   /* enlarge the array */
    SAFE_REALLOC(wdg_plugin_elements, (nplug + 1) * sizeof(struct wdg_list));
 
    /* fill the element */
    SAFE_CALLOC(wdg_plugin_elements[nplug].desc, MAX_DESC_LEN + 1, sizeof(char));
-   snprintf(wdg_plugin_elements[nplug].desc, MAX_DESC_LEN, "[%d] %15s %4s  %s", active, ops->name, ops->version, ops->info);  
+   snprintf(wdg_plugin_elements[nplug].desc, MAX_DESC_LEN, "[%d] %15s %4s  %s", active, ops->name, ops->version, ops->info);
    wdg_plugin_elements[nplug].value = ops->name;
-   
+
    nplug++;
-   
-   /* null terminate the array */ 
+
+   /* null terminate the array */
    SAFE_REALLOC(wdg_plugin_elements, (nplug + 1) * sizeof(struct wdg_list));
    wdg_plugin_elements[nplug].desc = NULL;
    wdg_plugin_elements[nplug].value = NULL;
 }
 
 /*
- * callback function for a plugin 
+ * callback function for a plugin
  */
 static void curses_select_plugin(void *plugin)
 {
    /* prevent the selection when the list is empty */
    if (plugin == NULL)
       return;
-        
+
    /* print the message */
    if (plugin_is_activated(plugin) == 0)
       INSTANT_USER_MSG("Activating %s plugin...\n", plugin);
    else
       INSTANT_USER_MSG("Deactivating %s plugin...\n", plugin);
-         
+
    /*
     * pay attention on this !
     * if the plugin init does not return,
@@ -241,14 +241,14 @@ static void curses_select_plugin(void *plugin)
     * and immediately return
     */
    if (plugin_is_activated(plugin) == 1)
-      plugin_fini(plugin);   
+      plugin_fini(plugin);
    else
       plugin_init(plugin);
-        
+
    /* refres the array for the list widget */
    nplug = 0;
    plugin_list_walk(PLP_MIN, PLP_MAX, &curses_refresh_plug_array);
-   
+
    /* refresh the list */
    wdg_list_refresh(wdg_plugin);
 }

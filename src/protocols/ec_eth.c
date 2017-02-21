@@ -61,33 +61,33 @@ FUNC_DECODER(decode_eth)
    struct eth_header *eth;
 
    DECODED_LEN = sizeof(struct eth_header);
-   
+
    eth = (struct eth_header *)DECODE_DATA;
 
    /* fill the packet object with sensitive data */
    PACKET->L2.header = (u_char *)DECODE_DATA;
    PACKET->L2.proto = IL_TYPE_ETH;
    PACKET->L2.len = DECODED_LEN;
-   
+
    memcpy(PACKET->L2.src, eth->sha, ETH_ADDR_LEN);
    memcpy(PACKET->L2.dst, eth->dha, ETH_ADDR_LEN);
 
    /* HOOK POINT : HOOK_PACKET_ETH */
    hook_point(HOOK_PACKET_ETH, po);
-   
-   /* leave the control to the next decoder */   
+
+   /* leave the control to the next decoder */
    next_decoder = get_decoder(NET_LAYER, ntohs(eth->proto));
 
    EXECUTE_DECODER(next_decoder);
-      
+
    /* eth header does not care about modification of upper layer */
-   
+
    return NULL;
 }
 
 
 /*
- * function to create an ethernet header 
+ * function to create an ethernet header
  */
 FUNC_BUILDER(build_eth)
 {

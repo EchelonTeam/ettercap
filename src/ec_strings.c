@@ -2,7 +2,7 @@
     ettercap -- string manipulation functions
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -150,27 +150,27 @@ int base64_decode(char *bufplain, const char *bufcoded)
 
 /* adapted from magic.c part of dsniff <dugsong@monkey.org> source code... */
 
-/* 
+/*
  * convert an HEX rapresentation into int
  */
 static int hextoint(int c)
 {
-   if (!isascii((int) c))       
+   if (!isascii((int) c))
       return (-1);
-   
-   if (isdigit((int) c))        
+
+   if (isdigit((int) c))
       return (c - '0');
-   
-   if ((c >= 'a') && (c <= 'f'))   
+
+   if ((c >= 'a') && (c <= 'f'))
       return (c + 10 - 'a');
-   
-   if ((c >= 'A') && (c <= 'F'))   
+
+   if ((c >= 'A') && (c <= 'F'))
       return (c + 10 - 'A');
 
    return (-1);
 }
 
-/* 
+/*
  * convert the escaped string into a binary one
  */
 int strescape(char *dst, char *src)
@@ -215,17 +215,17 @@ int strescape(char *dst, char *src)
             case '6':
             case '7':
                val = c - '0';
-               c = *src++;  
+               c = *src++;
                /* try for 2 */
                if (c >= '0' && c <= '7') {
                   val = (val << 3) | (c - '0');
-                  c = *src++;  
+                  c = *src++;
                   /* try for 3 */
                   if (c >= '0' && c <= '7')
                      val = (val << 3) | (c - '0');
-                  else 
+                  else
                      --src;
-               } else 
+               } else
                   --src;
                *dst++ = (char) val;
                break;
@@ -236,11 +236,11 @@ int strescape(char *dst, char *src)
                if (c >= 0) {
                        val = c;
                        c = hextoint(*src++);
-                       if (c >= 0) 
+                       if (c >= 0)
                           val = (val << 4) + c;
-                       else 
+                       else
                           --src;
-               } else 
+               } else
                   --src;
                *dst++ = (char) val;
                break;
@@ -274,21 +274,21 @@ int str_replace(char **text, const char *s, const char *d)
    /* the search string does not exist */
    if (strstr(*text, s) == NULL)
       return -ENOTFOUND;
-   
+
    /* search all the occurrence of 's' */
    while ( (p = strstr(q, s)) != NULL ) {
 
       /* the new size */
       if (diff > 0)
          size = strlen(q) + diff + 1;
-      else 
+      else
          size = strlen(q) + 1;
-     
+
       SAFE_REALLOC(*text, size);
-      
+
       q = *text;
-      
-      /* 
+
+      /*
        * make sure the pointer p is within the *text memory.
        * realloc may have moved it...
        */
@@ -302,19 +302,19 @@ int str_replace(char **text, const char *s, const char *d)
       /* avoid recursion on substituted string */
       q = p + dlen;
    }
-   
+
    return ESUCCESS;
 }
 
 
-/* 
- * Calculate the correct length of characters in an UTF-8 encoded string. 
+/*
+ * Calculate the correct length of characters in an UTF-8 encoded string.
  */
 size_t strlen_utf8(const char *s)
 {
    u_char c;
    size_t len = 0;
- 
+
    while ((c = *s++)) {
       if ((c & 0xC0) != 0x80)
          ++len;
@@ -329,7 +329,7 @@ size_t strlen_utf8(const char *s)
  */
 char * ec_strtok(char *s, const char *delim, char **ptrptr)
 {
-#ifdef HAVE_STRTOK_R 
+#ifdef HAVE_STRTOK_R
    return strtok_r(s, delim, ptrptr);
 #else
    #warning unsafe strtok
@@ -352,7 +352,7 @@ char getchar_buffer(char **buf)
 #endif
 
    DEBUG_MSG("getchar_buffer: %s", *buf);
-   
+
    /* the buffer is empty, do nothing */
    if (**buf == 0)
       return 0;
@@ -361,7 +361,7 @@ char getchar_buffer(char **buf)
    if (*(*buf + 0) == 's' && *(*buf + 1) == '(') {
       char *p;
       int time = 0;
-      
+
       p = strchr(*buf, ')');
       if (p != NULL) {
 
@@ -374,27 +374,27 @@ char getchar_buffer(char **buf)
          ts.tv_sec = time;
          ts.tv_nsec = 0;
 #endif
-         
+
          DEBUG_MSG("getchar_buffer: sleeping %d secs", time);
 
          /* move the buffer after the s(x) */
          *buf = p + 1;
-#if !defined(OS_WINDOWS) 
+#if !defined(OS_WINDOWS)
          nanosleep(&ts, NULL);
 #else
          usleep(time*1000);
 #endif
       }
    }
-   
+
    /* get the first char of the buffer */
    ret = *buf[0];
 
    /* increment the buffer pointer */
    *buf = *buf + 1;
-   
+
    DEBUG_MSG("getchar_buffer: returning %c", ret);
-   
+
    return ret;
 }
 

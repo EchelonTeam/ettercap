@@ -24,7 +24,7 @@
 
 ABOUT:
 
-ettercap-gg is a Gadu-Gadu IM ettercap dissector. 
+ettercap-gg is a Gadu-Gadu IM ettercap dissector.
 
 It is a patch for ettercap sniffer that adds the ability to intercept Gadu-Gadu logins, passwords and messages.
 
@@ -46,7 +46,7 @@ FEATURES:
 - intercepts gg connections to port 8074 and 443
 - determines Gadu-Gadu version
 
-INSTALLATION & CONFIGURATION: 
+INSTALLATION & CONFIGURATION:
 
 Apply Gadu-Gadu dissector patch and compile ettercap as you used to do before:
 
@@ -55,8 +55,8 @@ patch -p0 < ettercap-NG-0.7.3-gg_dissector_02.patch
 make
 make install
 
-Normally Gadu-Gadu dissector is installed on port number 8074 (appropriate entry is added to etter.conf file). If you want to enable dissector to 
-intercept traffic on port 443 just turn off https dissector (there can be only one dissector on the same port at the same time) by editing etter.conf 
+Normally Gadu-Gadu dissector is installed on port number 8074 (appropriate entry is added to etter.conf file). If you want to enable dissector to
+intercept traffic on port 443 just turn off https dissector (there can be only one dissector on the same port at the same time) by editing etter.conf
 file and changing following line:
 
 https = 443              # tcp    443
@@ -117,9 +117,9 @@ v0.2:
 
 v0.1 (initial release):
 
-- added support for following gadu-gadu protocols: 4.x, 5.x, 6.x, 7.x 
+- added support for following gadu-gadu protocols: 4.x, 5.x, 6.x, 7.x
 - added interception of gg numbers, password hashes and seeds
-- added interception of gg connections to port 8074 and 443 
+- added interception of gg connections to port 8074 and 443
 
 */
 
@@ -136,7 +136,7 @@ TODO:
 
 /* CONFIGURATION */
 
-/* 
+/*
 uncomment #define below if you want to see all contacts status changes - be careful using this option in really big networks - it could mess up your whole screen !
 */
 /*
@@ -176,25 +176,25 @@ struct gg_welcome_hdr {
 };
 
 struct gg_login50_hdr {
-   u_int32 uin;       
-   u_int32 hash;      
-   u_int32 status;    
-   u_int32 version;   
-   u_int8 local_ip[4];  
+   u_int32 uin;
+   u_int32 hash;
+   u_int32 status;
+   u_int32 version;
+   u_int8 local_ip[4];
    u_int16 local_port;
    char description[71];     /* 70+1 (0x0) */
    u_int32 time;
 }__attribute__ ((packed));
 
 struct gg_login60_hdr {
-   u_int32 uin;       
-   u_int32 hash;      
-   u_int32 status;    
-   u_int32 version;   
+   u_int32 uin;
+   u_int32 hash;
+   u_int32 status;
+   u_int32 version;
    u_int8 unknown1;          /* 0x00 */
-   u_int8 local_ip[4];  
+   u_int8 local_ip[4];
    u_int16 local_port;
-   u_int8 remote_ip[4]; 
+   u_int8 remote_ip[4];
    u_int16 remote_port;
    u_int8 image_size;
    u_int8 unknown2;          /* 0xbe */
@@ -203,17 +203,17 @@ struct gg_login60_hdr {
 }__attribute__ ((packed));
 
 struct gg_login70_hdr {
-   u_int32 uin;       
+   u_int32 uin;
    u_int8 unknown1;          /* 0x02 */
-   u_int32 hash[5];          /* 160b */      
+   u_int32 hash[5];          /* 160b */
    u_int32 unknown2[11];     /* 0x00, 352b */
-   u_int32 status;    
-   u_int16 version;   
+   u_int32 status;
+   u_int16 version;
    u_int16 unknown3;         /* 0xc202 */
    u_int8 unknown4;          /* 0x00 */
-   u_int8 local_ip[4];  
+   u_int8 local_ip[4];
    u_int16 local_port;
-   u_int8 remote_ip[4]; 
+   u_int8 remote_ip[4];
    u_int16 remote_port;
    u_int8 image_size;
    u_int8 unknown5;          /* 0xbe */
@@ -250,11 +250,11 @@ struct gg_status_hdr {
 };
 
 struct gg_status50_hdr {
-   u_int32 uin;       
-   u_int32 status;    
-   u_int8 remote_ip[4]; 
+   u_int32 uin;
+   u_int32 status;
+   u_int8 remote_ip[4];
    u_int16 remote_port;
-   u_int32 version;   
+   u_int32 version;
    u_int16 unknown1;         /* remote port again? */
    char description[71];     /* 70+1 (0x0) */
    u_int32 time;
@@ -263,9 +263,9 @@ struct gg_status50_hdr {
 struct gg_status60_hdr {
    u_int32 uin;
    u_int8 status;
-   u_int8 remote_ip[4]; 
+   u_int8 remote_ip[4];
    u_int16 remote_port;
-   u_int8 version;   
+   u_int8 version;
    u_int8 image_size;
    u_int8 unknown1;          /* 0x00 */
    char description[71];     /* 70+1 (0x0) */
@@ -275,9 +275,9 @@ struct gg_status60_hdr {
 struct gg_status70_hdr {
    u_int32 uin;
    u_int8 status;
-   u_int8 remote_ip[4]; 
+   u_int8 remote_ip[4];
    u_int16 remote_port;
-   u_int8 version;   
+   u_int8 version;
    u_int8 image_size;
    u_int8 unknown1;          /* 0x00 */
    u_int32 unknown2;         /* 0x00 */
@@ -323,11 +323,11 @@ FUNC_DECODER(dissector_gg)
 
    /* don't complain about unused var */
    (void)end;
-   
+
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    /* cast the gg header */
    gg = (struct gg_hdr *)ptr;
    gg_login50 = (struct gg_login50_hdr *)(gg + 1);
@@ -351,7 +351,7 @@ FUNC_DECODER(dissector_gg)
    SAFE_CALLOC(tbuf, 50, sizeof(char));
    SAFE_CALLOC(tbuf2, 71, sizeof(char));
    SAFE_CALLOC(tbuf3, 30, sizeof(char));
-   
+
 if ((gg->type == GG_LOGIN50_CMD) && !FROM_SERVER("gg", PACKET)) {
    gg_get_status(gg_login50->status,tbuf);
    gg_get_version(gg_login50->version,tbuf3);
@@ -362,11 +362,11 @@ if ((gg->type == GG_LOGIN50_CMD) && !FROM_SERVER("gg", PACKET)) {
    sprintf(pass,"%u",gg_login50->hash);
    PACKET->DISSECTOR.pass = strdup(pass);
    DISSECT_MSG("GG4/5 : %s:%d -> %s:%d - LOGIN  UIN: %u  PWD_HASH: 0x%.8X (%u)  STATUS: %s (%s)  VERSION: %s  LIP: %u.%u.%u.%u:%u\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                 ntohs(PACKET->L4.src), 
+                                 ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
                                  ntohs(PACKET->L4.dst),
                                  gg_login50->uin,
-                                 gg_login50->hash, gg_login50->hash, 
+                                 gg_login50->hash, gg_login50->hash,
                                  tbuf2, tbuf,
                                  tbuf3,
                                  gg_login50->local_ip[0], gg_login50->local_ip[1], gg_login50->local_ip[2], gg_login50->local_ip[3],
@@ -382,11 +382,11 @@ else if (gg->type == GG_LOGIN60_CMD) {
    sprintf(pass,"%u",gg_login60->hash);
    PACKET->DISSECTOR.pass = strdup(pass);
    DISSECT_MSG("GG6 : %s:%d -> %s:%d - LOGIN  UIN: %u  PWD_HASH: 0x%.8X (%u)  STATUS: %s (%s)  VERSION: %s  LIP: %u.%u.%u.%u:%u  RIP: %u.%u.%u.%u:%u\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                 ntohs(PACKET->L4.src), 
+                                 ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
                                  ntohs(PACKET->L4.dst),
                                  gg_login60->uin,
-                                 gg_login60->hash, gg_login60->hash, 
+                                 gg_login60->hash, gg_login60->hash,
                                  tbuf2, tbuf,
                                  tbuf3,
                                  gg_login60->local_ip[0], gg_login60->local_ip[1], gg_login60->local_ip[2], gg_login60->local_ip[3],
@@ -404,7 +404,7 @@ else if (gg->type == GG_LOGIN70_CMD) {
    sprintf(pass,"%X%X%X%X%X",gg_login70->hash[0],gg_login70->hash[1],gg_login70->hash[2],gg_login70->hash[3],gg_login70->hash[4]);
    PACKET->DISSECTOR.pass = strdup(pass);
    DISSECT_MSG("GG7 : %s:%d -> %s:%d - LOGIN  UIN: %u  PWD_HASH: 0x%.8X%.8X%.8X%.8X%.8X  STATUS: %s (%s)  VERSION: %s  LIP: %u.%u.%u.%u:%u  RIP: %u.%u.%u.%u:%u\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                 ntohs(PACKET->L4.src), 
+                                 ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
                                  ntohs(PACKET->L4.dst),
                                  gg_login70->uin,
@@ -419,7 +419,7 @@ else if (gg->type == GG_LOGIN70_CMD) {
 else if (gg->type == GG_SEND_MSG_CMD) {
    if (!FROM_SERVER("gg", PACKET)) {
       DISSECT_MSG("GG : %s:%d -> %s:%d - SEND_MSG  RECIPIENT: %u  MESSAGE: \"%s\"\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                 ntohs(PACKET->L4.src), 
+                                 ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
                                  ntohs(PACKET->L4.dst),
                                  gg_send_msg->recipient,
@@ -428,7 +428,7 @@ else if (gg->type == GG_SEND_MSG_CMD) {
 }
 else if (gg->type == GG_RECV_MSG_CMD) {
    DISSECT_MSG("GG : %s:%d -> %s:%d - RECV_MSG  SENDER: %u  MESSAGE: \"%s\"\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                 ntohs(PACKET->L4.src), 
+                                 ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
                                  ntohs(PACKET->L4.dst),
                                  gg_recv_msg->sender,
@@ -438,7 +438,7 @@ else if (gg->type == GG_WELCOME_CMD) {
    DISSECT_MSG("GG : %s:%d -> %s:%d - WELCOME  SEED: 0x%.8X (%u)\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
                                  ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
-                                 ntohs(PACKET->L4.dst), 
+                                 ntohs(PACKET->L4.dst),
                                  gg_welcome->seed, gg_welcome->seed);
 }
 #ifdef GG_CONTACTS_STATUS_CHANGES
@@ -449,10 +449,10 @@ else if ((gg->type == GG_STATUS_CMD) && FROM_SERVER("gg", PACKET)) {
     DISSECT_MSG("GG : %s:%d -> %s:%d - STATUS CHANGED  UIN: %u  STATUS: %s (%s)\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
                                  ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
-                                 ntohs(PACKET->L4.dst), 
+                                 ntohs(PACKET->L4.dst),
                                  gg_status->uin,
                                  tbuf2, tbuf);
-} 
+}
 #endif
 else if ((gg->type == GG_NEW_STATUS_CMD) && !FROM_SERVER("gg", PACKET)) {
       gg_get_status(gg_new_status->status,tbuf);
@@ -461,7 +461,7 @@ else if ((gg->type == GG_NEW_STATUS_CMD) && !FROM_SERVER("gg", PACKET)) {
       DISSECT_MSG("GG : %s:%d -> %s:%d - NEW STATUS  STATUS: %s (%s)\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
                                  ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
-                                 ntohs(PACKET->L4.dst), 
+                                 ntohs(PACKET->L4.dst),
                                  tbuf2, tbuf);
 }
 #ifdef GG_CONTACTS_STATUS_CHANGES
@@ -473,7 +473,7 @@ else if ((gg->type == GG_STATUS50_CMD) && FROM_SERVER("gg", PACKET)) {
       DISSECT_MSG("GG4/5 : %s:%d -> %s:%d - STATUS CHANGED  UIN: %u  STATUS: %s (%s)  VERSION: %s  RIP: %u.%u.%u.%u:%u\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
                                  ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
-                                 ntohs(PACKET->L4.dst), 
+                                 ntohs(PACKET->L4.dst),
                                  gg_status50->uin,
                                  tbuf2, tbuf,
                                  tbuf3,
@@ -488,7 +488,7 @@ else if (gg->type == GG_STATUS60_CMD) {
       DISSECT_MSG("GG6 : %s:%d -> %s:%d - STATUS CHANGED  UIN: %u  STATUS: %s (%s)  VERSION: %s  RIP: %u.%u.%u.%u:%u\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
                                  ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
-                                 ntohs(PACKET->L4.dst), 
+                                 ntohs(PACKET->L4.dst),
                                  (gg_status60->uin & 0x00ffffff),
                                  tbuf2, tbuf,
                                  tbuf3,
@@ -503,7 +503,7 @@ else if (gg->type == GG_STATUS70_CMD) {
       DISSECT_MSG("GG7 : %s:%d -> %s:%d - STATUS CHANGED  UIN: %u  STATUS: %s (%s)  VERSION: %s  RIP: %u.%u.%u.%u:%u\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
                                  ntohs(PACKET->L4.src),
                                  ip_addr_ntoa(&PACKET->L3.dst, tmp2),
-                                 ntohs(PACKET->L4.dst), 
+                                 ntohs(PACKET->L4.dst),
                                  (gg_status70->uin & 0x00ffffff),
                                  tbuf2, tbuf,
                                  tbuf3,
@@ -524,7 +524,7 @@ else {
    SAFE_FREE(tbuf);
    SAFE_FREE(tbuf2);
    SAFE_FREE(tbuf3);
-  
+
    return NULL;
 }
 

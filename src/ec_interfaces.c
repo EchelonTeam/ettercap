@@ -40,30 +40,30 @@ void select_gtk_interface(void);
 void select_daemon_interface(void)
 {
    DEBUG_MSG("select_daemon_interface");
-   
+
    set_daemon_interface();
 }
 
 void select_text_interface(void)
 {
    DEBUG_MSG("select_text_interface");
-   
+
    set_text_interface();
 }
 
 void select_curses_interface(void)
 {
    DEBUG_MSG("select_curses_interface");
-#ifdef HAVE_NCURSES 
+#ifdef HAVE_NCURSES
    /* check if the stdout is available */
    if (isatty(fileno(stdout)) <= 0)
       FATAL_ERROR("Cannot use Curses if stdout is redirected");
-   
+
    set_curses_interface();
 #else
    FATAL_ERROR("Curses support not compiled in %s", GBL_PROGRAM);
 #endif
-   
+
 }
 
 void select_gtk_interface(void)

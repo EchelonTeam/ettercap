@@ -49,7 +49,7 @@ static char *logfile;
 /*******************************************/
 
 /*
- * the auto-refreshing list of profiles 
+ * the auto-refreshing list of profiles
  */
 void curses_show_profiles(void)
 {
@@ -60,9 +60,9 @@ void curses_show_profiles(void)
       wdg_set_focus(wdg_profiles);
       return;
    }
-   
+
    wdg_create_object(&wdg_profiles, WDG_DYNLIST, WDG_OBJ_WANT_FOCUS);
-   
+
    wdg_set_title(wdg_profiles, "Collected passive profiles:", WDG_ALIGN_LEFT);
    wdg_set_size(wdg_profiles, 1, 2, -1, SYSMSG_WIN_SIZE - 1);
    wdg_set_color(wdg_profiles, WDG_COLOR_SCREEN, EC_COLOR);
@@ -71,15 +71,15 @@ void curses_show_profiles(void)
    wdg_set_color(wdg_profiles, WDG_COLOR_FOCUS, EC_COLOR_FOCUS);
    wdg_set_color(wdg_profiles, WDG_COLOR_TITLE, EC_COLOR_TITLE);
    wdg_draw_object(wdg_profiles);
- 
+
    wdg_set_focus(wdg_profiles);
 
    /* set the list print callback */
    wdg_dynlist_print_callback(wdg_profiles, profile_print);
-   
+
    /* set the select callback */
    wdg_dynlist_select_callback(wdg_profiles, curses_profile_detail);
-  
+
    /* add the callback on idle to refresh the profile list */
    wdg_add_idle_callback(refresh_profiles);
 
@@ -119,7 +119,7 @@ static void refresh_profiles(void)
    /* if not focused don't refresh it */
    if (!(wdg_profiles->flags & WDG_OBJ_FOCUSED))
       return;
-   
+
    wdg_dynlist_refresh(wdg_profiles);
 }
 
@@ -133,7 +133,7 @@ static void curses_profile_detail(void *profile)
    struct active_user *u;
    char tmp[MAX_ASCII_ADDR_LEN];
    char os[OS_LEN+1];
-  
+
    DEBUG_MSG("curses_profile_detail");
 
    /* if the object already exist, set the focus to it */
@@ -141,9 +141,9 @@ static void curses_profile_detail(void *profile)
       wdg_destroy_object(&wdg_pro_detail);
       wdg_pro_detail = NULL;
    }
-   
+
    wdg_create_object(&wdg_pro_detail, WDG_SCROLL, WDG_OBJ_WANT_FOCUS);
-   
+
    wdg_set_title(wdg_pro_detail, "Profile details:", WDG_ALIGN_LEFT);
    wdg_set_size(wdg_pro_detail, 1, 2, -1, SYSMSG_WIN_SIZE - 1);
    wdg_set_color(wdg_pro_detail, WDG_COLOR_SCREEN, EC_COLOR);
@@ -152,20 +152,20 @@ static void curses_profile_detail(void *profile)
    wdg_set_color(wdg_pro_detail, WDG_COLOR_FOCUS, EC_COLOR_FOCUS);
    wdg_set_color(wdg_pro_detail, WDG_COLOR_TITLE, EC_COLOR_TITLE);
    wdg_draw_object(wdg_pro_detail);
- 
+
    wdg_set_focus(wdg_pro_detail);
 
    wdg_add_destroy_key(wdg_pro_detail, CTRL('Q'), NULL);
    wdg_scroll_set_lines(wdg_pro_detail, 100);
 
    memset(os, 0, sizeof(os));
-   
+
    wdg_scroll_print(wdg_pro_detail, EC_COLOR, " IP address   : %s \n", ip_addr_ntoa(&h->L3_addr, tmp));
    if (strcmp(h->hostname, ""))
       wdg_scroll_print(wdg_pro_detail, EC_COLOR, " Hostname     : %s \n\n", h->hostname);
    else
-      wdg_scroll_print(wdg_pro_detail, EC_COLOR, "\n");   
-      
+      wdg_scroll_print(wdg_pro_detail, EC_COLOR, "\n");
+
    if (h->type & FP_HOST_LOCAL || h->type == FP_UNKNOWN) {
       wdg_scroll_print(wdg_pro_detail, EC_COLOR, " MAC address  : %s \n", mac_addr_ntoa(h->L2_addr, tmp));
       wdg_scroll_print(wdg_pro_detail, EC_COLOR, " MANUFACTURER : %s \n\n", manuf_search((const char*)h->L2_addr));
@@ -193,18 +193,18 @@ static void curses_profile_detail(void *profile)
       wdg_scroll_print(wdg_pro_detail, EC_COLOR, " OPERATING SYSTEM : unknown fingerprint (please submit it) \n");
       wdg_scroll_print(wdg_pro_detail, EC_COLOR, " NEAREST ONE IS   : %s \n\n", os);
    }
-      
-   
+
+
    LIST_FOREACH(o, &(h->open_ports_head), next) {
-      
-      wdg_scroll_print(wdg_pro_detail, EC_COLOR, "   PORT     : %s %d | %s \t[%s]\n", 
-                  (o->L4_proto == NL_TYPE_TCP) ? "TCP" : "UDP" , 
+
+      wdg_scroll_print(wdg_pro_detail, EC_COLOR, "   PORT     : %s %d | %s \t[%s]\n",
+                  (o->L4_proto == NL_TYPE_TCP) ? "TCP" : "UDP" ,
                   ntohs(o->L4_addr),
-                  service_search(o->L4_addr, o->L4_proto), 
+                  service_search(o->L4_addr, o->L4_proto),
                   (o->banner) ? o->banner : "");
-      
+
       LIST_FOREACH(u, &(o->users_list_head), next) {
-        
+
          if (u->failed)
             wdg_scroll_print(wdg_pro_detail, EC_COLOR, "      ACCOUNT : * %s / %s  (%s)\n", u->user, u->pass, ip_addr_ntoa(&u->client, tmp));
          else

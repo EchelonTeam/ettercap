@@ -33,7 +33,7 @@ void gtkui_stop_sniffing(void);
 void gtkui_start_sniffing(void)
 {
    DEBUG_MSG("gtk_start_sniffing");
-   
+
    /* start the sniffing method */
    EXECUTE(GBL_SNIFF->start);
 }
@@ -41,7 +41,7 @@ void gtkui_start_sniffing(void)
 void gtkui_stop_sniffing(void)
 {
    DEBUG_MSG("gtk_stop_sniffing");
-   
+
    /* terminate the sniffing engine */
    EXECUTE(GBL_SNIFF->cleanup);
 }

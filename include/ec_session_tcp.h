@@ -18,7 +18,7 @@ struct tcp_status {
 };
 
 
-EC_API_EXTERN size_t tcp_create_ident(void **i, struct packet_object *po);            
+EC_API_EXTERN size_t tcp_create_ident(void **i, struct packet_object *po);
 EC_API_EXTERN int tcp_find_direction(void *ids, void *id);
 
 

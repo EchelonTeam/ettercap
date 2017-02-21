@@ -112,7 +112,7 @@ FUNC_DECODER(decode_ppp)
 
    /* Set the L4 header for the hook */
    PACKET->L4.header = (u_char *)DECODE_DATA;
-         
+
    /* HOOK POINT: HOOK_PACKET_PPP */
    hook_point(HOOK_PACKET_PPP, PACKET);
 
@@ -120,24 +120,24 @@ FUNC_DECODER(decode_ppp)
    /* XXX - && or || ??? */
    if (ppph->address != 0xff && ppph->control != 0x3) {
       proto = *((u_char *)ppph);
-      
+
       if (proto != PPP_PROTO_IP) {
          proto = ntohs(*((u_int16 *)ppph));
          DECODED_LEN = 2;
-      } else 
+      } else
          DECODED_LEN = 1;
-	    
+	
    } else {
       proto = ntohs(ppph->proto);
       DECODED_LEN = sizeof(ppph);
-	    
-      if (proto != PPP_PROTO_IP && proto != PPP_PROTO_CHAP && 
+	
+      if (proto != PPP_PROTO_IP && proto != PPP_PROTO_CHAP &&
           proto != PPP_PROTO_PAP && proto != PPP_PROTO_LCP &&
 	       proto != PPP_PROTO_ECP && proto != PPP_PROTO_CCP &&
-	       proto != PPP_PROTO_IPCP) {   
+	       proto != PPP_PROTO_IPCP) {
          proto = *((u_char *)ppph + 2);
          DECODED_LEN = 3;
-      }	    
+      }	
    }
 
    /* Set the L4 header to LCP for subsequent hooks */
@@ -151,12 +151,12 @@ FUNC_DECODER(decode_ppp)
       /* ...get the next decoder */
       next_decoder =  get_decoder(NET_LAYER, LL_TYPE_IP);
       EXECUTE_DECODER(next_decoder);
-      
-   } else if (proto == PPP_PROTO_CHAP) { 
+
+   } else if (proto == PPP_PROTO_CHAP) {
       /* Parse MSCHAP auth schemes */
       lcph = (struct ppp_lcp_header *)(DECODE_DATA + DECODED_LEN);
       chapch = (struct ppp_chap_challenge *)(lcph + 1);
-      
+
       switch (lcph->code) {
          case PPP_CHAP_CODE_CHALLENGE:
 
@@ -166,7 +166,7 @@ FUNC_DECODER(decode_ppp)
                for (i=0; i<8; i++) {
                   snprintf(dummy, 3, "%02X", chapch->value.challenge_v1[i]);
                   strcat(schallenge, dummy);
-               }	    
+               }	
             } else if (chapch->size == 16) {
                version = 2;
                memcpy (schallenge, chapch->value.challenge_v2, chapch->size);
@@ -174,13 +174,13 @@ FUNC_DECODER(decode_ppp)
                else version = 0;
             break;
 
-         case PPP_CHAP_CODE_RESPONSE: 
+         case PPP_CHAP_CODE_RESPONSE:
 
-            if (version != 1 && version !=2) 
+            if (version != 1 && version !=2)
                break;			
-               
+
             i = ntohs(lcph->length) - 5 - chapch->size;
-            if (i > sizeof(user)-2) 
+            if (i > sizeof(user)-2)
                i = sizeof(user)-2;
 
             memcpy(user, (u_char *)lcph + 5 + chapch->size, i);
@@ -188,17 +188,17 @@ FUNC_DECODER(decode_ppp)
 
             /* Check if it's from PPP or PPTP */
             if (!ip_addr_null(&PACKET->L3.dst) && !ip_addr_null(&PACKET->L3.src)) {
-               DISSECT_MSG("\n\nTunnel PPTP: %s -> ", ip_addr_ntoa(&PACKET->L3.src, temp)); 
+               DISSECT_MSG("\n\nTunnel PPTP: %s -> ", ip_addr_ntoa(&PACKET->L3.src, temp));
                DISSECT_MSG("%s\n", ip_addr_ntoa(&PACKET->L3.dst, temp));
             }
 
             DISSECT_MSG("PPP*MS-CHAP Password*%s:$MSCHAPv2$", user);
 
-            if (version == 1) {        
-               for (i = 0; i < 24; i++) 
+            if (version == 1) {
+               for (i = 0; i < 24; i++)
                   DISSECT_MSG("%02X", chapch->value.response_v1.lanman[i]);
                DISSECT_MSG(":");
-               for (i = 0; i < 24; i++) 
+               for (i = 0; i < 24; i++)
                   DISSECT_MSG("%02X", chapch->value.response_v1.nt[i]);
                DISSECT_MSG(":%s\n\n",schallenge);
 
@@ -208,7 +208,7 @@ FUNC_DECODER(decode_ppp)
 
                if ((p = strchr(user, '\\')) == NULL)
                   p = user;
-               else 
+               else
                   p++;
 
                SHA1_Init(&ctx);
@@ -217,7 +217,7 @@ FUNC_DECODER(decode_ppp)
                SHA1_Update(&ctx, p, strlen(p));
                SHA1_Final(digest, &ctx);
 
-               for (i = 0; i < 8; i++) 
+               for (i = 0; i < 8; i++)
                   DISSECT_MSG("%02X", digest[i]);
                DISSECT_MSG("$");
 
@@ -241,7 +241,7 @@ FUNC_DECODER(decode_ppp)
       }
    } else if (proto == PPP_PROTO_PAP) {
 
-      /* Parse PAP auth scheme */      
+      /* Parse PAP auth scheme */
       lcph = (struct ppp_lcp_header *)(DECODE_DATA + DECODED_LEN);
       pap_auth = (char *)(lcph + 1);
 
@@ -249,36 +249,36 @@ FUNC_DECODER(decode_ppp)
 
          /* Check if it's from PPP or PPTP */
          if (!ip_addr_null(&PACKET->L3.dst) && !ip_addr_null(&PACKET->L3.src)) {
-            DISSECT_MSG("\n\nTunnel PPTP: %s -> ", ip_addr_ntoa(&PACKET->L3.src, temp)); 
+            DISSECT_MSG("\n\nTunnel PPTP: %s -> ", ip_addr_ntoa(&PACKET->L3.src, temp));
             DISSECT_MSG("%s\n", ip_addr_ntoa(&PACKET->L3.dst, temp));
          }
-      
+
          DISSECT_MSG("PPP : PAP User: ");
 	
          auth_len = *pap_auth;
-         if (auth_len > sizeof(temp)-2) 
+         if (auth_len > sizeof(temp)-2)
             auth_len = sizeof(temp)-2;
          pap_auth++;
          memcpy(temp, pap_auth, auth_len);
          temp[auth_len] = 0;
          DISSECT_MSG("%s\n",temp);
-	       
+	
          pap_auth += auth_len;
          auth_len = *pap_auth;
          pap_auth++;
-         if (auth_len > sizeof(temp)-2) 
+         if (auth_len > sizeof(temp)-2)
             auth_len = sizeof(temp)-2;
          memcpy(temp, pap_auth, auth_len);
          temp[auth_len] = 0;
-         DISSECT_MSG("PPP : PAP Pass: %s\n\n", temp);   
+         DISSECT_MSG("PPP : PAP Pass: %s\n\n", temp);
       }
-   } else if (proto == PPP_PROTO_LCP) { 
+   } else if (proto == PPP_PROTO_LCP) {
       /* HOOK POINT: HOOK_PACKET_LCP */
       hook_point(HOOK_PACKET_LCP, PACKET);
-   } else if (proto == PPP_PROTO_ECP || proto == PPP_PROTO_CCP) { 
+   } else if (proto == PPP_PROTO_ECP || proto == PPP_PROTO_CCP) {
       /* HOOK POINT: HOOK_PACKET_ECP */
       hook_point(HOOK_PACKET_ECP, PACKET);
-   } else if (proto == PPP_PROTO_IPCP) { 
+   } else if (proto == PPP_PROTO_IPCP) {
       /* HOOK POINT: HOOK_PACKET_IPCP */
       hook_point(HOOK_PACKET_IPCP, PACKET);
    }

@@ -58,7 +58,7 @@ void gtkui_load_filter(void)
       gtk_widget_hide(dialog);
       filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (dialog));
 
-      /* 
+      /*
        * load the filters chain.
        * errors are spawned by the function itself
        */
@@ -75,7 +75,7 @@ void gtkui_stop_filter(void)
    DEBUG_MSG("gtk_stop_filter");
 
    filter_unload(GBL_FILTERS);
-   
+
    gtkui_message("Filters were unloaded");
 }
 

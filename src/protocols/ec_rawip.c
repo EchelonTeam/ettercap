@@ -51,8 +51,8 @@ FUNC_DECODER(decode_rawip)
 
    DECODED_LEN = 0;
 
-   /* 
-    * there is no L2 header, it is raw ip, 
+   /*
+    * there is no L2 header, it is raw ip,
     * so skip the L2 and invoke directly
     * the L3 dissector
     */

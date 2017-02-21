@@ -2,7 +2,7 @@
     ettercap -- ICMP decoder module
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -67,23 +67,23 @@ FUNC_DECODER(decode_icmp)
    u_int16 sum;
 
    icmp = (struct icmp_header *)DECODE_DATA;
-  
+
    DECODED_LEN = sizeof(struct icmp_header);
 
    /* include the data in this level */
    PACKET->L4.len = PACKET->L3.payload_len;
-   
+
    /* fill the data */
    PACKET->L4.header = (u_char *)DECODE_DATA;
    PACKET->L4.options = NULL;
-   
+
    PACKET->L4.proto = NL_TYPE_ICMP;
-   
+
    /* this is a lie... but we have to put this somewhere */
    PACKET->L4.flags = icmp->type;
-  
-   /* 
-    * if the checsum is wrong, don't parse it (avoid ettercap spotting) 
+
+   /*
+    * if the checsum is wrong, don't parse it (avoid ettercap spotting)
     * the checksum should be 0 ;)
     *
     * don't perform the check in unoffensive mode
@@ -92,14 +92,14 @@ FUNC_DECODER(decode_icmp)
       if (!GBL_OPTIONS->unoffensive && (sum = L3_checksum(PACKET->L4.header, PACKET->L4.len)) != CSUM_RESULT) {
          char tmp[MAX_ASCII_ADDR_LEN];
          if (GBL_CONF->checksum_warning)
-            USER_MSG("Invalid ICMP packet from %s : csum [%#x] should be (%#x)\n", ip_addr_ntoa(&PACKET->L3.src, tmp), 
-                              ntohs(icmp->csum), checksum_shouldbe(icmp->csum, sum));      
+            USER_MSG("Invalid ICMP packet from %s : csum [%#x] should be (%#x)\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
+                              ntohs(icmp->csum), checksum_shouldbe(icmp->csum, sum));
          return NULL;
       }
    }
-   
-   /* 
-    * if the host is sending strange 
+
+   /*
+    * if the host is sending strange
     * ICMP messages, it might be a router
     */
    switch (icmp->type) {
@@ -118,7 +118,7 @@ FUNC_DECODER(decode_icmp)
 
    /* HOOK POINT:  HOOK_PACKET_ICMP */
    hook_point(HOOK_PACKET_ICMP, po);
-   
+
 
    return NULL;
 }

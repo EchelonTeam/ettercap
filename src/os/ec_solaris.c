@@ -59,7 +59,7 @@ void disable_ip_forward(void)
 
    if ( (ioctl(fd, I_STR, (char *)&strIo)) == -1 )
       ERROR_MSG("ioctl(I_STR)");
- 
+
 
    if (strIo.ic_cmd == ND_GET) {
       strncpy(saved_status, buf, 2);
@@ -70,7 +70,7 @@ void disable_ip_forward(void)
    snprintf(buf, 13, "%s", cp);
 
    /* the format is "element"\0"value"\0 */
-   buf[strlen(buf) + 1] = '0';  
+   buf[strlen(buf) + 1] = '0';
 
    strIo.ic_cmd = ND_SET;
    strIo.ic_timout = 0;
@@ -94,13 +94,13 @@ static void restore_ip_forward(void)
    /* no need to restore anything */
    if (saved_status[0] == '0')
       return;
-   
+
    cp = "ip_forwarding";
    memset(buf, '\0', sizeof(buf));
    snprintf(buf, 13, "%s", cp);
 
    /* the format is "element"\0"value"\0 */
-   snprintf(buf + strlen(buf)+1, 2, "%s", saved_status);   
+   snprintf(buf + strlen(buf)+1, 2, "%s", saved_status);
 
    DEBUG_MSG("ATEXIT: restore_ip_forward -- restoring to value = %s", saved_status);
 
@@ -114,27 +114,27 @@ static void restore_ip_forward(void)
       FATAL_ERROR("Please restore manually the ip_forwarding value to %s", saved_status);
 
    close(fd);
-                                                
+
 }
 
-/* 
- * get the MTU parameter from the interface 
+/*
+ * get the MTU parameter from the interface
  */
 u_int16 get_iface_mtu(const char *iface)
 {
    int sock, mtu;
    struct ifreq ifr;
-   
+
 #if !defined(ifr_mtu) && defined(ifr_metric)
    #define ifr_mtu  ifr_metric
 #endif
 
    /* open the socket to work on */
    sock = socket(PF_INET, SOCK_DGRAM, 0);
-               
+
    memset(&ifr, 0, sizeof(ifr));
    strncpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
-                        
+
    /* get the MTU */
    if ( ioctl(sock, SIOCGIFMTU, &ifr) < 0)  {
       DEBUG_MSG("get_iface_mtu: MTU FAILED... assuming 1500");
@@ -143,9 +143,9 @@ u_int16 get_iface_mtu(const char *iface)
       DEBUG_MSG("get_iface_mtu: %d", ifr.ifr_mtu);
       mtu = ifr.ifr_mtu;
    }
-   
+
    close(sock);
-   
+
    return mtu;
 }
 

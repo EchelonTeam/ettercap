@@ -55,13 +55,13 @@ static guint profiles_idle; /* for removing the idle call */
 /*******************************************/
 
 /*
- * the auto-refreshing list of profiles 
+ * the auto-refreshing list of profiles
  */
 void gtkui_show_profiles(void)
 {
    GtkWidget *scrolled, *vbox, *hbox, *button;
    GtkCellRenderer   *renderer;
-   GtkTreeViewColumn *column;  
+   GtkTreeViewColumn *column;
 
    DEBUG_MSG("gtk_show_profiles");
 
@@ -73,7 +73,7 @@ void gtkui_show_profiles(void)
          gtkui_page_present(profiles_window);
       return;
    }
-   
+
    profiles_window = gtkui_page_new("Profiles", &gtkui_kill_profiles, &gtkui_profiles_detach);
 
    vbox = gtk_vbox_new(FALSE, 0);
@@ -226,9 +226,9 @@ static gboolean refresh_profiles(gpointer data)
       /* otherwise, add the new item */
       gtk_list_store_append (ls_profiles, &iter);
 
-      gtk_list_store_set (ls_profiles, &iter, 
+      gtk_list_store_set (ls_profiles, &iter,
                           0, (found)?"X":" ",
-                          1, ip_addr_ntoa(&hcurr->L3_addr, tmp), 
+                          1, ip_addr_ntoa(&hcurr->L3_addr, tmp),
                           2, (hcurr->hostname) ? hcurr->hostname : "",
                           3, hcurr, -1);
    }
@@ -249,22 +249,22 @@ static void gtkui_profile_detail(void)
    struct active_user *u;
    char tmp[MAX_ASCII_ADDR_LEN];
    char os[OS_LEN+1];
-   
+
    DEBUG_MSG("gtkui_profile_detail");
 
    textbuf = gtkui_details_window("Profile Details");
 
    memset(os, 0, sizeof(os));
-   
+
    snprintf(line, 200, " IP Address: \t%s \n", ip_addr_ntoa(&h->L3_addr, tmp));
    gtkui_details_print(textbuf, line);
 
    if (strcmp(h->hostname, ""))
       snprintf(line, 200, " Hostname: \t%s \n\n", h->hostname);
    else
-      snprintf(line, 200, "\n");   
+      snprintf(line, 200, "\n");
    gtkui_details_print(textbuf, line);
-      
+
    if (h->type & FP_HOST_LOCAL || h->type == FP_UNKNOWN) {
       snprintf(line, 200, " MAC address:  \t%s \n", mac_addr_ntoa(h->L2_addr, tmp));
       gtkui_details_print(textbuf, line);
@@ -302,19 +302,19 @@ static void gtkui_profile_detail(void)
       snprintf(line, 200, " Nearest one is: \t%s \n\n", os);
    }
    gtkui_details_print(textbuf, line);
-      
-   
+
+
    LIST_FOREACH(o, &(h->open_ports_head), next) {
-      
-      snprintf(line, 200, "   Port: \t%s %d | %s \t[%s]\n", 
-                  (o->L4_proto == NL_TYPE_TCP) ? "TCP" : "UDP" , 
+
+      snprintf(line, 200, "   Port: \t%s %d | %s \t[%s]\n",
+                  (o->L4_proto == NL_TYPE_TCP) ? "TCP" : "UDP" ,
                   ntohs(o->L4_addr),
-                  service_search(o->L4_addr, o->L4_proto), 
+                  service_search(o->L4_addr, o->L4_proto),
                   (o->banner) ? o->banner : "");
       gtkui_details_print(textbuf, line);
-      
+
       LIST_FOREACH(u, &(o->users_list_head), next) {
-        
+
          if (u->failed)
             snprintf(line, 200, "   Account: * %s / %s  (%s)\n", u->user, u->pass, ip_addr_ntoa(&u->client, tmp));
          else

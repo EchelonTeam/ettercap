@@ -92,7 +92,7 @@ static int nadv_poison_start(char *args)
          SEMIFATAL_ERROR("NADV poisoning failed to start");
          return EFATAL;
       }
-      hook_add(HOOK_PACKET_ICMP6, &catch_response); 
+      hook_add(HOOK_PACKET_ICMP6, &catch_response);
    }
 
    ec_thread_new("nadv_poisoner", "NDP spoofing thread", &nadv_poisoner, NULL);
@@ -107,7 +107,7 @@ static void nadv_poison_stop(void)
    pthread_t pid;
 
    DEBUG_MSG("nadv_poison_stop");
-   
+
    hook_del(HOOK_PACKET_ICMP6, &catch_response);
 
    pid = ec_thread_getpid("nadv_poisoner");
@@ -138,7 +138,7 @@ EC_THREAD_FUNC(nadv_poisoner)
 
    /* it's a loop */
    LOOP {
-      
+
       CANCELLATION_POINT();
 
       /* Here we go! */
@@ -232,9 +232,9 @@ static void catch_response(struct packet_object *po)
 
    /* if it is not response to our ping */
    if(ip_addr_is_ours(&po->L3.dst) != EFOUND)
-      return; 
+      return;
 
-   /* 
+   /*
     * search if the node address is in one of the ping lists
     * if so add the address to the poison list
     */

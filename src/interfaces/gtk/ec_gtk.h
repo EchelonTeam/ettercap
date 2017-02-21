@@ -1,5 +1,3 @@
-
-
 #ifndef EC_GTK_H
 #define EC_GTK_H
 #define G_DISABLE_CONST_RETURNS

@@ -40,7 +40,7 @@
 
 
 #define LIBWDG_VERSION "0.10.3"
-   
+
 /********************************************/
 
 enum {
@@ -63,7 +63,7 @@ extern void wdg_debug_init(void);
 extern void wdg_debug_close(void);
 extern void wdg_debug_msg(const char *message, ...);
 #ifdef DEBUG
-   #define WDG_DEBUG_INIT()      wdg_debug_init() 
+   #define WDG_DEBUG_INIT()      wdg_debug_init()
    #define WDG_DEBUG_CLOSE()     wdg_debug_close()
    #define WDG_DEBUG_MSG(x, ...) wdg_debug_msg(x, ## __VA_ARGS__ )
 #else
@@ -163,7 +163,7 @@ struct wdg_object {
       #define WDG_INPUT       8
       #define WDG_LIST        9
       #define WDG_DYNLIST    10
-   
+
    /* destructor function */
    int (*destroy)(struct wdg_object *wo);
    int destroy_key;
@@ -292,7 +292,7 @@ extern void wdg_add_destroy_key(wdg_t *wo, int key, void (*callback)(void));
 
 /* object modifications */
 extern void wdg_set_size(wdg_t *wo, int x1, int y1, int x2, int y2);
-extern void wdg_set_colors(wdg_t *wo, int color, size_t type); 
+extern void wdg_set_colors(wdg_t *wo, int color, size_t type);
 extern void wdg_draw_object(wdg_t *wo);
 extern size_t wdg_get_type(wdg_t *wo);
 extern void wdg_set_focus(wdg_t *wo);
@@ -313,7 +313,7 @@ extern size_t wdg_get_ncols(wdg_t *wo);
 extern size_t wdg_get_begin_x(wdg_t *wo);
 extern size_t wdg_get_begin_y(wdg_t *wo);
 
-#endif 
+#endif
 
 /* EOF */
 

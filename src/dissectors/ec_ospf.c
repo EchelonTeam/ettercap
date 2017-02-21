@@ -21,7 +21,7 @@
 
 /*
  * RFC: 2328
- * 
+ *
  *      0                   1                   2                   3
  *       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  *      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -39,7 +39,7 @@
  *      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  *
 */
- 
+
 #include <ec.h>
 #include <ec_decode.h>
 #include <ec_dissect.h>
@@ -77,7 +77,7 @@ void __init ospf_init(void)
    dissect_add("ospf", PROTO_LAYER, NL_TYPE_OSPF, dissector_ospf);
 }
 
-/* 
+/*
  * the passwords collected by ospf will not be logged
  * in logfile since it is not over TCP or UDP.
  * anyway we can print them in the user message window
@@ -98,34 +98,34 @@ FUNC_DECODER(dissector_ospf)
       return NULL;
 
    DEBUG_MSG("OSPF --> dissector_ospf");
-  
+
    ohdr = (struct ospf_hdr *)ptr;
-   
+
    /* authentication */
    if ( ntohs(ohdr->auth_type) == OSPF_AUTH ) {
-      
+
       DEBUG_MSG("\tDissector_ospf PASS");
-      
-      /* 
-       * we use a local variable since this does 
+
+      /*
+       * we use a local variable since this does
        * not need to reach the top half
        */
       char o[OSPF_AUTH_LEN];
       snprintf(o, OSPF_AUTH_LEN, "%u", ohdr->auth1);
       strncpy(pass, o, OSPF_AUTH_LEN);
-      
-   } 
+
+   }
 
    /* no authentication */
    if ( ntohs(ohdr->auth_type) == OSPF_NO_AUTH ) {
-      
+
       DEBUG_MSG("\tDissector_ospf NO AUTH");
-      
+
       strncpy(pass, "No Auth", 7);
    }
-   
+
    DISSECT_MSG("OSPF : %s:%d -> AUTH: %s \n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                             ntohs(PACKET->L4.dst), 
+                                             ntohs(PACKET->L4.dst),
                                              pass);
 
    return NULL;

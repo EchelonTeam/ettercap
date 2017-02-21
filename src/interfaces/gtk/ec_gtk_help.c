@@ -79,7 +79,7 @@ void gtkui_help(void)
    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (scrolled), GTK_SHADOW_IN);
    gtk_box_pack_start(GTK_BOX(hbox), scrolled, FALSE, FALSE, 0);
    gtk_widget_show(scrolled);
-   
+
    treeview = gtk_tree_view_new();
    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW (treeview), FALSE);
    gtk_container_add(GTK_CONTAINER (scrolled), treeview);
@@ -102,7 +102,7 @@ void gtkui_help(void)
                           0, section->title,
                           1, section->file, -1);
    }
-   
+
    gtk_tree_view_set_model(GTK_TREE_VIEW (treeview), GTK_TREE_MODEL (liststore));
 
    /* text area */
@@ -148,7 +148,7 @@ void gtkui_help_open(char *file) {
    /* print output of command in help window */
    if(data && ret) {
       gtk_text_buffer_set_text(textbuf, "", -1);
-   
+
       gtkui_details_print(textbuf, data);
       g_free(data);
    }

@@ -33,7 +33,7 @@ packetrule = function(packet_object)
   end
 
   local dst_port = ffi.C.ntohs(packet_object.L4.dst)
-  
+
   if not( dst_port == 1143) then
 	return false
   end
@@ -44,7 +44,7 @@ end
 
 
 -- Here's your action.
-action = function(packet_object) 
+action = function(packet_object)
   local buf = packet.read_data(packet_object)
   if string.match(buf,"login") then
 	user,password = string.match(buf,"login \"(%S+)\" \"(%S+)\"")

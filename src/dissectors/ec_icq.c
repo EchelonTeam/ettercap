@@ -78,19 +78,19 @@ FUNC_DECODER(dissector_icq)
    (void)end;
 
    /* parse only version 7/8 */
-   if (ptr[0] != 0x2a || ptr[1] > 4) 
+   if (ptr[0] != 0x2a || ptr[1] > 4)
       return NULL;
-   
+
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    /* skip messages coming from the server */
    if (FROM_SERVER("icq", PACKET))
       return NULL;
-  
+
    DEBUG_MSG("ICQ --> TCP dissector_icq [%d.%d]", ptr[0], ptr[1]);
-   
+
    /* we try to recognize the protocol */
    fhdr = (struct flap_hdr *) ptr;
 
@@ -100,18 +100,18 @@ FUNC_DECODER(dissector_icq)
       /* move the pointer */
       ptr += sizeof(struct flap_hdr);
       thdr = (struct tlv_hdr *) ptr;
-      
+
       /* we need server HELLO (0000 0001) */
-      if (memcmp(ptr, "\x00\x00\x00\x01", 4) ) 
+      if (memcmp(ptr, "\x00\x00\x00\x01", 4) )
          return NULL;
-      
+
       /* move the pointer */
       thdr = thdr + 1;
 
       /* catch the login */
       if (memcmp(thdr->type, TLV_LOGIN, sizeof(thdr->type)))
          return NULL;
-      
+
       DEBUG_MSG("\tDissector_icq - LOGIN ");
 
       /* point to the user */
@@ -121,13 +121,13 @@ FUNC_DECODER(dissector_icq)
       thdr = (struct tlv_hdr *) ((char *)thdr + sizeof(struct tlv_hdr) + thdr->len[1]);
 
       DEBUG_MSG("\tdissector_icq : TLV TYPE [%d]", thdr->type[1]);
-            
+
       /* catch the pass */
       if (memcmp(thdr->type, TLV_PASS, sizeof(thdr->type)))
          return NULL;
 
       DEBUG_MSG("\tDissector_icq - PASS");
-      
+
       /* use a temp buff to decript the password */
       pwdtemp = strdup((char *)(thdr + 1));
 
@@ -139,24 +139,24 @@ FUNC_DECODER(dissector_icq)
       PACKET->DISSECTOR.user = strdup(user);
 
       SAFE_FREE(pwdtemp);
-      
+
       /* move the pointer */
       thdr = (struct tlv_hdr *) ((char *)thdr + sizeof(struct tlv_hdr) + thdr->len[1]);
 
       PACKET->DISSECTOR.info = strdup((char *)(thdr + 1));
-      
+
       DISSECT_MSG("ICQ : %s:%d -> USER: %s  PASS: %s \n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass);
 
-   } 
+   }
 
    return NULL;
 }
 
 /*
- * decode the crypted password 
+ * decode the crypted password
  */
 static void decode_pwd(char *pwd, char *outpwd)
 {
@@ -165,10 +165,10 @@ static void decode_pwd(char *pwd, char *outpwd)
       0xF3, 0x26, 0x81, 0xC4, 0x39, 0x86, 0xDB, 0x92,
       0x71, 0xA3, 0xB9, 0xE6, 0x53, 0x7A, 0x95, 0x7C
    };
-   
+
    for( x = 0; x < strlen(pwd); x++)
       *(outpwd + x) = pwd[x] ^ pwd_key[x];
-   
+
    return;
 }
 

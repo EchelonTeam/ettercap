@@ -65,13 +65,13 @@ void wdg_input_get_input(wdg_t *wo);
 
 /*******************************************/
 
-/* 
+/*
  * called to create the menu
  */
 void wdg_create_input(struct wdg_object *wo)
 {
    WDG_DEBUG_MSG("wdg_create_input");
-   
+
    /* set the callbacks */
    wo->destroy = wdg_input_destroy;
    wo->resize = wdg_input_resize;
@@ -83,14 +83,14 @@ void wdg_create_input(struct wdg_object *wo)
    WDG_SAFE_CALLOC(wo->extend, 1, sizeof(struct wdg_input_handle));
 }
 
-/* 
+/*
  * called to destroy the menu
  */
 static int wdg_input_destroy(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_input_handle, ww);
    size_t i = 0;
-   
+
    WDG_DEBUG_MSG("wdg_input_destroy");
 
    /* erase the window */
@@ -100,12 +100,12 @@ static int wdg_input_destroy(struct wdg_object *wo)
 
    /* destroy the internal form */
    wdg_input_form_destroy(wo);
-   
+
    /* dealloc the structures */
    delwin(ww->win);
-   
+
    /* free all the items */
-   while(ww->fields[i] != NULL) 
+   while(ww->fields[i] != NULL)
       free_field(ww->fields[i++]);
 
    /* free the array */
@@ -113,13 +113,13 @@ static int wdg_input_destroy(struct wdg_object *wo)
 
    /* free the buffer array */
    WDG_SAFE_FREE(ww->buffers);
-   
+
    WDG_SAFE_FREE(wo->extend);
 
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to resize the menu
  */
 static int wdg_input_resize(struct wdg_object *wo)
@@ -129,31 +129,31 @@ static int wdg_input_resize(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to redraw the menu
  */
 static int wdg_input_redraw(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_input_handle, ww);
    size_t c, l, x, y;
-   
+
    WDG_DEBUG_MSG("wdg_input_redraw");
-   
+
    /* center the window on the screen */
    wo->x1 = (current_screen.cols - (ww->x + 2)) / 2;
    wo->y1 = (current_screen.lines - (ww->y + 2)) / 2;
    wo->x2 = -wo->x1;
    wo->y2 = -wo->y1;
-   
+
    c = wdg_get_ncols(wo);
    l = wdg_get_nlines(wo);
    x = wdg_get_begin_x(wo);
    y = wdg_get_begin_y(wo);
-   
+
    /* deal with rouding */
    if (l != ww->y + 2) l = ww->y + 2;
    if (c != ww->x + 2) c = ww->x + 2;
- 
+
    /* the window already exist */
    if (ww->win) {
       /* erase the border */
@@ -161,23 +161,23 @@ static int wdg_input_redraw(struct wdg_object *wo)
       werase(ww->win);
       /* destroy the internal form */
       wdg_input_form_destroy(wo);
-      
+
       touchwin(ww->win);
       wnoutrefresh(ww->win);
 
       /* set the form color */
       wbkgd(ww->win, COLOR_PAIR(wo->window_color));
-     
+
       /* resize the window */
       mvwin(ww->win, y, x);
       wresize(ww->win, l, c);
-      
+
       /* redraw the window */
       wdg_input_borders(wo);
-      
+
       /* create the internal form */
       wdg_input_form_create(wo);
-      
+
       touchwin(ww->win);
 
    /* the first time we have to allocate the window */
@@ -190,7 +190,7 @@ static int wdg_input_redraw(struct wdg_object *wo)
       /* set the window color */
       wbkgd(ww->win, COLOR_PAIR(wo->window_color));
       redrawwin(ww->win);
-      
+
       /* draw the titles */
       wdg_input_borders(wo);
 
@@ -201,11 +201,11 @@ static int wdg_input_redraw(struct wdg_object *wo)
       scrollok(ww->win, FALSE);
 
    }
-   
+
    /* refresh the window */
    touchwin(ww->win);
    wnoutrefresh(ww->win);
-   
+
    touchwin(ww->fwin);
    wnoutrefresh(ww->fwin);
 
@@ -214,7 +214,7 @@ static int wdg_input_redraw(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the menu gets the focus
  */
 static int wdg_input_get_focus(struct wdg_object *wo)
@@ -224,25 +224,25 @@ static int wdg_input_get_focus(struct wdg_object *wo)
 
    /* redraw the window */
    wdg_input_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the menu looses the focus
  */
 static int wdg_input_lost_focus(struct wdg_object *wo)
 {
    /* set the flag */
    wo->flags &= ~WDG_OBJ_FOCUSED;
-   
+
    /* redraw the window */
    wdg_input_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called by the messages dispatcher when the menu is focused
  */
 static int wdg_input_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_event *mouse)
@@ -250,10 +250,10 @@ static int wdg_input_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_ev
    WDG_WO_EXT(struct wdg_input_handle, ww);
 
    WDG_DEBUG_MSG("keypress get msg: %d", key);
-   
+
    /* handle the message */
    switch (key) {
-         
+
       case KEY_MOUSE:
          /* is the mouse event within our edges ? */
          if (wenclose(ww->win, mouse->y, mouse->x)) {
@@ -264,7 +264,7 @@ static int wdg_input_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_ev
             return -WDG_ENOTHANDLED;
          }
          break;
-      
+
       case KEY_ESC:
       case CTRL('Q'):
          wdg_destroy_object(&wo);
@@ -281,7 +281,7 @@ static int wdg_input_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_ev
          }
          break;
    }
-   
+
    return WDG_ESUCCESS;
 }
 
@@ -292,7 +292,7 @@ static void wdg_input_borders(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_input_handle, ww);
    size_t c = wdg_get_ncols(wo);
-      
+
    /* the object was focused */
    if (wo->flags & WDG_OBJ_FOCUSED) {
       wattron(ww->win, A_BOLD);
@@ -302,10 +302,10 @@ static void wdg_input_borders(struct wdg_object *wo)
 
    /* draw the borders */
    box(ww->win, 0, 0);
-   
+
    /* set the title color */
    wbkgdset(ww->win, COLOR_PAIR(wo->title_color));
-   
+
    /* there is a title: print it */
    if (wo->title) {
       switch (wo->align) {
@@ -321,22 +321,22 @@ static void wdg_input_borders(struct wdg_object *wo)
       }
       wprintw(ww->win, wo->title);
    }
-   
+
    /* restore the attribute */
    if (wo->flags & WDG_OBJ_FOCUSED)
       wattroff(ww->win, A_BOLD);
-   
+
 }
 
 
 /*
- * stransform keys into menu commands 
+ * stransform keys into menu commands
  */
 static int wdg_input_virtualize(struct wdg_object *wo, int key)
 {
    WDG_WO_EXT(struct wdg_input_handle, ww);
    int c;
-   
+
    switch (key) {
       case KEY_RETURN:
       case KEY_EXIT:
@@ -372,16 +372,16 @@ static int wdg_input_virtualize(struct wdg_object *wo, int key)
          c = key;
          break;
    }
-  
-   /*    
+
+   /*
     * Force the field that the user is typing into to be in reverse video,
     * while the other fields are shown underlined.
-    */   
+    */
    //if (c <= KEY_MAX)
    //   set_field_back(current_field(ww->form), A_REVERSE);
    //else if (c <= MAX_FORM_COMMAND)
    //  set_field_back(current_field(ww->form), A_UNDERLINE);
-   
+
    return c;
 }
 
@@ -392,20 +392,20 @@ static int wdg_input_driver(struct wdg_object *wo, int key, struct wdg_mouse_eve
 {
    WDG_WO_EXT(struct wdg_input_handle, ww);
    int c, v;
-   
+
    WDG_DEBUG_MSG("keypress driver: %d", key);
-   
+
    /* virtualize the command */
    c = form_driver(ww->form, (v = wdg_input_virtualize(wo, key)) );
-   
+
    set_field_back(current_field(ww->form), A_REVERSE);
-   
+
    /* one item has been selected */
    if (c == E_UNKNOWN_COMMAND) {
       /* send a command to the form in order to validate the current field */
       form_driver(ww->form, REQ_NEXT_FIELD);
-      /* 
-       * put the temp buffer in the real one 
+      /*
+       * put the temp buffer in the real one
        * call the callback
        * and destroy the object
        */
@@ -414,17 +414,17 @@ static int wdg_input_driver(struct wdg_object *wo, int key, struct wdg_mouse_eve
    }
 
    wnoutrefresh(ww->fwin);
-      
+
    return WDG_ESUCCESS;
 }
 
 /*
- * delete the internal form 
+ * delete the internal form
  */
 static void wdg_input_form_destroy(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_input_handle, ww);
-  
+
    /* delete the form */
    unpost_form(ww->form);
    free_form(ww->form);
@@ -446,7 +446,7 @@ static void wdg_input_form_create(struct wdg_object *wo)
    /* the form is already posted */
    if (ww->form)
       return;
-  
+
    /* create the form */
    ww->form = new_form(ww->fields);
 
@@ -458,16 +458,16 @@ static void wdg_input_form_create(struct wdg_object *wo)
    /* set the color */
    wbkgd(ww->fwin, COLOR_PAIR(wo->window_color));
    keypad(ww->fwin, TRUE);
-  
+
    /* associate with the form */
    set_form_win(ww->form, ww->fwin);
-   
+
    /* the subwin for the form */
    set_form_sub(ww->form, derwin(ww->fwin, mrows + 1, mcols, 1, 1));
 
    /* make the active field in reverse mode */
    set_field_back(current_field(ww->form), A_REVERSE);
-   
+
    /* display the form */
    post_form(ww->form);
 
@@ -476,33 +476,33 @@ static void wdg_input_form_create(struct wdg_object *wo)
 
 
 /*
- * set the size of the dialog 
+ * set the size of the dialog
  */
 void wdg_input_size(wdg_t *wo, size_t x, size_t y)
 {
    WDG_WO_EXT(struct wdg_input_handle, ww);
 
    /* add 2 for the space between the label and the field
-    * add 2 for the borders 
+    * add 2 for the borders
     */
    ww->x = x + 2 + 4;
    ww->y = y;
-   
+
    /* center the window on the screen */
    wo->x1 = (current_screen.cols - (x + 2)) / 2;
    wo->y1 = (current_screen.lines - (y + 2)) / 2;
    wo->x2 = -wo->x1;
    wo->y2 = -wo->y1;
-   
+
 }
 
-/* 
- * add a field to the form 
+/*
+ * add a field to the form
  */
 void wdg_input_add(wdg_t *wo, size_t x, size_t y, const char *caption, char *buf, size_t len, size_t lines)
 {
    WDG_WO_EXT(struct wdg_input_handle, ww);
-   
+
    ww->nfields += 2;
    WDG_SAFE_REALLOC(ww->fields, ww->nfields * sizeof(FIELD *));
 
@@ -523,7 +523,7 @@ void wdg_input_add(wdg_t *wo, size_t x, size_t y, const char *caption, char *buf
    field_opts_off(ww->fields[ww->nfields - 1], O_WRAP);
    set_field_buffer(ww->fields[ww->nfields - 1], 0, buf);
    set_field_fore(ww->fields[ww->nfields - 1], COLOR_PAIR(wo->window_color));
-   
+
    /* null terminate the array */
    WDG_SAFE_REALLOC(ww->fields, (ww->nfields + 1) * sizeof(FIELD *));
    ww->fields[ww->nfields] = NULL;
@@ -539,9 +539,9 @@ static void wdg_input_consolidate(struct wdg_object *wo)
    char *buf;
    int i = 0, j;
    void (*callback)(void);
-   
+
    WDG_DEBUG_MSG("wdg_input_consolidate");
-   
+
    while(ww->fields[i] != NULL) {
       /* get the buffer */
       buf = field_buffer(ww->fields[i+1], 0);
@@ -552,10 +552,10 @@ static void wdg_input_consolidate(struct wdg_object *wo)
             buf[j] = 0;
          else
             break;
-      
+
       /* copy the buffer in the real one */
       strcpy(ww->buffers[i/2], buf);
-      
+
       /* skip the label */
       i += 2;
    }
@@ -586,20 +586,20 @@ void wdg_input_get_input(wdg_t *wo)
 {
    int key, ret;
    struct wdg_mouse_event mouse;
-  
+
    WDG_DEBUG_MSG("wdg_input_get_input");
-   
+
    /* dispatch keys to self */
    WDG_LOOP {
 
       key = wgetch(stdscr);
-     
+
       switch (key) {
 
          /* don't switch focus... */
          case KEY_TAB:
             break;
-         
+
          case KEY_CTRL_L:
             /* redrawing the screen is equivalent to resizing it */
          case KEY_RESIZE:
@@ -608,7 +608,7 @@ void wdg_input_get_input(wdg_t *wo)
             /* update the screen */
             doupdate();
             break;
-            
+
          case ERR:
             /* non-blocking input reached the timeout */
             /* sleep for milliseconds */
@@ -616,42 +616,42 @@ void wdg_input_get_input(wdg_t *wo)
             refresh();
             doupdate();
             break;
-            
+
          default:
 
 #ifdef NCURSES_MOUSE_VERSION
             /* handle mouse events */
             if (key == KEY_MOUSE) {
                MEVENT event;
-            
+
                getmouse(&event);
                mouse_trafo(&event.y, &event.x, TRUE);
                mouse.x = event.x;
                mouse.y = event.y;
                mouse.event = event.bstate;
             }
-#else            
+#else
             /* we don't support mouse events */
             memset(&mouse, 0, sizeof(mouse));
 #endif
             /* dispatch the user input */
-            ret = wdg_input_get_msg(wo, key, &mouse); 
+            ret = wdg_input_get_msg(wo, key, &mouse);
             /* update the screen */
             doupdate();
 
-            /* 
-             * if the object is destroyed or the input finished, 
+            /*
+             * if the object is destroyed or the input finished,
              * then return to the main loop
              */
             if (ret == WDG_EFINISHED) {
                WDG_DEBUG_MSG("wdg_input_get_input: return to main loop");
                return;
             }
-            
+
             break;
       }
    }
-   
+
 
 }
 

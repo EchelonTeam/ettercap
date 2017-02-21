@@ -21,11 +21,11 @@ struct conn_object {
    /* mac addresses */
    u_int8 L2_addr1[MEDIA_ADDR_LEN];
    u_int8 L2_addr2[MEDIA_ADDR_LEN];
-   
+
    /* ip addresses */
    struct ip_addr L3_addr1;
    struct ip_addr L3_addr2;
-   
+
    /* port numbers */
    u_int16 L4_addr1;
    u_int16 L4_addr2;
@@ -38,7 +38,7 @@ struct conn_object {
    u_int32 xferred;  /* XXX: remove it some day */
    u_int32 tx;       /* from 1 to 2 */
    u_int32 rx;       /* from 2 to 1 */
-   
+
    /* connection status */
    int status;
 
@@ -53,7 +53,7 @@ struct conn_object {
 };
 
 struct conn_tail {
-   struct conn_object *co; 
+   struct conn_object *co;
    struct conn_hash_search *cs;
    TAILQ_ENTRY(conn_tail) next;
 };
@@ -77,7 +77,7 @@ enum {
 
 /* exported functions */
 EC_API_EXTERN void * conntrack_print(int mode, void *list, char **desc, size_t len);
-EC_API_EXTERN EC_THREAD_FUNC(conntrack_timeouter); 
+EC_API_EXTERN EC_THREAD_FUNC(conntrack_timeouter);
 EC_API_EXTERN void conntrack_purge(void);
 
 EC_API_EXTERN int conntrack_hook_packet_add(struct packet_object *po, void (*func)(struct packet_object *po));

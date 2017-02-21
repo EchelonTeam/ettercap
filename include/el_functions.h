@@ -37,7 +37,7 @@ EL_API_EXTERN void conn_decode(void);
 EL_API_EXTERN void filcon_compile(char *conn);
 EL_API_EXTERN int is_conn(struct log_header_packet *pck, int *versus);
 #define VERSUS_SOURCE   0
-#define VERSUS_DEST     1 
+#define VERSUS_DEST     1
 
 /* el_target */
 EL_API_EXTERN void target_compile(char *target);

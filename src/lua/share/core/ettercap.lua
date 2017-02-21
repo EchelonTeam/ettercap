@@ -17,7 +17,7 @@
 --    along with this program; if not, write to the Free Software
 --    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
--- 
+--
 
 
 -- All of our core stuff will reside in the "ettercap" namespace.
@@ -34,8 +34,8 @@ ettercap.reg = require("ettercap_reg")
 -- @see string.format
 -- @param fmt The format string
 -- @param ... Variable arguments to pass in
-log = function(fmt, ...) 
-  -- We don't want any format string "accidents" on the C side of things.. 
+log = function(fmt, ...)
+  -- We don't want any format string "accidents" on the C side of things..
   -- so, we will let lua handle it.
   ettercap_c.log(string.format(fmt, ...))
 end
@@ -63,45 +63,45 @@ end
 
 -- Script interface
 --
--- All Ettercap LUA scripts are initialized using a common interface. We've 
--- modeled this interface very closely after that of NMAP's NSE script 
--- interface. Our hope is that the community's familiarity with NSE will 
--- lower the barrier for entry for those looking to write Ettercap LUA 
+-- All Ettercap LUA scripts are initialized using a common interface. We've
+-- modeled this interface very closely after that of NMAP's NSE script
+-- interface. Our hope is that the community's familiarity with NSE will
+-- lower the barrier for entry for those looking to write Ettercap LUA
 -- scripts.
 --
 --
 --  Data structures:
---    packet_object - Access to the Ettercap "packet_object" (originally 
---                    defined in include/ec_packet.h) is provided via a 
---                    light luajit FFI wrapper. Details on interacting with 
+--    packet_object - Access to the Ettercap "packet_object" (originally
+--                    defined in include/ec_packet.h) is provided via a
+--                    light luajit FFI wrapper. Details on interacting with
 --                    data-types via luajit FFI can be found here:
---                    http://luajit.org/ext_ffi_semantics.html. 
+--                    http://luajit.org/ext_ffi_semantics.html.
 --
 --                    Generally, script implementations should avoid direct
---                    modifications to packet_object, or any FFI wrapped 
---                    structure, instead favoring modification through 
+--                    modifications to packet_object, or any FFI wrapped
+--                    structure, instead favoring modification through
 --                    defined ettercap.* interfaces.
 --
---                    NOTE: Careful consideration must be taken to when 
---                    interacting with FFI-wrapped data-structures! Data 
+--                    NOTE: Careful consideration must be taken to when
+--                    interacting with FFI-wrapped data-structures! Data
 --                    originating from outside of the LUA VM must have their
 --                    memory managed *manually*! See the section of luajit's
 --                    FFI Semantics on "Garbage Collection of cdata Objects"
---                    for details. 
---                    
+--                    for details.
+--
 --
 --  Script requirements:
 --
---    description - (string) Like that of NSE, each script must have a 
+--    description - (string) Like that of NSE, each script must have a
 --                  description of the its functionality.
 --
 --    action      - (function (packet_object)) The action of a script operates
---                  on a FFI-wrapped packet_object. 
+--                  on a FFI-wrapped packet_object.
 --
 --  Optional:
 --
---    packetrule  - (function (packet_object)) If implemented, then this 
---                  function must return true for a given packet_object 
+--    packetrule  - (function (packet_object)) If implemented, then this
+--                  function must return true for a given packet_object
 --                  before that packet_object is passed to the script's action.
 --
 
@@ -116,7 +116,7 @@ do
     packetrule = "packetrule",
   };
 
-  -- These are the components of a script that are required. 
+  -- These are the components of a script that are required.
   local REQUIRED_FIELDS = {
     description = "string",
     action = "function",
@@ -125,8 +125,8 @@ do
   };
 
   function Script.new (filename, arguments)
-    local script_params = arguments or {};  
-    local script_path = filename 
+    local script_params = arguments or {};
+    local script_path = filename
     local full_path = ETTERCAP_LUA_SCRIPT_PATH .. "/" .. filename;
 
     local file_closure = nil
@@ -164,7 +164,7 @@ do
       local required_type = REQUIRED_FIELDS[required_field_name];
       local raw_field = rawget(env, required_field_name)
       local actual_type = type(raw_field);
-      assert(actual_type == required_type, 
+      assert(actual_type == required_type,
              "Incorrect of missing field: '" .. required_field_name .. "'." ..
              " Must be of type: '" .. required_type .. "'" ..
              " got type: '" .. actual_type .. "'." ..
@@ -186,7 +186,7 @@ do
     -- Make sure we have a hook_point!
     local hook_point = rawget(env, "hook_point")
     assert(type(hook_point) == "number", "hook_point must be a number!")
- 
+
     local script = {
       filename = filename,
       action = action,
@@ -196,14 +196,14 @@ do
       file_closure = file_closure,
       script_params = script_params
     };
-    
+
     return setmetatable(script, {__index = Script, __metatable = Script});
   end
 end
 
 -- Stores hook mappings.
 --- Called during ettercap's shutdown
-local ettercap_cleanup = function() 
+local ettercap_cleanup = function()
 end
 
 local packet_object_ctype = ffi.typeof("struct packet_object *")
@@ -211,7 +211,7 @@ local ffi_cast = ffi.cast
 
 local create_hook = function(script)
   local packetrule = script.rules["packetrule"]
-  local hook_func = function(packet_object_ptr) 
+  local hook_func = function(packet_object_ptr)
     local packet_object = ffi_cast(packet_object_ctype, packet_object_ptr);
     if (not(packetrule == nil)) then
       if not(packetrule(packet_object) == true) then
@@ -229,12 +229,12 @@ local hook_add = function (hook_point, func)
 end
 
 -- Processes all the --lua-script arguments into a single list of script
--- names. 
+-- names.
 --
 -- @param scripts An array of script cli arguments
 -- @return A table containing all the split arguments
 local cli_split_scripts = function (scripts)
-  -- This keeps track of what script names have already been encountered. 
+  -- This keeps track of what script names have already been encountered.
   -- This prevents us from loading the same script more than once.
   local loaded_scripts = {}
 
@@ -242,20 +242,20 @@ local cli_split_scripts = function (scripts)
   for v = 1, #scripts do
     local s = scripts[v]
     local script_list = eclib.split(s, ",")
-    for i = 1, #script_list do 
+    for i = 1, #script_list do
       if (loaded_scripts[script_list[i]] == nil) then
         -- We haven't loaded this script, yet, so add it it our list.
         table.insert(ret, script_list[i])
         loaded_scripts[script_list[i]] = 1
       end
-    end 
+    end
   end
 
   return ret
 end
 
 -- Processes all the --lua-args arguments into a single list of args
--- names. 
+-- names.
 --
 -- @param args An array of args cli arguments
 -- @return A table containing all the split arguments
@@ -264,11 +264,11 @@ local cli_split_args = function (args)
   for v = 1, #args do
     local s = args[v]
     local arglist = eclib.split(s, ",")
-    for i = 1, #arglist do 
+    for i = 1, #arglist do
       -- We haven't loaded this args, yet, so add it it our list.
       local temp = eclib.split(arglist[i],"=")
       ret[temp[1]] = temp[2]
-    end 
+    end
   end
 
   return ret
@@ -303,6 +303,6 @@ ettercap.cleanup = ettercap_cleanup
 ettercap.log = log
 ettercap.dump = dump
 
--- Is this even nescessary? Nobody should be requiring this except for 
+-- Is this even nescessary? Nobody should be requiring this except for
 -- init.lua... However, I'll act like this is required.
 return ettercap

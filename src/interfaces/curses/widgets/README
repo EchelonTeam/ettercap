@@ -2,7 +2,7 @@
 ==============================================================================
 
                                     libwdg
-                                    
+
                        a collection of widgets for ncurses
 
                            Copyright 2003-2004 ALoR
@@ -23,6 +23,6 @@ this implies.
 No documentation is provided, sorry. But if you understand how to use these
 functions looking at the ettercap code, you can use the library in your own
 projects. Drop me an email if you are interested in this project.
-                              
+
 ==============================================================================
 vim:ts=3:expandtab

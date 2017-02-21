@@ -39,9 +39,9 @@ int text_plugin(char *plugin)
    int type;
 
    DEBUG_MSG("text_plugin: %s", plugin);
-   
+
    /*
-    * if the plugin name is "list", print the 
+    * if the plugin name is "list", print the
     * plugin list and exit
     */
    if (!strcasecmp(plugin, "list")) {
@@ -50,28 +50,28 @@ int text_plugin(char *plugin)
 
       INSTANT_USER_MSG("\nAvailable plugins :\n\n");
       type = plugin_list_walk(PLP_MIN, PLP_MAX, &text_plugin_list);
-      if (type == -ENOTFOUND) 
+      if (type == -ENOTFOUND)
          FATAL_MSG("No plugin found !\n");
-      
+
       INSTANT_USER_MSG("\n\n");
-      /* 
-       * return an error, so the text interface 
+      /*
+       * return an error, so the text interface
        * ends and returns to main
        */
       return -EINVALID;
    }
-   
+
 
    /* check if the plugin exists */
    if (search_plugin(plugin) != ESUCCESS)
       FATAL_MSG("%s plugin can not be found !", plugin);
-   
-   
+
+
    if (plugin_is_activated(plugin) == 0)
       INSTANT_USER_MSG("Activating %s plugin...\n\n", plugin);
    else
       INSTANT_USER_MSG("Deactivating %s plugin...\n\n", plugin);
-  
+
    /*
     * pay attention on this !
     * if the plugin init does not return,
@@ -81,18 +81,18 @@ int text_plugin(char *plugin)
     */
    if (plugin_is_activated(plugin) == 1)
       return plugin_fini(plugin);
-   else 
+   else
       return plugin_init(plugin);
-      
+
 }
 
 /*
- * callback function for displaying the plugin list 
+ * callback function for displaying the plugin list
  */
 static void text_plugin_list(char active, struct plugin_ops *ops)
 {
-   INSTANT_USER_MSG("[%d] %15s %4s  %s\n", active, 
-         ops->name, ops->version, ops->info);  
+   INSTANT_USER_MSG("[%d] %15s %4s  %s\n", active,
+         ops->name, ops->version, ops->info);
 }
 
 /* EOF */

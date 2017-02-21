@@ -1,5 +1,5 @@
---- 
--- The purpose of this lib is to provide a simple way of defining the style of 
+---
+-- The purpose of this lib is to provide a simple way of defining the style of
 -- session tracking that would be employed by a given script.
 --
 --    Copyright (C) Ryan Linn and Mike Ryan
@@ -43,7 +43,7 @@ function magic_session(packet_object, magic_vals)
     if ident then
       local ident_magic = ffi.cast(ident_magic_ptr, ident)
       local magic = tonumber(ident_magic.magic)
-      -- If we have the magic value in our table, then we have are in the 
+      -- If we have the magic value in our table, then we have are in the
       -- right spot!
       if magic_vals[magic] then
         break
@@ -61,7 +61,7 @@ end
 
 local ip_magic_vals = {[ffi.C.IP_MAGIC] = 1, [ffi.C.IP6_MAGIC] = 1}
 local tcp_magic_vals = {[ffi.C.TCP_MAGIC] = 1}
--- Search down through the session structures for either an IP or IPv6 
+-- Search down through the session structures for either an IP or IPv6
 -- session object. If we find that, then use it. If we don't find the session
 -- structure, then return nil.
 --

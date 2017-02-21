@@ -1,7 +1,7 @@
 /*
-    ettercap -- dissector NBNS -- UDP 137 
+    ettercap -- dissector NBNS -- UDP 137
 
-    Copyright (C) Ettercap Team 
+    Copyright (C) Ettercap Team
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -105,7 +105,7 @@ void nbns_init(void);
 static int nbns_expand(char *compressed, char *dst);
 
 
-/* 
+/*
  * initializer
  */
 void __init nbns_init(void)
@@ -135,7 +135,7 @@ FUNC_DECODER(dissector_nbns)
 	if (header->response) {
 		response = (struct nbns_response *)po->DATA.data;	
 		
-		if (response->class != CLASS_IN) 
+		if (response->class != CLASS_IN)
 			return NULL;
 	
 		nbns_expand(response->rr_name, name);

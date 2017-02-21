@@ -38,7 +38,7 @@ void curses_sniff_offline(void);
 void curses_sniff_offline(void)
 {
    wdg_t *menu;
-   
+
    DEBUG_MSG("curses_sniff_offline");
 
    wdg_create_object(&menu, WDG_MENU, WDG_OBJ_WANT_FOCUS | WDG_OBJ_ROOT_OBJECT);
@@ -56,7 +56,7 @@ void curses_sniff_offline(void)
    wdg_menu_add(menu, menu_logging);
    wdg_menu_add(menu, menu_help);
    wdg_draw_object(menu);
-   
+
    /* repaint the whole screen */
    wdg_redraw_all();
 
@@ -65,7 +65,7 @@ void curses_sniff_offline(void)
    /* add the message flush callback */
    wdg_add_idle_callback(curses_flush_msg);
 
-   /* 
+   /*
     * give the control to the event dispatcher
     * with the emergency exit CTRL + X
     */

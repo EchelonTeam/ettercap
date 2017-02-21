@@ -55,17 +55,17 @@ FUNC_DECODER(decode_vlan)
    struct vlan_header *vlan;
 
    DECODED_LEN = sizeof(struct vlan_header);
-   
+
    vlan = (struct vlan_header *)DECODE_DATA;
 
    /* HOOK POINT : HOOK_PACKET_VLAN */
    hook_point(HOOK_PACKET_VLAN, po);
-   
-   /* leave the control to the next decoder */   
+
+   /* leave the control to the next decoder */
    next_decoder = get_decoder(NET_LAYER, ntohs(vlan->proto));
 
    EXECUTE_DECODER(next_decoder);
-      
+
    return NULL;
 }
 

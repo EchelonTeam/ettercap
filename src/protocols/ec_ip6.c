@@ -34,7 +34,7 @@ struct ip6_header {
 #ifndef WORDS_BIGENDIAN
    u_int8   version:4;
    u_int8   priority:4;
-#else 
+#else
    u_int8   priority:4;
    u_int8   version:4;
 #endif
@@ -102,7 +102,7 @@ FUNC_DECODER(decode_ip6)
    void *ident;
 
    ip6 = (struct ip6_header *)DECODE_DATA;
-  
+
    if (ip6->payload_len == 0) {
       DEBUG_MSG("IPv6 jumbogram, Hop-By-Hop header should follow");
    }
@@ -111,10 +111,10 @@ FUNC_DECODER(decode_ip6)
    /* IP addresses */
    ip_addr_init(&PACKET->L3.src, AF_INET6, (u_char *)&ip6->saddr);
    ip_addr_init(&PACKET->L3.dst, AF_INET6, (u_char *)&ip6->daddr);
-   
+
    /* this is needed at upper layer to calculate the tcp payload size */
    PACKET->L3.payload_len = ntohs(ip6->payload_len);
-      
+
    /* other relevant infos */
    PACKET->L3.header = (u_char *)DECODE_DATA;
    PACKET->L3.len = DECODED_LEN;
@@ -146,7 +146,7 @@ FUNC_DECODER(decode_ip6)
          PACKET->PASSIVE.flags = FP_UNKNOWN;
          break;
    }
-   
+
    next_decoder = get_decoder(NET6_LAYER, ip6->next_hdr);
    if(next_decoder == NULL) {
       PACKET->L3.options = NULL;
@@ -155,7 +155,7 @@ FUNC_DECODER(decode_ip6)
    } else {
       PACKET->L3.options = (u_char *)&ip6[1];
    }
-      
+
    /* HOOK POINT: HOOK_PACKET_IP6 */
    hook_point(HOOK_PACKET_IP6, po);
 
@@ -170,12 +170,12 @@ FUNC_DECODER(decode_ip6)
 
       SESSION_PASSTHRU(s, PACKET);
    }
-   
+
    /* passing the packet to options or upper-layer decoder */
    EXECUTE_DECODER(next_decoder);
-   
+
    /*
-    * External L3 header sets itself 
+    * External L3 header sets itself
     * as the packet to be forwarded.
     */
    /* XXX - recheck this */
@@ -187,7 +187,7 @@ FUNC_DECODER(decode_ip6)
          PACKET->fwd_len = PACKET->L3.payload_len + DECODED_LEN;
       }
    }
-   
+
    return NULL;
 }
 
@@ -249,7 +249,7 @@ FUNC_INJECTOR(inject_ip6)
 
    data = s->data;
    ip6->priority = data->priority;
-   
+
    flen = LENGTH;
    LENGTH += sizeof(struct ip6_header);
 
@@ -258,12 +258,12 @@ FUNC_INJECTOR(inject_ip6)
       magic = *(u_int32 *) s->prev_session->ident;
 
       EXECUTE_INJECTOR(CHAIN_LINKED, magic);
-   } 
+   }
 
    plen = GBL_IFACE->mtu - LENGTH < PACKET->DATA.inject_len
           ? GBL_IFACE->mtu - LENGTH : PACKET->DATA.inject_len;
    ip6->payload_len = htons(plen);
-   
+
    PACKET->L3.len = flen + plen;
    PACKET->L3.header = (u_char *)ip6;
 
@@ -274,7 +274,7 @@ FUNC_INJECTOR(inject_ip6)
 
    return ESUCCESS;
 }
-   
+
 static size_t ip6_create_ident(void **i, struct packet_object *po)
 {
    struct ip6_header *ip6;

@@ -36,10 +36,10 @@ struct open_port {
    u_int8  L4_proto;
    /* the service banner */
    char *banner;
-   
+
    /* the list of users */
    LIST_HEAD(, active_user) users_list_head;
-   
+
    LIST_ENTRY(open_port) next;
 };
 
@@ -47,7 +47,7 @@ struct open_port {
 /* this contains all the info related to an host */
 
 struct host_profile {
-   
+
    u_int8 L2_addr[MEDIA_ADDR_LEN];
 
    struct ip_addr L3_addr;
@@ -58,7 +58,7 @@ struct host_profile {
 
    /* the list of open ports */
    LIST_HEAD(, open_port) open_ports_head;
-   
+
    /* distance in hop (TTL) */
    u_int8 distance;
    /* local or not ? */

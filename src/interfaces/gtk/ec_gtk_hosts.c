@@ -47,7 +47,7 @@ enum { HOST_DELETE, HOST_TARGET1, HOST_TARGET2 };
 /*******************************************/
 
 /*
- * scan the lan for hosts 
+ * scan the lan for hosts
  */
 void gtkui_scan(void)
 {
@@ -60,7 +60,7 @@ void gtkui_scan(void)
       GBL_TARGET1->scan_all = 1;
       GBL_TARGET2->scan_all = 1;
    }
-   
+
    /* perform a new scan */
    build_hosts_list();
 }
@@ -79,7 +79,7 @@ void gtkui_load_hosts(void)
    dialog = gtk_file_selection_new ("Select a hosts file...");
 
    response = gtk_dialog_run (GTK_DIALOG (dialog));
-   
+
    if (response == GTK_RESPONSE_OK) {
       gtk_widget_hide(dialog);
       filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (dialog));
@@ -94,9 +94,9 @@ static void load_hosts(char *file)
 {
    char *tmp;
    char current[PATH_MAX];
-   
+
    DEBUG_MSG("load_hosts %s", file);
-   
+
    SAFE_CALLOC(tmp, strlen(file)+1, sizeof(char));
 
    /* get the current working directory */
@@ -119,9 +119,9 @@ static void load_hosts(char *file)
 
    /* load the hosts list */
    scan_load_hosts(tmp);
-   
+
    SAFE_FREE(tmp);
-   
+
    gtkui_host_list();
 }
 
@@ -131,19 +131,19 @@ static void load_hosts(char *file)
 void gtkui_save_hosts(void)
 {
 #define FILE_LEN  40
-   
+
    DEBUG_MSG("gtk_save_hosts");
 
    SAFE_FREE(GBL_OPTIONS->hostsfile);
    SAFE_CALLOC(GBL_OPTIONS->hostsfile, FILE_LEN, sizeof(char));
-   
+
    gtkui_input("Output file :", GBL_OPTIONS->hostsfile, FILE_LEN, save_hosts);
 }
 
 static void save_hosts(void)
 {
    FILE *f;
-   
+
    /* check if the file is writeable */
    f = fopen(GBL_OPTIONS->hostsfile, "w");
    if (f == NULL) {
@@ -151,16 +151,16 @@ static void save_hosts(void)
       SAFE_FREE(GBL_OPTIONS->hostsfile);
       return;
    }
- 
+
    /* if ok, delete it */
    fclose(f);
    unlink(GBL_OPTIONS->hostsfile);
-   
+
    scan_save_hosts(GBL_OPTIONS->hostsfile);
 }
 
 /*
- * display the host list 
+ * display the host list
  */
 void gtkui_host_list(void)
 {
@@ -177,7 +177,7 @@ void gtkui_host_list(void)
          gtkui_page_present(hosts_window);
       return;
    }
-   
+
    hosts_window = gtkui_page_new("Host List", &gtkui_hosts_destroy, &gtkui_hosts_detach);
 
    vbox = gtk_vbox_new(FALSE, 0);
@@ -214,7 +214,7 @@ void gtkui_host_list(void)
 
    /* populate the list or at least allocate a spot for it */
    gtkui_refresh_host_list();
-  
+
    /* set the elements */
    gtk_tree_view_set_model(GTK_TREE_VIEW (treeview), GTK_TREE_MODEL (liststore));
 
@@ -283,21 +283,21 @@ void gtkui_refresh_host_list(void)
 
    DEBUG_MSG("gtk_refresh_host_list");
 
-   /* The list store contains a 4th column that is NOT displayed 
+   /* The list store contains a 4th column that is NOT displayed
       by the treeview widget. This is used to store the pointer
       for each entry's structure. */
-   
-   if(liststore) 
+
+   if(liststore)
       gtk_list_store_clear(GTK_LIST_STORE (liststore));
    else
       liststore = gtk_list_store_new (4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER);
 
    /* walk the hosts list */
    LIST_FOREACH(hl, &GBL_HOSTLIST, next) {
-      /* enlarge the list */ 
+      /* enlarge the list */
       gtk_list_store_append (liststore, &iter);
       /* fill the element */
-      gtk_list_store_set (liststore, &iter, 
+      gtk_list_store_set (liststore, &iter,
                           0, ip_addr_ntoa(&hl->ip, tmp),
                           1, mac_addr_ntoa(hl->mac, tmp2),
                           3, hl, -1);

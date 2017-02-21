@@ -77,7 +77,7 @@ FUNC_DECODER(dissector_mysql)
    /* Skip ACK packets */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    dissect_create_ident(&ident, PACKET, DISSECT_CODE(dissector_mysql));
 
    /* Packets coming from the server */
@@ -137,7 +137,7 @@ FUNC_DECODER(dissector_mysql)
          }
          /* save the session */
          session_put(s);
-      } 
+      }
    } else { /* Packets coming from the client */
       /* Only if we catched the connection from the beginning */
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS) {
@@ -188,7 +188,7 @@ FUNC_DECODER(dissector_mysql)
             } else {
                PACKET->DISSECTOR.pass = strdup("No Password!!!");
             }
-            
+
             DISSECT_MSG("MYSQL : %s:%d -> USER:%s %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
                             ntohs(PACKET->L4.dst),
                             PACKET->DISSECTOR.user,

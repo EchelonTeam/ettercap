@@ -75,7 +75,7 @@ void gtkui_conf_read(void) {
    DEBUG_MSG("gtkui_conf_read: %s", filename);
 
    fd = fopen(filename, "r");
-   if(!fd) 
+   if(!fd)
       return;
 
    while(fgets(line, 100, fd)) {
@@ -98,7 +98,7 @@ void gtkui_conf_save(void) {
 
    DEBUG_MSG("gtkui_conf_save");
 
-   if(!filename) 
+   if(!filename)
       return;
 
    fd = fopen(filename, "w");

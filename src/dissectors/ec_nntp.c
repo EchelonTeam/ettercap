@@ -21,9 +21,9 @@
 
 /*
  * The authentication schema can be found here:
- * 
+ *
  * ftp://ftp.rfc-editor.org/in-notes/rfc2980.txt
- * 
+ *
  */
 
 #include <ec.h>
@@ -56,29 +56,29 @@ FUNC_DECODER(dissector_nntp)
    struct ec_session *s = NULL;
    void *ident = NULL;
    char tmp[MAX_ASCII_ADDR_LEN];
-   
+
    /* the connection is starting... create the session */
    CREATE_SESSION_ON_SYN_ACK("nntp", s, dissector_nntp);
    CREATE_SESSION_ON_SYN_ACK("nntps", s, dissector_nntp);
-   
+
    /* check if it is the first packet sent by the server */
    IF_FIRST_PACKET_FROM_SERVER_SSL("nntp", "nntps", s, ident, dissector_nntp) {
-          
+
       DEBUG_MSG("\tdissector_nntp BANNER");
       /*
-       * get the banner 
+       * get the banner
        * ptr + 4 to skip the initial 200 response
        */
       if (!strncmp((const char*)ptr, "200", 3)) {
          PACKET->DISSECTOR.banner = strdup((const char*)ptr + 4);
-      
+
          /* remove the \r\n */
          if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.banner, '\r')) != NULL )
             *ptr = '\0';
       }
-            
+
    } ENDIF_FIRST_PACKET_FROM_SERVER(s, ident)
-   
+
    /* skip messages coming from the server */
    if (FROM_SERVER("nntp", PACKET) || FROM_SERVER("nntps", PACKET))
       return NULL;
@@ -86,12 +86,12 @@ FUNC_DECODER(dissector_nntp)
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
- 
+
    DEBUG_MSG("NNTP --> TCP dissector_nntp");
-   
+
    /* skip the whitespaces at the beginning */
    while(*ptr == ' ' && ptr != end) ptr++;
-  
+
    /* reached the end */
    if (ptr == end) return NULL;
 
@@ -99,23 +99,23 @@ FUNC_DECODER(dissector_nntp)
    if ( !strncasecmp((const char*)ptr, "AUTHINFO USER ", 14) ) {
 
       DEBUG_MSG("\tDissector_nntp USER");
-      
+
       /* create the session */
       dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_nntp));
-      
+
       ptr += 14;
-      
+
       /* if not null, free it */
       SAFE_FREE(s->data);
 
       /* fill the session data */
       s->data = strdup((const char*)ptr);
       s->data_len = strlen((const char*)ptr);
-      
+
       /* remove the \r\n */
       if ( (ptr = (u_char*)strchr(s->data,'\r')) != NULL )
          *ptr = '\0';
-      
+
       /* save the session */
       session_put(s);
 
@@ -126,12 +126,12 @@ FUNC_DECODER(dissector_nntp)
    if ( !strncasecmp((const char*)ptr, "AUTHINFO PASS ", 14) ) {
 
       DEBUG_MSG("\tDissector_nntp PASS");
-      
+
       ptr += 14;
-      
+
       /* create an ident to retrieve the session */
       dissect_create_ident(&ident, PACKET, DISSECT_CODE(dissector_nntp));
-      
+
       /* retrieve the session and delete it */
       if (session_get_and_del(&s, ident, DISSECT_IDENT_LEN) == -ENOTFOUND) {
          SAFE_FREE(ident);
@@ -143,10 +143,10 @@ FUNC_DECODER(dissector_nntp)
          SAFE_FREE(ident);
          return NULL;
       }
-      
+
       /* fill the structure */
       PACKET->DISSECTOR.user = strdup(s->data);
-      
+
       PACKET->DISSECTOR.pass = strdup((const char*)ptr);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
          *ptr = '\0';
@@ -154,15 +154,15 @@ FUNC_DECODER(dissector_nntp)
       /* free the session */
       session_free(s);
       SAFE_FREE(ident);
-      
+
       DISSECT_MSG("NNTP : %s:%d -> USER: %s  PASS: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass);
 
       return NULL;
    }
-   
+
    return NULL;
 }
 

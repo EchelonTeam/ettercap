@@ -65,15 +65,15 @@ void wdg_compound_add_callback(wdg_t *wo, int key, void (*callback)(void));
 
 /*******************************************/
 
-/* 
+/*
  * called to create a compound
  */
 void wdg_create_compound(struct wdg_object *wo)
 {
    struct wdg_compound *ww;
-   
+
    WDG_DEBUG_MSG("wdg_create_compound");
-   
+
    /* set the callbacks */
    wo->destroy = wdg_compound_destroy;
    wo->resize = wdg_compound_resize;
@@ -85,11 +85,11 @@ void wdg_create_compound(struct wdg_object *wo)
    WDG_SAFE_CALLOC(wo->extend, 1, sizeof(struct wdg_compound));
 
    ww = (struct wdg_compound *)wo->extend;
-   
+
    TAILQ_INIT(&ww->widgets_list);
 }
 
-/* 
+/*
  * called to destroy a compound
  */
 static int wdg_compound_destroy(struct wdg_object *wo)
@@ -97,14 +97,14 @@ static int wdg_compound_destroy(struct wdg_object *wo)
    WDG_WO_EXT(struct wdg_compound, ww);
    struct wdg_widget_list *e, *tmp;
    struct wdg_compound_call *c;
-   
+
    WDG_DEBUG_MSG("wdg_compound_destroy");
 
    /* erase the window */
    wbkgd(ww->win, COLOR_PAIR(wo->screen_color));
    werase(ww->win);
    wnoutrefresh(ww->win);
-   
+
    /* dealloc the structures */
    delwin(ww->win);
 
@@ -113,7 +113,7 @@ static int wdg_compound_destroy(struct wdg_object *wo)
       wdg_destroy_object(&e->wdg);
       WDG_SAFE_FREE(e);
    }
-   
+
    /* free the callback list */
    while (SLIST_FIRST(&ww->callbacks) != NULL) {
       c = SLIST_FIRST(&ww->callbacks);
@@ -126,7 +126,7 @@ static int wdg_compound_destroy(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to resize a compound
  */
 static int wdg_compound_resize(struct wdg_object *wo)
@@ -136,7 +136,7 @@ static int wdg_compound_resize(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to redraw a compound (it redraws all the contained widgets)
  */
 static int wdg_compound_redraw(struct wdg_object *wo)
@@ -147,9 +147,9 @@ static int wdg_compound_redraw(struct wdg_object *wo)
    size_t l = wdg_get_nlines(wo);
    size_t x = wdg_get_begin_x(wo);
    size_t y = wdg_get_begin_y(wo);
-   
+
    WDG_DEBUG_MSG("wdg_compound_redraw");
- 
+
    /* the window already exist */
    if (ww->win) {
       /* erase the border */
@@ -157,12 +157,12 @@ static int wdg_compound_redraw(struct wdg_object *wo)
       werase(ww->win);
       touchwin(ww->win);
       wnoutrefresh(ww->win);
-      
+
       /* resize the window and draw the new border */
       mvwin(ww->win, y, x);
       wresize(ww->win, l, c);
       wdg_compound_border(wo);
-      
+
    /* the first time we have to allocate the window */
    } else {
 
@@ -174,11 +174,11 @@ static int wdg_compound_redraw(struct wdg_object *wo)
       wdg_compound_border(wo);
 
    }
-   
+
    /* refresh the window */
    redrawwin(ww->win);
    wnoutrefresh(ww->win);
-   
+
    wo->flags |= WDG_OBJ_VISIBLE;
 
    /* redraw all the contained widget */
@@ -189,17 +189,17 @@ static int wdg_compound_redraw(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the compound gets the focus
  */
 static int wdg_compound_get_focus(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_compound, ww);
    struct wdg_widget_list *e;
-   
+
    /* set the flag */
    wo->flags |= WDG_OBJ_FOCUSED;
-   
+
    /* set the focus on the focused widget */
    TAILQ_FOREACH(e, &(ww->widgets_list), next) {
       if (e == ww->focused)
@@ -208,34 +208,34 @@ static int wdg_compound_get_focus(struct wdg_object *wo)
 
    /* redraw the window */
    wdg_compound_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the compound looses the focus
  */
 static int wdg_compound_lost_focus(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_compound, ww);
    struct wdg_widget_list *e;
-   
+
    /* set the flag */
    wo->flags &= ~WDG_OBJ_FOCUSED;
-   
+
    /* remove the focus from the focused widget */
    TAILQ_FOREACH(e, &(ww->widgets_list), next) {
       if (e == ww->focused)
          e->wdg->flags &= ~WDG_OBJ_FOCUSED;
    }
-   
+
    /* redraw the window */
    wdg_compound_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called by the messages dispatcher when the compound is focused
  */
 static int wdg_compound_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_event *mouse)
@@ -252,20 +252,20 @@ static int wdg_compound_get_msg(struct wdg_object *wo, int key, struct wdg_mouse
             /* dispatch to the proper widget */
             TAILQ_FOREACH(wl, &ww->widgets_list, next)
                if (wl->wdg->get_msg(wl->wdg, key, mouse) == WDG_ESUCCESS) {
-                  /* 
+                  /*
                    * the widget has handled the message,
-                   * set to the focused one 
+                   * set to the focused one
                    */
                   ww->focused = wl;
-                  /* 
+                  /*
                    * regain focus to the compound
-                   * this is needed because it is always the 
+                   * this is needed because it is always the
                    * compound that must receive the messages
                    */
                   wdg_set_focus(wo);
                }
          }
-         else 
+         else
             return -WDG_ENOTHANDLED;
          break;
 
@@ -274,13 +274,13 @@ static int wdg_compound_get_msg(struct wdg_object *wo, int key, struct wdg_mouse
       case KEY_RIGHT:
          wdg_compound_move(wo, key);
          break;
-         
+
       /* dispatch the message to the focused widget */
       default:
          return wdg_compound_dispatch(wo, key, mouse);
          break;
    }
-  
+
    return WDG_ESUCCESS;
 }
 
@@ -293,12 +293,12 @@ static void wdg_compound_move(struct wdg_object *wo, int key)
 
    if (ww->focused == NULL)
       return;
-  
+
 
    /* move the focus to the right widget */
    if (key == KEY_LEFT) {
       WDG_DEBUG_MSG("wdg_compound_move: prev");
-      
+
      if (TAILQ_PREV(ww->focused, wtail, next) != NULL) {
         /* remove the focus from the current object */
         ww->focused->wdg->flags &= ~WDG_OBJ_FOCUSED;
@@ -308,7 +308,7 @@ static void wdg_compound_move(struct wdg_object *wo, int key)
      }
    } else if (key == KEY_RIGHT) {
      WDG_DEBUG_MSG("wdg_compound_move: next");
-      
+
      if (TAILQ_NEXT(ww->focused, next) != NULL) {
         /* remove the focus from the current object */
         ww->focused->wdg->flags &= ~WDG_OBJ_FOCUSED;
@@ -333,12 +333,12 @@ static int wdg_compound_dispatch(struct wdg_object *wo, int key, struct wdg_mous
    /* first: check if the key is linked to a callback */
    SLIST_FOREACH(c, &ww->callbacks, next) {
       if (c->key == key) {
-         
+
          WDG_DEBUG_MSG("wdg_compound_callback");
-         
+
          /* execute the callback */
          WDG_EXECUTE(c->callback);
-         
+
          return WDG_ESUCCESS;
       }
    }
@@ -355,7 +355,7 @@ static void wdg_compound_border(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_compound, ww);
    size_t c = wdg_get_ncols(wo);
-      
+
    /* the object was focused */
    if (wo->flags & WDG_OBJ_FOCUSED) {
       wattron(ww->win, A_BOLD);
@@ -365,10 +365,10 @@ static void wdg_compound_border(struct wdg_object *wo)
 
    /* draw the borders */
    box(ww->win, 0, 0);
-   
+
    /* set the title color */
    wbkgdset(ww->win, COLOR_PAIR(wo->title_color));
-   
+
    /* there is a title: print it */
    if (wo->title) {
       switch (wo->align) {
@@ -384,7 +384,7 @@ static void wdg_compound_border(struct wdg_object *wo)
       }
       wprintw(ww->win, wo->title);
    }
-   
+
    /* restore the attribute */
    if (wo->flags & WDG_OBJ_FOCUSED)
       wattroff(ww->win, A_BOLD);
@@ -419,7 +419,7 @@ void wdg_compound_set_focus(wdg_t *wo, wdg_t *widget)
    struct wdg_widget_list *e;
 
    TAILQ_FOREACH(e, &ww->widgets_list, next) {
-      
+
      /* remove the focus from the current object */
      if (e->wdg->flags & WDG_OBJ_FOCUSED)
         ww->focused->wdg->flags &= ~WDG_OBJ_FOCUSED;
@@ -443,7 +443,7 @@ wdg_t * wdg_compound_get_focused(wdg_t *wo)
    TAILQ_FOREACH(e, &ww->widgets_list, next)
      if (e->wdg->flags & WDG_OBJ_FOCUSED)
         return e->wdg;
-  
+
    return NULL;
 }
 
@@ -456,7 +456,7 @@ void wdg_compound_add_callback(wdg_t *wo, int key, void (*callback)(void))
    struct wdg_compound_call *c;
 
    WDG_SAFE_CALLOC(c, 1, sizeof(struct wdg_compound_call));
-   
+
    c->key = key;
    c->callback = callback;
 

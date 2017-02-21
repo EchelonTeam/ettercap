@@ -26,7 +26,7 @@
 /* globals */
 #define COOKED_LEN   16
 #define PROTO_OFFSET 14
-#define SENT_BY_US   4 
+#define SENT_BY_US   4
 
 /* protos */
 
@@ -72,7 +72,7 @@ FUNC_DECODER(decode_cook)
       memcpy(PACKET->L2.src, bogus_mac, ETH_ADDR_LEN);
    else
       memcpy(PACKET->L2.dst, bogus_mac, ETH_ADDR_LEN);
-   
+
    next_decoder =  get_decoder(NET_LAYER, proto);
    EXECUTE_DECODER(next_decoder);
 

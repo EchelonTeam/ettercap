@@ -49,7 +49,7 @@ void error_msg(char *file, const char *function, int line, char *message, ...)
 #else
    err_code = errno;
 #endif
-   
+
 
    va_start(ap, message);
    vsnprintf(errmsg, ERROR_MSG_LEN, message, ap);
@@ -57,10 +57,10 @@ void error_msg(char *file, const char *function, int line, char *message, ...)
 
    DEBUG_MSG("ERROR : %d, %s\n[%s:%s:%d] %s \n",  err_code, strerror(err_code),
                    file, function, line, errmsg );
-   
+
    /* close the interface and display the error */
    ui_cleanup();
-  
+
    fprintf(stderr, "ERROR : %d, %s\n[%s:%s:%d]\n\n %s \n\n",  err_code, strerror(err_code),
                    file, function, line, errmsg );
 
@@ -120,10 +120,10 @@ void fatal_error(char *message, ...)
 void bug(char *file, const char *function, int line, char *message)
 {
    DEBUG_MSG("BUG : [%s:%s:%d] %s \n", file, function, line, message );
-   
+
    /* close the interface and display the error */
    ui_cleanup();
-  
+
    fprintf(stderr, "\n\nBUG at [%s:%s:%d]\n\n %s \n\n", file, function, line, message );
 
    clean_exit(-666);

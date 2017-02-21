@@ -119,7 +119,7 @@
    #define MAX(a, b)    (((a) > (b)) ? (a) : (b))
 #endif
 
-/* file operations */ 
+/* file operations */
 #ifndef OS_WINDOWS
    #define O_BINARY  0
 #endif
@@ -133,7 +133,7 @@
 
 /* Save and restore relative offsets for pointers into a buffer */
 #define SAVE_OFFSET(o,b)     o=(u_int8 *)((int)o-(int)b)
-#define RESTORE_OFFSET(o,b)  o=(u_int8 *)((int)o+(int)b)   
+#define RESTORE_OFFSET(o,b)  o=(u_int8 *)((int)o+(int)b)
 
 /* ANSI colors */
 #ifndef OS_WINDOWS
@@ -147,14 +147,14 @@
    #define EC_COLOR_CYAN   "\033[36m"EC_COLOR_BOLD
 #else
    /* Windows console doesn't grok ANSI */
-   #define EC_COLOR_END    
-   #define EC_COLOR_BOLD   
+   #define EC_COLOR_END
+   #define EC_COLOR_BOLD
 
-   #define EC_COLOR_RED    
-   #define EC_COLOR_YELLOW 
-   #define EC_COLOR_GREEN  
-   #define EC_COLOR_BLUE   
-   #define EC_COLOR_CYAN  
+   #define EC_COLOR_RED
+   #define EC_COLOR_YELLOW
+   #define EC_COLOR_GREEN
+   #define EC_COLOR_BLUE
+   #define EC_COLOR_CYAN
 #endif
 
 /* magic numbers */

@@ -2,7 +2,7 @@
     repoison_arp -- ettercap plugin -- Repoison after a broadcast ARP
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -38,32 +38,32 @@ void repoison_victims(void *group_ptr, struct packet_object *po);
 
 
 /* plugin operations */
-struct plugin_ops repoison_arp_ops = { 
+struct plugin_ops repoison_arp_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "repoison_arp",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "Repoison after broadcast ARP",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "repoison_arp",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "Repoison after broadcast ARP",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &repoison_arp_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &repoison_arp_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &repoison_arp_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int repoison_arp_init(void *dummy) 
+static int repoison_arp_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
@@ -73,13 +73,13 @@ static int repoison_arp_init(void *dummy)
 
    hook_add(HOOK_PACKET_ARP_RQ, &repoison_func);
    hook_add(HOOK_PACKET_ARP_RP, &repoison_func);
-   
 
-   return PLUGIN_RUNNING;      
+
+   return PLUGIN_RUNNING;
 }
 
 
-static int repoison_arp_fini(void *dummy) 
+static int repoison_arp_fini(void *dummy)
 {
    USER_MSG("repoison_arp: plugin terminated...\n");
 
@@ -99,7 +99,7 @@ void repoison_victims(void *group_ptr, struct packet_object *po)
 
 #if !defined(OS_WINDOWS)
    struct timespec tm;
- 
+
    tm.tv_sec = GBL_CONF->arp_storm_delay;
    tm.tv_nsec = 0;
 #endif
@@ -125,10 +125,10 @@ void repoison_victims(void *group_ptr, struct packet_object *po)
 
       if (GBL_CONF->arp_poison_reply)
          send_arp(ARPOP_REPLY, &po->L3.src, GBL_IFACE->mac, &t->ip, t->mac);
-	 
+	
       if (GBL_CONF->arp_poison_request)
          send_arp(ARPOP_REQUEST, &po->L3.src, GBL_IFACE->mac, &t->ip, t->mac);
-	 
+	
    }
 }
 
@@ -152,7 +152,7 @@ static void repoison_func(struct packet_object *po)
          repoison_victims(&arp_group_one, po);
 	 break;
       }
-      
+
    /* search in target 1 */
    LIST_FOREACH(t, &arp_group_one, next)
       if (!ip_addr_cmp(&t->ip, &po->L3.src)) {
@@ -164,4 +164,4 @@ static void repoison_func(struct packet_object *po)
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

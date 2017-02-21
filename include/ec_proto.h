@@ -93,7 +93,7 @@ enum {
    ICMP6_PKT_TOO_BIG    = 2,
    ICMP6_TIME_EXCEEDED  = 3,
    ICMP6_BAD_PARAM      = 4,
-   
+
    /* Info */
    ICMP6_ECHO           = 128,
    ICMP6_ECHOREPLY      = 129,

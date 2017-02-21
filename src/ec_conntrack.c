@@ -42,8 +42,8 @@ struct conn_hash_search {
 /*
  * the connection list.
  * this list is created adding new element in the tail.
- * the search method is established in the search function. 
- * an hash table is used and it is double-linked with the 
+ * the search method is established in the search function.
+ * an hash table is used and it is double-linked with the
  * tailq so from each element you can delete the corresponding
  * in the tailq or viceversa
  */
@@ -78,7 +78,7 @@ int conntrack_hook_conn_del(struct conn_object *co, void (*func)(struct packet_o
 void conntrack_hook(struct conn_object *co, struct packet_object *po);
 
 /************************************************/
-  
+
 /*
  * add the hook function
  */
@@ -96,7 +96,7 @@ static void conntrack_parse(struct packet_object *po)
    struct conn_object *conn;
 
    CONNTRACK_LOCK;
-   
+
    /* search if the connection already exists */
    conn = conntrack_search(po);
 
@@ -105,32 +105,32 @@ static void conntrack_parse(struct packet_object *po)
       conntrack_update(conn, po);
    else
       conntrack_add(po);
-   
+
    CONNTRACK_UNLOCK;
 }
 
-/* 
- * calculate the hash for a packet object 
+/*
+ * calculate the hash for a packet object
  */
 static u_int32 conntrack_hash(struct packet_object *po)
 {
    u_int32 hash_array[3];
 
-   /* 
+   /*
     * put them in an array and then compute the hash on the array.
-    * use XOR on src and dst because the hash must be equal for 
+    * use XOR on src and dst because the hash must be equal for
     * packets from dst to src and viceversa
     */
    hash_array[0] = fnv_32((u_char *)&po->L3.src, sizeof(struct ip_addr)) ^
                    fnv_32((u_char *)&po->L3.dst, sizeof(struct ip_addr));
    hash_array[1] = po->L4.src ^ po->L4.dst;
    hash_array[2] = po->L4.proto;
-   
+
    /* compute the resulting hash */
    return fnv_32((u_char *)&hash_array, sizeof(hash_array)) & TABMASK;
 }
 
-/* 
+/*
  * search the connection in the connection table
  * and return the pointer.
  */
@@ -138,10 +138,10 @@ static struct conn_object *conntrack_search(struct packet_object *po)
 {
    struct conn_hash_search *cs;
    u_int32 h;
-  
+
    /* use the hash table to find the connection in the tailq */
    h = conntrack_hash(po);
-   
+
    LIST_FOREACH(cs, &conntrack_search_head[h], next) {
       if (conntrack_match(cs->cl->co, po) == ESUCCESS) {
          return cs->cl->co;
@@ -149,9 +149,9 @@ static struct conn_object *conntrack_search(struct packet_object *po)
    }
 
    return NULL;
-#if 0   
+#if 0
    struct conn_tail *cl;
-   
+
    /* search in the list sequentially */
    TAILQ_FOREACH(cl, &conntrack_tail_head, next) {
       if (conntrack_match(cl->co, po) == ESUCCESS) {
@@ -172,37 +172,37 @@ static void conntrack_update(struct conn_object *co, struct packet_object *po)
 {
    /* update the timestamp */
    gettimeofday(&co->ts, 0);
-  
+
    /* update the status for TCP conn */
    if (po->L4.flags & TH_SYN)
       co->status = CONN_OPENING;
    else if (po->L4.flags & TH_FIN)
       co->status = CONN_CLOSING;
-   else if (po->L4.flags & TH_ACK) { 
+   else if (po->L4.flags & TH_ACK) {
       /* syn + ack,  ack */
       if (co->status == CONN_OPENING )
          co->status = CONN_OPEN;
       /* fin + ack,  ack */
       else if (co->status == CONN_CLOSING)
          co->status = CONN_CLOSED;
-   } 
+   }
 
    if (po->L4.flags & TH_PSH)
       co->status = CONN_ACTIVE;
-   
+
    if (po->L4.flags & TH_RST)
       co->status = CONN_KILLED;
-      
+
    /* update the buffer */
    connbuf_add(&co->data, po);
-  
+
 
    /* update the status for UDP conn */
    if (po->L4.proto == NL_TYPE_UDP)
       co->status = CONN_ACTIVE;
-   
-   /* 
-    * update the byte count 
+
+   /*
+    * update the byte count
     * use DATA.len and not DATA.disp_len to have an
     * effective count of byte trasferred, disp_data
     * may be longer or shorted than DATA.data
@@ -221,8 +221,8 @@ static void conntrack_update(struct conn_object *co, struct packet_object *po)
    if (po->flags & PO_MODIFIED || po->flags & PO_DROPPED)
       co->flags |= CONN_MODIFIED;
 
-   /* 
-    * update the password 
+   /*
+    * update the password
     * always overwrite the old one, a better one may
     * has been collected...
     */
@@ -236,14 +236,14 @@ static void conntrack_update(struct conn_object *co, struct packet_object *po)
       if (po->DISSECTOR.info)
          co->DISSECTOR.info = strdup(po->DISSECTOR.info);
    }
-   
+
    /* execute the hookpoint */
    conntrack_hook(co, po);
 }
 
 
 /*
- * create a new entry in the tail 
+ * create a new entry in the tail
  */
 static void conntrack_add(struct packet_object *po)
 {
@@ -251,17 +251,17 @@ static void conntrack_add(struct packet_object *po)
    struct conn_hash_search *cs;
 
    DEBUG_MSG("conntrack_add: NEW CONNECTION");
-   
+
    /* alloc the list element */
    SAFE_CALLOC(cl, 1, sizeof(struct conn_tail));
 
    /* alloc the conn object in the element */
    SAFE_CALLOC(cl->co, 1, sizeof(struct conn_object));
 
-   /* 
+   /*
     * here we create the connection.
     * this is the first packet seen...
-    * addr1 will be the source and addr2 the dest 
+    * addr1 will be the source and addr2 the dest
     */
 
    /* fill the addresses */
@@ -275,26 +275,26 @@ static void conntrack_add(struct packet_object *po)
    cl->co->L4_addr1 = po->L4.src;
    cl->co->L4_addr2 = po->L4.dst;
    cl->co->L4_proto = po->L4.proto;
- 
+
    /* initialize the connection buffer */
    connbuf_init(&cl->co->data, GBL_CONF->connection_buffer);
-   
+
    /* update the connection entry */
    conntrack_update(cl->co, po);
 
    /* alloc the hash table element */
    SAFE_CALLOC(cs, 1, sizeof(struct conn_hash_search));
-   
+
    /* set the pointer to the list */
    cs->cl = cl;
-  
-   /* 
-    * set the pointer to the element in the hash table 
+
+   /*
+    * set the pointer to the element in the hash table
     * it is used when a connection is deleted because
     * even the element in the hash table must be deleted
     */
    cl->cs = cs;
-   
+
    /* insert the new connection in the tail */
    TAILQ_INSERT_TAIL(&conntrack_tail_head, cl, next);
    /* insert the new connection in the tail */
@@ -323,11 +323,11 @@ static int conntrack_match(struct conn_object *co, struct packet_object *po)
        co->L4_addr1 == po->L4.dst &&
        co->L4_addr2 == po->L4.src)
       return ESUCCESS;
-   
+
    return -ENOMATCH;
 }
 
-/* 
+/*
  * erase a connection object
  */
 static void conntrack_del(struct conn_object *co)
@@ -342,7 +342,7 @@ static void conntrack_del(struct conn_object *co)
 
    /* wipe the associated buffer */
    connbuf_wipe(&co->data);
-   
+
    SAFE_FREE(co);
 }
 
@@ -354,14 +354,14 @@ void conntrack_purge(void)
    struct conn_tail *cl, *tmp;
 
    DEBUG_MSG("conntrack_purge");
-   
+
    TAILQ_FOREACH_SAFE(cl, &conntrack_tail_head, next, tmp) {
       /* don't erase the connection if it is viewed */
       if (cl->co->flags & CONN_VIEWING)
          continue;
-      
+
       CONNTRACK_LOCK;
-      
+
       /* wipe the connection */
       conntrack_del(cl->co);
       /* remove the element in the hash table */
@@ -373,7 +373,7 @@ void conntrack_purge(void)
 
       CONNTRACK_UNLOCK;
    }
-   
+
 }
 
 
@@ -384,20 +384,20 @@ EC_THREAD_FUNC(conntrack_timeouter)
    struct conn_tail *cl;
    struct conn_tail *tmp = NULL;
    size_t sec;
-   
+
    /* initialize the thread */
    ec_thread_init();
-   
+
    DEBUG_MSG("conntrack_timeouter: activated !");
 
-#if !defined(OS_WINDOWS) 
+#if !defined(OS_WINDOWS)
    struct timespec timeouter_sleep;
    timeouter_sleep.tv_nsec = 0;
 #endif
- 
+
    LOOP {
 
-      /* 
+      /*
        * sleep for the maximum time possible
        * (determined as the minumum of the timeouts)
        */
@@ -406,9 +406,9 @@ EC_THREAD_FUNC(conntrack_timeouter)
 #if !defined(OS_WINDOWS)
       timeouter_sleep.tv_sec = sec;
 #endif
-    
+
       DEBUG_MSG("conntrack_timeouter: sleeping for %lu sec", (unsigned long)sec);
-      
+
       /* always check if a cancel is requested */
       CANCELLATION_POINT();
 
@@ -417,17 +417,17 @@ EC_THREAD_FUNC(conntrack_timeouter)
 #else
       usleep(sec*1000);
 #endif
-     
+
       DEBUG_MSG("conntrack_timeouter: woke up");
-      
+
       /* get current time */
       gettimeofday(&ts, NULL);
-     
+
       /*
        * the timeouter is the only thread that erase a connection
        * so we are sure that the list will be consistent till the
        * end.
-       * we can lock and unlock every time we handle an element of 
+       * we can lock and unlock every time we handle an element of
        * the list to permit the conntrack functions to operate on the
        * list even when timeouter goes thru the list
        */
@@ -436,19 +436,19 @@ EC_THREAD_FUNC(conntrack_timeouter)
          /* don't erase the connection if it is viewed */
          if (cl->co->flags & CONN_VIEWING)
             continue;
-         
+
          CONNTRACK_LOCK;
-         
+
          /* calculate the difference */
          time_sub(&ts, &cl->co->ts, &diff);
-         
-         /* 
+
+         /*
           * update it only if the staus is active,
           * all the other status must be left as they are
           */
          if (cl->co->status == CONN_ACTIVE && diff.tv_sec >= GBL_CONF->connection_idle)
             cl->co->status = CONN_IDLE;
-         
+
          /* delete the timeouted connections */
          if (diff.tv_sec >= GBL_CONF->connection_timeout) {
             /* wipe the connection */
@@ -462,11 +462,11 @@ EC_THREAD_FUNC(conntrack_timeouter)
          }
 
          CONNTRACK_UNLOCK;
-   
+
          CANCELLATION_POINT();
       }
    }
-   
+
    return NULL;
 }
 
@@ -480,65 +480,65 @@ int conntrack_hook_packet_add(struct packet_object *po, void (*func)(struct pack
    struct conn_object *conn;
 
    CONNTRACK_LOCK;
-   
+
    /* search the connection already exists */
    conn = conntrack_search(po);
 
-   /* 
-    * if the connection already exist, add the hook function 
+   /*
+    * if the connection already exist, add the hook function
     * else create the entry for the connection and add the hook
     * this is useful to add hooks for future connections
     */
 
    /* create the fake connection */
    if (!conn) {
-      
+
       DEBUG_MSG("conntrack_hook_packet_add: ephemeral connection");
       conntrack_add(po);
       conn = conntrack_search(po);
    }
-  
+
    /* add the hook point */
    if (conn) {
       struct ct_hook_list *h;
-      
+
       DEBUG_MSG("conntrack_hook_packet_add: existing connection");
-      
+
       SAFE_CALLOC(h, 1, sizeof(struct ct_hook_list));
-      
+
       /* set the hook function */
       h->func = func;
-      
+
       SLIST_INSERT_HEAD(&conn->hook_head, h, next);
-      
+
       CONNTRACK_UNLOCK;
       return ESUCCESS;
-   } 
-   
+   }
+
    CONNTRACK_UNLOCK;
 
    return -ENOTFOUND;
 }
 
 
-/* 
- * removes a hook from a connection 
+/*
+ * removes a hook from a connection
  */
 int conntrack_hook_packet_del(struct packet_object *po, void (*func)(struct packet_object *po))
 {
    struct conn_object *conn;
 
    DEBUG_MSG("conntrack_hook_packet_del");
-   
+
    CONNTRACK_LOCK;
-   
+
    /* search the connection already exists */
    conn = conntrack_search(po);
 
    /* remove the hook function only if the connection exists */
    if (conn) {
       struct ct_hook_list *h;
-      
+
       SLIST_FOREACH(h, &conn->hook_head, next) {
          if (h->func == func) {
             SLIST_REMOVE(&conn->hook_head, h, ct_hook_list, next);
@@ -546,11 +546,11 @@ int conntrack_hook_packet_del(struct packet_object *po, void (*func)(struct pack
             break;
          }
       }
-      
+
       CONNTRACK_UNLOCK;
       return ESUCCESS;
    }
-   
+
    CONNTRACK_UNLOCK;
 
    return -ENOTFOUND;
@@ -558,42 +558,42 @@ int conntrack_hook_packet_del(struct packet_object *po, void (*func)(struct pack
 
 /*
  * add the fucntion 'func' to the hookpoint of the
- * connection 'co' 
+ * connection 'co'
  */
 int conntrack_hook_conn_add(struct conn_object *co, void (*func)(struct packet_object *po))
 {
    struct ct_hook_list *h;
 
    CONNTRACK_LOCK;
-   
+
    /* add the hook point */
-   
+
    DEBUG_MSG("conntrack_hook_conn_add");
-   
+
    SAFE_CALLOC(h, 1, sizeof(struct ct_hook_list));
-   
+
    /* set the hook function */
    h->func = func;
-   
+
    SLIST_INSERT_HEAD(&co->hook_head, h, next);
-      
+
    CONNTRACK_UNLOCK;
 
    return ESUCCESS;
 }
 
 
-/* 
- * removes a hook from a connection 
+/*
+ * removes a hook from a connection
  */
 int conntrack_hook_conn_del(struct conn_object *co, void (*func)(struct packet_object *po))
 {
    struct ct_hook_list *h;
 
    DEBUG_MSG("conntrack_hook_conn_del");
-   
+
    CONNTRACK_LOCK;
-   
+
    SLIST_FOREACH(h, &co->hook_head, next) {
       if (h->func == func) {
          SLIST_REMOVE(&co->hook_head, h, ct_hook_list, next);
@@ -601,7 +601,7 @@ int conntrack_hook_conn_del(struct conn_object *co, void (*func)(struct packet_o
          break;
       }
    }
-   
+
    CONNTRACK_UNLOCK;
    return ESUCCESS;
 }
@@ -618,7 +618,7 @@ void conntrack_hook(struct conn_object *co, struct packet_object *po)
    SLIST_FOREACH(h, &co->hook_head, next) {
       h->func(po);
    }
-   
+
 }
 
 /*
@@ -638,7 +638,7 @@ void * conntrack_print(int mode, void *list, char **desc, size_t len)
 
    /* the caller wants the description */
    if (desc != NULL) {
-         
+
       switch (c->co->L4_proto) {
          case NL_TYPE_UDP:
             proto = 'U';
@@ -650,7 +650,7 @@ void * conntrack_print(int mode, void *list, char **desc, size_t len)
             proto = ' ';
          break;
       }
-      
+
       ip_addr_ntoa(&c->co->L3_addr1, src);
       ip_addr_ntoa(&c->co->L3_addr2, dst);
 
@@ -678,7 +678,7 @@ void * conntrack_print(int mode, void *list, char **desc, size_t len)
             status = "killed ";
             break;
       }
-      
+
       /* determine the flags:
        * account collection has precedence over injection/modification
        */
@@ -688,12 +688,12 @@ void * conntrack_print(int mode, void *list, char **desc, size_t len)
          flags = 'I';
       if (c->co->DISSECTOR.user)
          flags = '*';
-      
-      snprintf(*desc, len, "%c %15s:%-5d - %15s:%-5d %c %s TX: %lu RX: %lu", flags, 
+
+      snprintf(*desc, len, "%c %15s:%-5d - %15s:%-5d %c %s TX: %lu RX: %lu", flags,
                                            src, ntohs(c->co->L4_addr1), dst, ntohs(c->co->L4_addr2),
                                            proto, status, (unsigned long)c->co->tx, (unsigned long)c->co->rx);
    }
-  
+
    /* return the next/prev/current to the caller */
    switch (mode) {
       case -1:
@@ -714,7 +714,7 @@ void * conntrack_print(int mode, void *list, char **desc, size_t len)
          return list;
          break;
    }
-         
+
    return NULL;
 }
 

@@ -128,7 +128,7 @@ void gtkui_create_menu(int live)
    GtkWidget *vbox, *item;
    GtkItemFactory *root_menu;
    int num_items = 0;
-   
+
    DEBUG_MSG("gtk_create_menu");
 
    /* remove old menu, it will be automatically destroyed by gtk_main */
@@ -139,35 +139,35 @@ void gtkui_create_menu(int live)
    accel_group = gtk_accel_group_new ();
    root_menu = gtk_item_factory_new (GTK_TYPE_MENU_BAR, "<main>", accel_group);
    gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
-   
+
    /* Start Menu */
    num_items = sizeof (gmenu_start) / sizeof (gmenu_start[0]);
    gtk_item_factory_create_items (root_menu, num_items, gmenu_start, NULL);
-   
+
    /* Targets Menu */
    num_items = sizeof (gmenu_targets) / sizeof (gmenu_targets[0]);
    gtk_item_factory_create_items (root_menu, num_items, gmenu_targets, NULL);
-   
+
    /* Hosts Menu */
    if (live > 0 && GBL_SNIFF->type != SM_BRIDGED) {
       num_items = sizeof (gmenu_hosts) / sizeof (gmenu_hosts[0]);
       gtk_item_factory_create_items (root_menu, num_items, gmenu_hosts, NULL);
    }
-   
+
    /* View Menu */
    num_items = sizeof (gmenu_view) / sizeof (gmenu_view[0]);
    gtk_item_factory_create_items (root_menu, num_items, gmenu_view, NULL);
-   
+
    /* MITM Menu */
    if (live > 0 && GBL_SNIFF->type != SM_BRIDGED) {
       num_items = sizeof (gmenu_mitm) / sizeof (gmenu_mitm[0]);
       gtk_item_factory_create_items (root_menu, num_items, gmenu_mitm, NULL);
    }
-   
+
    /* Filters Menu */
    num_items = sizeof (gmenu_filters) / sizeof (gmenu_filters[0]);
    gtk_item_factory_create_items (root_menu, num_items, gmenu_filters, NULL);
-   
+
    /* Logging Menu */
    num_items = sizeof (gmenu_logging) / sizeof (gmenu_logging[0]);
    gtk_item_factory_create_items (root_menu, num_items, gmenu_logging, NULL);

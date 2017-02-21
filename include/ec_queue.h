@@ -1,8 +1,8 @@
 
-/*      
- *      
+/*
+ *
  *      added the _SAFE functions from:
- *      $FreeBSD: queue.h,v 1.56 2003/08/14 14:49:26 kan Exp $          
+ *      $FreeBSD: queue.h,v 1.56 2003/08/14 14:49:26 kan Exp $
  *
  *      the rest is copyrighted by:
  */
@@ -56,7 +56,7 @@
 #endif
 
 /*
- * This file defines five types of data structures: singly-linked lists, 
+ * This file defines five types of data structures: singly-linked lists,
  * lists, simple queues, tail queues, and circular queues.
  *
  *
@@ -101,15 +101,15 @@
 struct name {                                                           \
         struct type *slh_first; /* first element */                     \
 }
- 
+
 #define SLIST_HEAD_INITIALIZER(head)                                    \
         { NULL }
- 
+
 #define SLIST_ENTRY(type)                                               \
 struct {                                                                \
         struct type *sle_next;  /* next element */                      \
 }
- 
+
 /*
  * Singly-linked List access methods.
  */
@@ -123,7 +123,7 @@ struct {                                                                \
             (var) != SLIST_END(head);                                   \
             (var) = SLIST_NEXT(var, field))
 
-   
+
 #define SLIST_FOREACH_SAFE(var, head, field, tvar)                      \
         for ((var) = SLIST_FIRST((head));                               \
              (var) && ((tvar) = SLIST_NEXT((var), field), 1);           \
@@ -198,7 +198,7 @@ struct {                                                                \
              (var) && ((tvar) = LIST_NEXT((var), field), 1);            \
              (var) = (tvar))
 
-   
+
 
 /*
  * List functions.
@@ -278,7 +278,7 @@ struct {                                                                \
         for ((var) = STAILQ_FIRST((head));                              \
              (var) && ((tvar) = STAILQ_NEXT((var), field), 1);          \
              (var) = (tvar))
-   
+
 /*
  * Simple queue functions.
  */
@@ -328,8 +328,8 @@ struct {                                                                \
         struct type **tqe_prev; /* address of previous next element */  \
 }
 
-/* 
- * tail queue access methods 
+/*
+ * tail queue access methods
  */
 #define TAILQ_FIRST(head)               ((head)->tqh_first)
 #define TAILQ_END(head)                 NULL
@@ -351,7 +351,7 @@ struct {                                                                \
         for ((var) = TAILQ_FIRST((head));                               \
              (var) && ((tvar) = TAILQ_NEXT((var), field), 1);           \
              (var) = (tvar))
-   
+
 #define TAILQ_FOREACH_REVERSE(var, head, field, headname)               \
         for((var) = TAILQ_LAST(head, headname);                         \
             (var) != TAILQ_END(head);                                   \
@@ -361,7 +361,7 @@ struct {                                                                \
         for ((var) = TAILQ_LAST((head), headname);                      \
              (var) && ((tvar) = TAILQ_PREV((var), headname, field), 1); \
              (var) = (tvar))
-   
+
 /*
  * Tail queue functions.
  */

@@ -49,7 +49,7 @@ void filter_unload(struct filter_list **list);
 static void reconstruct_strings(struct filter_env *fenv, struct filter_header *fh);
 static int compile_regex(struct filter_env *fenv, struct filter_header *fh);
 void filter_walk_list( int(*cb)(struct filter_list*, void*), void *arg);
-   
+
 static int filter_engine(struct filter_op *fop, struct packet_object *po);
 static int execute_test(struct filter_op *fop, struct packet_object *po);
 static int execute_assign(struct filter_op *fop, struct packet_object *po);
@@ -94,7 +94,7 @@ static int filter_engine(struct filter_op *fop, struct packet_object *po)
    u_int32 flags = 0;
       #define FLAG_FALSE   0
       #define FLAG_TRUE    1
-  
+
    /* sanity check */
    BUG_IF(fop == NULL);
 
@@ -109,24 +109,24 @@ static int filter_engine(struct filter_op *fop, struct packet_object *po)
                flags |= FLAG_TRUE;
             else
                flags &= ~(FLAG_TRUE);
-            
+
             break;
-            
+
          case FOP_ASSIGN:
             execute_assign(&fop[eip], po);
             /* assignment always returns true */
             flags |= FLAG_TRUE;
-            
+
             break;
-            
+
          case FOP_INC:
          case FOP_DEC:
             execute_incdec(&fop[eip], po);
             /* inc/dec always return true */
             flags |= FLAG_TRUE;
-            
+
             break;
-            
+
          case FOP_FUNC:
             if (execute_func(&fop[eip], po) == FLAG_TRUE)
                flags |= FLAG_TRUE;
@@ -134,14 +134,14 @@ static int filter_engine(struct filter_op *fop, struct packet_object *po)
                flags &= ~(FLAG_TRUE);
 
             break;
-            
+
          case FOP_JMP:
             /* jump the the next eip */
             eip = fop[eip].op.jmp;
             continue;
 
             break;
-            
+
          case FOP_JTRUE:
             /* jump the the next eip if the TRUE FLAG is set*/
             if (flags & FLAG_TRUE) {
@@ -149,7 +149,7 @@ static int filter_engine(struct filter_op *fop, struct packet_object *po)
                continue;
             }
             break;
-            
+
          case FOP_JFALSE:
             /* jump the the next eip if the TRUE FLAG is NOT set */
             if (!(flags & FLAG_TRUE)) {
@@ -157,17 +157,17 @@ static int filter_engine(struct filter_op *fop, struct packet_object *po)
                continue;
             }
             break;
-            
+
          default:
             FILTERS_UNLOCK;
             JIT_FAULT("unsupported opcode [%d] (execution interrupted)", fop[eip].opcode);
             break;
       }
-    
+
       /* autoincrement the instruction pointer */
       eip++;
    }
-   
+
    FILTERS_UNLOCK;
 
    return 0;
@@ -188,7 +188,7 @@ void filter_packet(struct packet_object *po) {
    }
 }
 
-/* 
+/*
  * execute a function.
  * return FLAG_TRUE if the function was successful
  */
@@ -200,13 +200,13 @@ static int execute_func(struct filter_op *fop, struct packet_object *po)
          if (func_search(fop, po) == ESUCCESS)
             return FLAG_TRUE;
          break;
-         
+
       case FFUNC_REGEX:
          /* search the string with a regex */
          if (func_regex(fop, po) == ESUCCESS)
             return FLAG_TRUE;
          break;
-         
+
       case FFUNC_PCRE:
          /* evaluate a perl regex */
          if (func_pcre(fop, po) == ESUCCESS)
@@ -218,43 +218,43 @@ static int execute_func(struct filter_op *fop, struct packet_object *po)
          if (func_replace(fop, po) == ESUCCESS)
             return FLAG_TRUE;
          break;
-         
+
       case FFUNC_INJECT:
          /* replace the string */
          if (func_inject(fop, po) == ESUCCESS)
             return FLAG_TRUE;
          break;
-         
+
       case FFUNC_LOG:
          /* log the packet */
          if (func_log(fop, po) == ESUCCESS)
             return FLAG_TRUE;
          break;
-         
+
       case FFUNC_DROP:
          /* drop the packet */
          func_drop(po);
          return FLAG_TRUE;
          break;
-         
+
       case FFUNC_KILL:
          /* kill the connection */
          func_kill(po);
          return FLAG_TRUE;
          break;
-         
+
       case FFUNC_MSG:
          /* display the message to the user */
          USER_MSG("%s\n", fop->op.func.string);
          return FLAG_TRUE;
          break;
-         
+
       case FFUNC_EXEC:
          /* execute the command */
          if (func_exec(fop) == ESUCCESS)
             return FLAG_TRUE;
          break;
-         
+
       default:
          JIT_FAULT("unsupported function [%d]", fop->op.func.op);
          break;
@@ -263,7 +263,7 @@ static int execute_func(struct filter_op *fop, struct packet_object *po)
    return FLAG_FALSE;
 }
 
-/* 
+/*
  * execute a test.
  * return FLAG_TRUE if the test was successful
  */
@@ -273,7 +273,7 @@ static int execute_test(struct filter_op *fop, struct packet_object *po)
    u_char *base = po->L2.header;
    int (*cmp_func)(u_int32, u_int32) = &cmp_eq;
 
-   /* 
+   /*
     * point to the right base.
     * if the test is L3.ttl, we have to start from
     * L3.header to count for offset.
@@ -322,12 +322,12 @@ static int execute_test(struct filter_op *fop, struct packet_object *po)
       default:
          JIT_FAULT("unsupported test operation");
          break;
-           
+
    }
-   
-   /* 
+
+   /*
     * get the value with the proper size.
-    * 0 is a special case for strings (even binary) 
+    * 0 is a special case for strings (even binary)
     */
    switch (fop->op.test.size) {
       case 0:
@@ -354,11 +354,11 @@ static int execute_test(struct filter_op *fop, struct packet_object *po)
          JIT_FAULT("unsupported test size [%d]", fop->op.test.size);
          break;
    }
-         
+
    return FLAG_FALSE;
 }
 
-/* 
+/*
  * make an assignment.
  */
 static int execute_assign(struct filter_op *fop, struct packet_object *po)
@@ -369,10 +369,10 @@ static int execute_assign(struct filter_op *fop, struct packet_object *po)
    /* check the offensiveness */
    if (GBL_OPTIONS->unoffensive)
       JIT_FAULT("Cannot modify packets in unoffensive mode");
-   
+
    DEBUG_MSG("filter engine: execute_assign: L%d O%d S%d", fop->op.assign.level, fop->op.assign.offset, fop->op.assign.size);
-   
-   /* 
+
+   /*
     * point to the right base.
     */
    switch (fop->op.assign.level) {
@@ -393,9 +393,9 @@ static int execute_assign(struct filter_op *fop, struct packet_object *po)
          break;
    }
 
-   /* 
+   /*
     * get the value with the proper size.
-    * 0 is a special case for strings (even binary) 
+    * 0 is a special case for strings (even binary)
     */
    switch (fop->op.assign.size) {
       case 0:
@@ -405,7 +405,7 @@ static int execute_assign(struct filter_op *fop, struct packet_object *po)
          *(u_int8 *)(base + fop->op.assign.offset) = (fop->op.assign.value & 0xff);
          break;
       case 2:
-         *(u_int16 *)(base + fop->op.assign.offset) = ntohs(fop->op.assign.value & 0xffff); 
+         *(u_int16 *)(base + fop->op.assign.offset) = ntohs(fop->op.assign.value & 0xffff);
          break;
       case 4:
          *(u_int32 *)(base + fop->op.assign.offset) = ntohl(fop->op.assign.value & 0xffffffff);
@@ -414,14 +414,14 @@ static int execute_assign(struct filter_op *fop, struct packet_object *po)
          JIT_FAULT("unsupported assign size [%d]", fop->op.assign.size);
          break;
    }
-      
+
    /* mark the packet as modified */
    po->flags |= PO_MODIFIED;
 
    return FLAG_TRUE;
 }
 
-/* 
+/*
  * make an increment or decrement.
  */
 static int execute_incdec(struct filter_op *fop, struct packet_object *po)
@@ -432,10 +432,10 @@ static int execute_incdec(struct filter_op *fop, struct packet_object *po)
    /* check the offensiveness */
    if (GBL_OPTIONS->unoffensive)
       JIT_FAULT("Cannot modify packets in unoffensive mode");
-   
+
    DEBUG_MSG("filter engine: execute_incdec: L%d O%d S%d", fop->op.assign.level, fop->op.assign.offset, fop->op.assign.size);
-   
-   /* 
+
+   /*
     * point to the right base.
     */
    switch (fop->op.assign.level) {
@@ -456,24 +456,24 @@ static int execute_incdec(struct filter_op *fop, struct packet_object *po)
          break;
    }
 
-   /* 
+   /*
     * inc/dec the value with the proper size.
     */
    switch (fop->op.assign.size) {
       case 1:
-         if (fop->opcode == FOP_INC) 
+         if (fop->opcode == FOP_INC)
             *(u_int8 *)(base + fop->op.assign.offset) += (fop->op.assign.value & 0xff);
          else
             *(u_int8 *)(base + fop->op.assign.offset) -= (fop->op.assign.value & 0xff);
          break;
       case 2:
-         if (fop->opcode == FOP_INC) 
-            *(u_int16 *)(base + fop->op.assign.offset) += ntohs(fop->op.assign.value & 0xffff); 
+         if (fop->opcode == FOP_INC)
+            *(u_int16 *)(base + fop->op.assign.offset) += ntohs(fop->op.assign.value & 0xffff);
          else
-            *(u_int16 *)(base + fop->op.assign.offset) -= ntohs(fop->op.assign.value & 0xffff); 
+            *(u_int16 *)(base + fop->op.assign.offset) -= ntohs(fop->op.assign.value & 0xffff);
          break;
       case 4:
-         if (fop->opcode == FOP_INC) 
+         if (fop->opcode == FOP_INC)
             *(u_int32 *)(base + fop->op.assign.offset) += ntohl(fop->op.assign.value & 0xffffffff);
          else
             *(u_int32 *)(base + fop->op.assign.offset) -= ntohl(fop->op.assign.value & 0xffffffff);
@@ -482,7 +482,7 @@ static int execute_incdec(struct filter_op *fop, struct packet_object *po)
          JIT_FAULT("unsupported inc/dec size [%d]", fop->op.assign.size);
          break;
    }
-      
+
    /* mark the packet as modified */
    po->flags |= PO_MODIFIED;
 
@@ -510,7 +510,7 @@ static int func_search(struct filter_op *fop, struct packet_object *po)
          JIT_FAULT("unsupported search level [%d]", fop->op.func.level);
          break;
    }
-   
+
    return -ENOTFOUND;
 }
 
@@ -550,14 +550,14 @@ static int func_pcre(struct filter_op *fop, struct packet_object *po)
 #else
    int ovec[PCRE_OVEC_SIZE];
    int ret;
-   
+
    DEBUG_MSG("filter engine: func_pcre");
-   
+
    memset(&ovec, 0, sizeof(ovec));
-   
+
    switch (fop->op.func.level) {
       case 5:
-         
+
          /* search in the real packet */
          if ( (ret = pcre_exec(fop->op.func.ropt->pregex, fop->op.func.ropt->preg_extra, po->DATA.data, po->DATA.len, 0, 0, ovec, sizeof(ovec) / sizeof(*ovec))) < 0)
             return -ENOTFOUND;
@@ -571,8 +571,8 @@ static int func_pcre(struct filter_op *fop, struct packet_object *po)
             /* don't modify if in unoffensive mode */
             if (GBL_OPTIONS->unoffensive)
                JIT_FAULT("Cannot modify packets in unoffensive mode");
-             
-            /* 
+
+            /*
              * worst case: the resulting string will need:
              *   (n * |input|) + |subst| bytes
              * where
@@ -590,7 +590,7 @@ static int func_pcre(struct filter_op *fop, struct packet_object *po)
             /* now: i = strlen(q) */
 
             SAFE_CALLOC(replaced, markers*(ovec[1]-ovec[0]) + i + 1, sizeof(char));
-          
+
             po->flags |= PO_MODIFIED;
 
             /* make the replacement */
@@ -622,7 +622,7 @@ static int func_pcre(struct filter_op *fop, struct packet_object *po)
                   int r = ovec[marker * 2 + 1];
 
                   /* copy the sub-string in place of the marker */
-                  for ( ; t < r; t++) 
+                  for ( ; t < r; t++)
                      replaced[slen++] = po->DATA.data[t];
 
                }
@@ -634,7 +634,7 @@ static int func_pcre(struct filter_op *fop, struct packet_object *po)
                   escaped = 0;
                }
             }
-            
+
             /* calculate the delta */
             int delta = (ovec[0]-ovec[1])+slen;
 
@@ -662,7 +662,7 @@ static int func_pcre(struct filter_op *fop, struct packet_object *po)
 
             SAFE_FREE(replaced);
          }
-         
+
          break;
       case 6:
          /* search in the decoded one */
@@ -679,7 +679,7 @@ static int func_pcre(struct filter_op *fop, struct packet_object *po)
 }
 
 
-/* 
+/*
  * replace a string in the packet object DATA.data
  */
 static int func_replace(struct filter_op *fop, struct packet_object *po)
@@ -689,27 +689,27 @@ static int func_replace(struct filter_op *fop, struct packet_object *po)
    size_t len;
    size_t slen = fop->op.func.slen;
    size_t rlen = fop->op.func.rlen;
-  
+
    /* check the offensiveness */
    if (GBL_OPTIONS->unoffensive)
       JIT_FAULT("Cannot modify packets in unoffensive mode");
-   
+
    /* check if it exist at least one */
    if (!memmem(po->DATA.data, po->DATA.len, fop->op.func.string, fop->op.func.slen) )
       return -ENOTFOUND;
 
    DEBUG_MSG("filter engine: func_replace");
 
-   /* 
+   /*
     * XXX BIG WARNING:
-    * maxlen is GBL_PCAP->snaplen, but we can't 
+    * maxlen is GBL_PCAP->snaplen, but we can't
     * rely on this forever...
     */
-   
+
    /* take the beginning and the end of the data */
    ptr = po->DATA.data;
    end = ptr + po->DATA.len;
-   
+
    /* do the replacement */
    do {
       /* the len of the buffer to be analized */
@@ -721,32 +721,32 @@ static int func_replace(struct filter_op *fop, struct packet_object *po)
       /* string no found, exit */
       if (ptr == NULL)
          break;
-	 
+	
       /* update the len */
       len = end - ptr - slen;
-      
+
       /* set the delta */
       po->DATA.delta += rlen - slen;
       po->DATA.len += rlen - slen;
-      
+
       /* check if we are overflowing pcap buffer */
       BUG_IF(po->DATA.data < po->packet);
       BUG_IF((u_int16)(GBL_PCAP->snaplen - (po->DATA.data - po->packet)) <=  po->DATA.len);
-      
-      /* move the buffer to make room for the replacement string */   
-      memmove(ptr + rlen, ptr + slen, len); 
+
+      /* move the buffer to make room for the replacement string */
+      memmove(ptr + rlen, ptr + slen, len);
       /* copy the replacemente string */
       memcpy(ptr, fop->op.func.replace, rlen);
       /* move the ptr after the replaced string */
-      ptr += rlen; 
+      ptr += rlen;
       /* adjust the new buffer end */
       end += rlen - slen;
-                                                            
+
       /* mark the packet as modified */
       po->flags |= PO_MODIFIED;
 
    } while(ptr != NULL && ptr < end);
-   
+
    return ESUCCESS;
 }
 
@@ -758,14 +758,14 @@ static int func_inject(struct filter_op *fop, struct packet_object *po)
    int fd;
    void *file;
    size_t size, ret;
-   
+
    /* check the offensiveness */
    if (GBL_OPTIONS->unoffensive)
       JIT_FAULT("Cannot inject packets in unoffensive mode");
-   
+
 
    DEBUG_MSG("filter engine: func_inject %s", fop->op.func.string);
-   
+
    /* open the file */
    if ((fd = open((const char*)fop->op.func.string, O_RDONLY | O_BINARY)) == -1) {
       USER_MSG("filter engine: inject(): File not found (%s)\n", fop->op.func.string);
@@ -777,38 +777,38 @@ static int func_inject(struct filter_op *fop, struct packet_object *po)
 
    /* load the file in memory */
    SAFE_CALLOC(file, size, sizeof(char));
- 
+
    /* rewind the pointer */
    lseek(fd, 0, SEEK_SET);
-   
+
    ret = read(fd, file, size);
-   
+
    close(fd);
 
    if (ret != size)
       FATAL_MSG("Cannot read the file into memory");
- 
+
    /* check if we are overflowing pcap buffer */
    if(GBL_PCAP->snaplen - (po->L4.header - (po->packet + po->L2.len) + po->L4.len) <= po->DATA.len + size)
       JIT_FAULT("injected file too long");
-         
+
    /* copy the file into the buffer */
    memcpy(po->DATA.data + po->DATA.len, file, size);
 
    /* Adjust packet len and delta */
    po->DATA.delta += size;
-   po->DATA.len += size;    
+   po->DATA.len += size;
 
    /* mark the packet as modified */
    po->flags |= PO_MODIFIED;
-   
+
    /* unset the flag to be dropped */
    if (po->flags & PO_DROPPED)
       po->flags ^= PO_DROPPED;
 
    /* close and unmap the file */
    SAFE_FREE(file);
-   
+
    return ESUCCESS;
 }
 
@@ -821,7 +821,7 @@ static int func_log(struct filter_op *fop, struct packet_object *po)
    int fd;
 
    DEBUG_MSG("filter engine: func_log");
-   
+
    /* open the file */
    fd = open((const char*)fop->op.func.string, O_CREAT | O_APPEND | O_RDWR | O_BINARY, 0600);
    if (fd == -1) {
@@ -846,7 +846,7 @@ static int func_log(struct filter_op *fop, struct packet_object *po)
 
    /* close the file */
    close(fd);
-   
+
    return ESUCCESS;
 }
 
@@ -856,14 +856,14 @@ static int func_log(struct filter_op *fop, struct packet_object *po)
 static int func_drop(struct packet_object *po)
 {
    DEBUG_MSG("filter engine: func_drop");
-   
+
    /* se the flag to be dropped */
    po->flags |= PO_DROPPED;
 
    /* the delta is all the payload */
    po->DATA.delta -= po->DATA.len;
    po->DATA.len = 0;
-   
+
    return ESUCCESS;
 }
 
@@ -878,16 +878,16 @@ static int func_kill(struct packet_object *po)
 
    if (po->L4.proto == NL_TYPE_TCP) {
       /* reset both sides */
-      /* 
+      /*
        * we can trust the ack number.
-       * at least one side will be reset. the other is automatically reset 
+       * at least one side will be reset. the other is automatically reset
        */
       send_tcp(&po->L3.src, &po->L3.dst, po->L4.src, po->L4.dst, po->L4.seq, 0, TH_RST, NULL, 0);
       send_tcp(&po->L3.dst, &po->L3.src, po->L4.dst, po->L4.src, po->L4.ack, 0, TH_RST, NULL, 0);
    } else if (po->L4.proto == NL_TYPE_UDP) {
       send_L3_icmp_unreach(po);
    }
-   
+
    return ESUCCESS;
 }
 
@@ -897,20 +897,20 @@ static int func_kill(struct packet_object *po)
 static int func_exec(struct filter_op *fop)
 {
    pid_t pid;
-   
+
    DEBUG_MSG("filter engine: func_exec: %s", fop->op.func.string);
-   
-   /* 
+
+   /*
     * the command must be executed by a child.
-    * we are forwding packets, and we cannot wait 
-    * for the execution of the command 
+    * we are forwding packets, and we cannot wait
+    * for the execution of the command
     */
    pid = fork();
-   
+
    /* check if the fork was successfull */
    if (pid == -1)
       SEMIFATAL_ERROR("filter engine: fork() failed, cannot execute %s", fop->op.func.string);
-   
+
    /* differentiate between the parent and the child */
    if (!pid) {
       int k, param_length;
@@ -923,26 +923,26 @@ static int func_exec(struct filter_op *fop)
       for (p = strsep(&q, " "); p != NULL; p = strsep(&q, " ")) {
          /* allocate the array */
          SAFE_REALLOC(param, (i + 1) * sizeof(char *));
-         
+
          /* copy the tokens in the array */
-         param[i++] = strdup(p); 
+         param[i++] = strdup(p);
       }
-      
+
       /* NULL terminate the array */
       SAFE_REALLOC(param, (i + 1) * sizeof(char *));
-      
+
       param[i] = NULL;
       param_length= i + 1; //because there is a SAFE_REALLOC after the for.
-     
-      /* 
+
+      /*
        * close input, output and error.
-       * we don't want to clobber the interface 
+       * we don't want to clobber the interface
        * with output from the child
        */
       close(fileno(stdin));
       close(fileno(stdout));
       close(fileno(stderr));
-      
+
       /* execute the command */
       execve(param[0], param, NULL);
 
@@ -952,7 +952,7 @@ static int func_exec(struct filter_op *fop)
 	   SAFE_FREE(param);
       _exit(-1);
    }
-      
+
    return ESUCCESS;
 }
 
@@ -990,7 +990,7 @@ static int cmp_geq(u_int32 a, u_int32 b)
 }
 
 /*
- * load the filter from a file 
+ * load the filter from a file
  */
 int filter_load_file(char *filename, struct filter_list **list, uint8_t enabled)
 {
@@ -1013,24 +1013,24 @@ int filter_load_file(char *filename, struct filter_list **list, uint8_t enabled)
    /* sanity checks */
    if (fh.magic != htons(EC_FILTER_MAGIC))
       FATAL_MSG("Bad magic in filter file\nMake sure to compile the filter with etterfilter");
-  
+
    /* which version has compiled the filter ? */
    if (strcmp(fh.version, EC_VERSION))
       FATAL_MSG("Filter compiled for a different version");
-   
+
    /* get the size */
    size = lseek(fd, 0, SEEK_END);
 
    /* load the file in memory */
    SAFE_CALLOC(file, size, sizeof(char));
- 
+
    /* rewind the pointer */
    lseek(fd, 0, SEEK_SET);
-   
+
    ret = read(fd, file, size);
-   
+
    close(fd);
-   
+
    if (ret != size)
       FATAL_MSG("Cannot read the file into memory");
 
@@ -1042,14 +1042,14 @@ int filter_load_file(char *filename, struct filter_list **list, uint8_t enabled)
    /* allocate memory for the list entry */
    SAFE_CALLOC(*list, 1, sizeof(struct filter_list));
    fenv = &(*list)->env;
-   
+
    /* set the global variables */
    fenv->map = file;
    fenv->chain = (struct filter_op *)(file + fh.code);
    fenv->len = size - sizeof(struct filter_header) - fh.code;
 
-   /* 
-    * adjust all the string pointers 
+   /*
+    * adjust all the string pointers
     * they must point to the data segment
     */
    reconstruct_strings(fenv, &fh);
@@ -1065,13 +1065,13 @@ int filter_load_file(char *filename, struct filter_list **list, uint8_t enabled)
    /* compile the regex to speed up the matching */
    if (compile_regex(fenv, &fh) != ESUCCESS)
       return -EFATAL;
-   
+
    USER_MSG("Content filters loaded from %s...\n", filename);
-   
+
    return ESUCCESS;
 }
 
-/* 
+/*
  * unload a filter list entry
  */
 void filter_unload(struct filter_list **list)
@@ -1083,7 +1083,7 @@ void filter_unload(struct filter_list **list)
    struct filter_env *fenv= &(*list)->env;
    size_t i = 0;
    struct filter_op *fop = fenv->chain;
-   
+
    DEBUG_MSG("filter_unload");
 
    /* free the memory alloc'd for regex */
@@ -1095,19 +1095,19 @@ void filter_unload(struct filter_list **list)
                regfree(fop[i].op.func.ropt->regex);
                SAFE_FREE(fop[i].op.func.ropt);
                break;
-               
+
             case FFUNC_PCRE:
                #ifdef HAVE_PCRE
                pcre_free(fop[i].op.func.ropt->pregex);
                pcre_free(fop[i].op.func.ropt->preg_extra);
                SAFE_FREE(fop[i].op.func.ropt);
-               #endif               
+               #endif
                break;
          }
       }
       i++;
    }
-   
+
    /* free the memory region containing the file */
    SAFE_FREE(fenv->map);
 
@@ -1144,11 +1144,11 @@ static void reconstruct_strings(struct filter_env *fenv, struct filter_header *f
 {
    size_t i = 0;
    struct filter_op *fop = fenv->chain;
-     
-   /* parse all the instruction */ 
+
+   /* parse all the instruction */
    while (i < (fenv->len / sizeof(struct filter_op)) ) {
-         
-      /* 
+
+      /*
        * the real address for a string is the base of the mmap'd file
        * plus the base of the data segment plus the offset in the field
        */
@@ -1159,21 +1159,21 @@ static void reconstruct_strings(struct filter_env *fenv, struct filter_header *f
             if (fop[i].op.func.rlen)
                fop[i].op.func.replace = (fenv->map + fh->data + (size_t)fop[i].op.func.replace);
             break;
-            
+
          case FOP_TEST:
             if (fop[i].op.test.slen)
                fop[i].op.test.string = (fenv->map + fh->data + (size_t)fop[i].op.test.string);
             break;
-         
+
          case FOP_ASSIGN:
             if (fop[i].op.assign.slen)
                fop[i].op.assign.string = (fenv->map + fh->data + (size_t)fop[i].op.assign.string);
             break;
       }
-      
+
       i++;
-   }  
-   
+   }
+
 }
 
 /*
@@ -1188,10 +1188,10 @@ static int compile_regex(struct filter_env *fenv, struct filter_header *fh)
 #ifdef HAVE_PCRE
    const char *perrbuf = NULL;
 #endif
-     
-   /* parse all the instruction */ 
+
+   /* parse all the instruction */
    while (i < (fenv->len / sizeof(struct filter_op)) ) {
-      
+
       /* search for func regex and pcre */
       if(fop[i].opcode == FOP_FUNC) {
          switch(fop[i].op.func.op) {
@@ -1200,15 +1200,15 @@ static int compile_regex(struct filter_env *fenv, struct filter_header *fh)
                /* alloc the structures */
                SAFE_CALLOC(fop[i].op.func.ropt, 1, sizeof(struct regex_opt));
                SAFE_CALLOC(fop[i].op.func.ropt->regex, 1, sizeof(regex_t));
-   
+
                /* prepare the regex */
                err = regcomp(fop[i].op.func.ropt->regex, (const char*)fop[i].op.func.string, REG_EXTENDED | REG_NOSUB | REG_ICASE );
                if (err) {
                   regerror(err, fop[i].op.func.ropt->regex, errbuf, sizeof(errbuf));
                   FATAL_MSG("filter engine: %s", errbuf);
-               } 
+               }
                break;
-               
+
             case FFUNC_PCRE:
                #ifdef HAVE_PCRE
 
@@ -1219,18 +1219,18 @@ static int compile_regex(struct filter_env *fenv, struct filter_header *fh)
                fop[i].op.func.ropt->pregex = pcre_compile(fop[i].op.func.string, 0, &perrbuf, &err, NULL );
                if (fop[i].op.func.ropt->pregex == NULL)
                   FATAL_MSG("filter engine: %s\n", perrbuf);
-  
+
                /* optimize the pcre */
                fop[i].op.func.ropt->preg_extra = pcre_study(fop[i].op.func.ropt->pregex, 0, &perrbuf);
                if (perrbuf != NULL)
                   FATAL_MSG("filter engine: %s\n", perrbuf);
-               
-               #endif               
+
+               #endif
                break;
          }
       }
       i++;
-   } 
+   }
 
    return ESUCCESS;
 }

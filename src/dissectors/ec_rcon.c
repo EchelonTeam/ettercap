@@ -53,12 +53,12 @@ FUNC_DECODER(dissector_rcon)
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    DEBUG_MSG("RCON --> UDP dissector_rcon");
 
    /*
     *  format of an rcon-command:
-    *  
+    *
     *  0xFF 0xFF 0xFF 0xFF "RCON authkey command"
     */
 
@@ -67,13 +67,13 @@ FUNC_DECODER(dissector_rcon)
       return NULL;
 
    ptr += 4;
-   
+
    if ( !strncasecmp((const char*)ptr, "rcon", 4)  ) {
-      
+
       u_char *q;
-      
+
       DEBUG_MSG("\tDissector_rcon RCON command\n");
-      
+
       ptr += 4;
 
       /* skip the whitespaces at the beginning */
@@ -83,10 +83,10 @@ FUNC_DECODER(dissector_rcon)
       if (ptr == end) return NULL;
 
       q = ptr;
-      
+
       /* move after the authkey */
       while(*q != ' ' && q != end) q++;
-      
+
       /* reached the end */
       if (q == end) return NULL;
 
@@ -99,11 +99,11 @@ FUNC_DECODER(dissector_rcon)
       snprintf(PACKET->DISSECTOR.info, strlen((const char*)q) + 1, "%s", q);
 
       DISSECT_MSG("RCON : %s:%d -> AUTHKEY: %s  COMMAND: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.pass,
                                     PACKET->DISSECTOR.info);
    }
-  
+
    return NULL;
 }
 

@@ -1,5 +1,5 @@
 /*
-    ettercap -- diplay the connection list 
+    ettercap -- diplay the connection list
 
     Copyright (C) ALoR & NaGA
 
@@ -35,17 +35,17 @@ void text_connections(void);
 /*******************************************/
 
 void text_connections(void)
-{   
+{
    void *list;
    char *desc;
-   
+
    SAFE_CALLOC(desc, 100, sizeof(char));
 
    /* retrieve the first element */
    list = conntrack_print(0, NULL, NULL, 0);
-   
+
    fprintf(stdout, "\nConnections list:\n\n");
-  
+
    /* walk the connection list */
    while(list) {
       /* get the next element */

@@ -92,7 +92,7 @@
  *                  length field depend on the Authentication Code.
  *
  */
- 
+
 #include <ec.h>
 #include <ec_decode.h>
 #include <ec_dissect.h>
@@ -127,26 +127,26 @@ FUNC_DECODER(dissector_bgp)
 
    /* don't complain about unused var */
    (void)end;
-   
+
    /* skip packets that don't have enough data */
    if (PACKET->DATA.len < 30)
       return NULL;
 
    /* not the right version (4) */
-   if ( ptr[19] != 4 ) 
-      return 0;                  
-   
+   if ( ptr[19] != 4 )
+      return 0;
+
    /* not an OPEN message */
-   if ( ptr[18] != 1 ) 
+   if ( ptr[18] != 1 )
       return 0;
-                     
+
    /* BGP marker has to be FFFFFF... */
-   if ( memcmp(ptr, BGP_MARKER, 16) ) 
+   if ( memcmp(ptr, BGP_MARKER, 16) )
       return 0;
-   
+
    /* no optional parameter */
-   if ( (param_length = ptr[28]) == 0 ) 
-      return 0; 
+   if ( (param_length = ptr[28]) == 0 )
+      return 0;
 
    /* skip to parameters */
    parameters = ptr + 29;
@@ -164,16 +164,16 @@ FUNC_DECODER(dissector_bgp)
          char *str_ptr;
          u_int32 j;
          u_int32 length = parameters[i + 1];
-        
+
          DEBUG_MSG("\tDissector_BGP 4 AUTH");
-         
+
          PACKET->DISSECTOR.user = strdup("BGP4");
          SAFE_CALLOC(PACKET->DISSECTOR.pass, length * 3 + 10, sizeof(char));
          SAFE_CALLOC(PACKET->DISSECTOR.info, 32, sizeof(char));
 
          /* Get authentication type */
          snprintf(PACKET->DISSECTOR.info, 32, "AUTH TYPE [0x%02x]", parameters[i+2]);
-         
+
          /* Get authentication data */
          if (length > 1) {
             snprintf(PACKET->DISSECTOR.pass, 4, "Hex(");
@@ -185,19 +185,19 @@ FUNC_DECODER(dissector_bgp)
                size_t temp_len = strlen((char *)temp) + 2;
                snprintf(str_ptr + (j * 3), temp_len, " %.2x", *temp);
             }
-         
+
             strcat(str_ptr, " )");
-         }	 
-         
+         }	
+
          DISSECT_MSG("BGP : %s:%d -> %s  %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                             ntohs(PACKET->L4.dst), 
+                                             ntohs(PACKET->L4.dst),
                                              PACKET->DISSECTOR.info,
                                              PACKET->DISSECTOR.pass);
-   
+
          return NULL;
       }
    }
-   
+
    return NULL;
 }
 

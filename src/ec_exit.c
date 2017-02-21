@@ -1,5 +1,5 @@
 /*
-    ettercap -- everything starts from this file... 
+    ettercap -- everything starts from this file...
 
     Copyright (C) ALoR & NaGA
 
@@ -36,7 +36,7 @@ void clean_exit(int errcode);
 void clean_exit(int errcode)
 {
    DEBUG_MSG("clean_exit: %d", errcode);
-  
+
    INSTANT_USER_MSG("\nTerminating %s...\n", GBL_PROGRAM);
 
 #ifdef HAVE_EC_LUA

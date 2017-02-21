@@ -142,7 +142,7 @@ EC_API_EXTERN const char *ec_win_get_ec_dir (void);
 #ifndef INSTALL_EXECPREFIX
    #define INSTALL_EXECPREFIX ec_win_get_ec_dir()
 #endif
-   
+
 #ifndef INSTALL_SYSCONFDIR
    #define INSTALL_SYSCONFDIR ec_win_get_ec_dir()
 #endif
@@ -158,7 +158,7 @@ EC_API_EXTERN const char *ec_win_get_ec_dir (void);
 #ifndef INSTALL_DATADIR
    #define INSTALL_DATADIR   "/share"  /* this cannot be a function (sigh) */
 #endif
-   
+
 /* dlopen() emulation (not exported)
  */
 #if !defined(HAVE_DLOPEN)
@@ -197,8 +197,8 @@ EC_API_EXTERN const char *ec_win_get_ec_dir (void);
 
   EC_API_EXTERN int ec_win_wait (int *status);
 #endif
-   
-  
+
+
 /* Missing stuff for ec_resolv.h / ec_win_dnexpand()
  */
 #ifndef INT16SZ
@@ -253,5 +253,5 @@ EC_API_EXTERN const char *ec_win_get_ec_dir (void);
 #define strerror ec_win_strerror
 EC_API_EXTERN char *ec_win_strerror(int err);
 EC_API_EXTERN int  ec_win_pcap_stop(const void *pcap_handle);
-  
+
 #endif /* EC_WIN_MISC_H */

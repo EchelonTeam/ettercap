@@ -44,7 +44,7 @@ int dissect_modify(int mode, char *name, u_int32 port);
 
 int dissect_match(void *id_sess, void *id_curr);
 void dissect_create_session(struct ec_session **s, struct packet_object *po, u_int64 code);
-size_t dissect_create_ident(void **i, struct packet_object *po, u_int64 code);            
+size_t dissect_create_ident(void **i, struct packet_object *po, u_int64 code);
 void dissect_wipe_session(struct packet_object *po, u_int64 code);
 
 int dissect_on_port(char *name, u_int16 port);
@@ -65,14 +65,14 @@ int dissect_match(void *id_sess, void *id_curr)
    /* sanity check */
    BUG_IF(ids == NULL);
    BUG_IF(id == NULL);
-  
-   /* 
+
+   /*
     * is this ident from our level ?
     * check the magic !
     */
    if (ids->magic != id->magic)
       return 0;
-   
+
    /* check the protocol */
    if (ids->L4_proto != id->L4_proto)
       return 0;
@@ -83,7 +83,7 @@ int dissect_match(void *id_sess, void *id_curr)
        !ip_addr_cmp(&ids->L3_src, &id->L3_src) &&
        !ip_addr_cmp(&ids->L3_dst, &id->L3_dst) )
       return 1;
-   
+
    /* from dest to source */
    if (ids->L4_src == id->L4_dst &&
        ids->L4_dst == id->L4_src &&
@@ -105,13 +105,13 @@ void dissect_create_session(struct ec_session **s, struct packet_object *po, u_i
    void *ident;
 
    DEBUG_MSG("dissect_create_session");
-   
+
    /* allocate the session */
    SAFE_CALLOC(*s, 1, sizeof(struct ec_session));
-   
+
    /* create the ident */
    (*s)->ident_len = dissect_create_ident(&ident, po, code);
-   
+
    /* link to the session */
    (*s)->ident = ident;
 
@@ -126,19 +126,19 @@ void dissect_create_session(struct ec_session **s, struct packet_object *po, u_i
 size_t dissect_create_ident(void **i, struct packet_object *po, u_int64 code)
 {
    struct dissect_ident *ident;
-   
+
    /* allocate the ident for that session */
    SAFE_CALLOC(ident, 1, sizeof(struct dissect_ident));
-   
+
    /* the magic number (usually the pointer for the function) */
    ident->magic = code;
-      
+
    /* prepare the ident */
    memcpy(&ident->L3_src, &po->L3.src, sizeof(struct ip_addr));
    memcpy(&ident->L3_dst, &po->L3.dst, sizeof(struct ip_addr));
-   
+
    ident->L4_proto = po->L4.proto;
-   
+
    ident->L4_src = po->L4.src;
    ident->L4_dst = po->L4.dst;
 
@@ -155,10 +155,10 @@ size_t dissect_create_ident(void **i, struct packet_object *po, u_int64 code)
 void dissect_wipe_session(struct packet_object *po, u_int64 code)
 {
    void *ident;
-   struct ec_session *s;   
+   struct ec_session *s;
 
    DEBUG_MSG("dissect_wipe_session");
-   
+
    /* create an ident to retrieve the session */
    dissect_create_ident(&ident, po, code);
 
@@ -184,17 +184,17 @@ void dissect_add(char *name, u_int8 level, u_int32 port, FUNC_DECODER_PTR(decode
    struct dissect_entry *e;
 
    SAFE_CALLOC(e, 1, sizeof(struct dissect_entry));
-   
+
    e->name = strdup(name);
    e->level = level;
    e->type = port;
    e->decoder = decoder;
 
-   SLIST_INSERT_HEAD (&dissect_list, e, next); 
+   SLIST_INSERT_HEAD (&dissect_list, e, next);
 
    /* add the default decoder */
    add_decoder(level, port, decoder);
-      
+
    return;
 }
 
@@ -212,12 +212,12 @@ void dissect_del(char *name)
          SAFE_FREE(e);
       }
    }
-   
+
    return;
 }
 
 /*
- * given the name of the dissector add or remove it 
+ * given the name of the dissector add or remove it
  * from the decoders' table.
  * is it possible to add multiple port with MODE_ADD
  */
@@ -241,24 +241,24 @@ int dissect_modify(int mode, char *name, u_int32 port)
                /* save them because the dissect_del may delete this values */
                level = e->level;
                decoder = e->decoder;
-               
+
                /* remove all the previous istances */
                dissect_del(name);
 
 	       /* move the ssl wrapper (even if no wrapper) */
                sslw_dissect_move(name, port);
-               
+
                /* a value of 0 will disable the dissector */
                if (port == 0) {
                   DEBUG_MSG("dissect_modify: %s disabled", name);
                   return ESUCCESS;
                }
-              
+
                DEBUG_MSG("dissect_modify: %s replaced to %lu", name, (unsigned long)port);
-               
+
                /* add the new value */
-               dissect_add(name, level, port, decoder);	       
-	       
+               dissect_add(name, level, port, decoder);	
+	
                return ESUCCESS;
                break;
          }
@@ -270,22 +270,22 @@ int dissect_modify(int mode, char *name, u_int32 port)
 
 /*
  * return ESUCCESS if the dissector is on
- * the specified port 
+ * the specified port
  */
 int dissect_on_port(char *name, u_int16 port)
 {
    struct dissect_entry *e;
 
-   /* 
-    * return ESUCCESS if at least one port is bound 
+   /*
+    * return ESUCCESS if at least one port is bound
     * to the dissector name
     */
    SLIST_FOREACH (e, &dissect_list, next) {
       if (!strcasecmp(e->name, name) && e->type == port) {
          return ESUCCESS;
-      } 
+      }
    }
-   
+
    return -ENOTFOUND;
 }
 
@@ -297,16 +297,16 @@ int dissect_on_port_level(char *name, u_int16 port, u_int8 level)
 {
    struct dissect_entry *e;
 
-   /* 
-    * return ESUCCESS if at least one port is bound 
+   /*
+    * return ESUCCESS if at least one port is bound
     * to the dissector name
     */
    SLIST_FOREACH (e, &dissect_list, next) {
       if (!strcasecmp(e->name, name) && e->type == port && e->level == level) {
          return ESUCCESS;
-      } 
+      }
    }
-   
+
    return -ENOTFOUND;
 }
 

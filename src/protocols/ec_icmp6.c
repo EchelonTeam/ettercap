@@ -51,7 +51,7 @@ FUNC_DECODER(decode_icmp6)
 
    DECODED_LEN = sizeof(struct icmp6_hdr);
 
-   /* this sucked. Now it sucks less. */ 
+   /* this sucked. Now it sucks less. */
    if(GBL_CONF->checksum_check && !GBL_OPTIONS->unoffensive) {
       if((csum = L4_checksum(PACKET)) != CSUM_RESULT) {
          if(GBL_CONF->checksum_warning) {

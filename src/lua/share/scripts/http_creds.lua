@@ -8,7 +8,7 @@ description = "Script to show HTTP requsts";
 local http = require("http")
 local packet = require("packet")
 
-hook_point = http.hook 
+hook_point = http.hook
 
 packetrule = function(packet_object)
 
@@ -25,9 +25,9 @@ end
 
 
 -- Here's your action.
-action = function(packet_object) 
+action = function(packet_object)
    local p = packet_object
-   
+
    -- Parse the http data into an HTTP object
    local hobj = http.parse_http(p)
 
@@ -38,15 +38,15 @@ action = function(packet_object)
 
    -- If it's a request, save the request to the registry
    -- We'll need this for the response
-   if hobj.request then 
+   if hobj.request then
       if hobj.creds then
-       
+
          -- Log the request/response with the redirect
          ettercap.log("HTTP_CREDS: %s:%d -> %s:%d %s %s [User:Pass = %s]\n",
             packet.src_ip(p),
-            packet.src_port(p), 
-            packet.dst_ip(p), 
-            packet.dst_port(p), 
+            packet.src_port(p),
+            packet.dst_ip(p),
+            packet.dst_port(p),
             hobj.verb ,hobj.url, hobj.creds)
       end
 

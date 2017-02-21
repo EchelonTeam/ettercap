@@ -55,9 +55,9 @@
    #ifndef UINT32_MAX
       #define UINT32_MAX	(4294967295U)
    #endif
-   
+
 #endif
-   
+
 #endif
 
 /* EOF */

@@ -30,9 +30,9 @@
 #ifdef HAVE_NCURSES
    extern char *curses_version(void);
 #endif
-#ifdef HAVE_GTK 
-   /* 
-    * hack here because this file is compiled 
+#ifdef HAVE_GTK
+   /*
+    * hack here because this file is compiled
     * without the include directive for gtk
     */
    extern int gtk_major_version;
@@ -81,12 +81,12 @@ void debug_init(void)
    struct utsname buf;
 #endif
    DEBUG_LOCK;
-   
+
    if ((debug_file = fopen (GBL_DEBUG_FILE, "w")) == NULL)
       ERROR_MSG("Couldn't open for writing %s", GBL_DEBUG_FILE);
-   
+
    fprintf (debug_file, "\n==============================================================\n\n");
-                   
+
   	fprintf (debug_file, "-> ${prefix}        %s\n", INSTALL_PREFIX);
   	fprintf (debug_file, "-> ${exec_prefix}   %s\n", INSTALL_EXECPREFIX);
   	fprintf (debug_file, "-> ${bindir}        %s\n", INSTALL_BINDIR);
@@ -111,21 +111,21 @@ void debug_init(void)
    #ifdef HAVE_PCRE
    fprintf(debug_file, "-> libpcre version %s\n", pcre_version());
    #endif
-   #ifdef HAVE_OPENSSL 
+   #ifdef HAVE_OPENSSL
       fprintf (debug_file, "-> lib     %s\n", SSLeay_version(SSLEAY_VERSION));
       fprintf (debug_file, "-> headers %s\n", OPENSSL_VERSION_TEXT);
    #endif
-   #ifdef HAVE_NCURSES 
+   #ifdef HAVE_NCURSES
       fprintf (debug_file, "-> %s\n", curses_version());
    #endif
-   #ifdef HAVE_GTK 
+   #ifdef HAVE_GTK
       fprintf (debug_file, "-> gtk+ %d.%d.%d\n", gtk_major_version, gtk_minor_version, gtk_micro_version);
    #endif
    fprintf (debug_file, "\n\nDEVICE OPENED FOR %s DEBUGGING\n\n", GBL_PROGRAM);
    fflush(debug_file);
-   
+
    DEBUG_UNLOCK;
-   
+
    atexit(debug_close);
 }
 
@@ -134,7 +134,7 @@ void debug_init(void)
 void debug_close(void)
 {
    DEBUG_LOCK;
-   
+
    fprintf (debug_file, "\n\nDEVICE CLOSED FOR DEBUGGING\n\n");
    fflush(debug_file);
    fclose (debug_file);

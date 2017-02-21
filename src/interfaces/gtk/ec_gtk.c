@@ -59,7 +59,7 @@ void gtkui_message(const char *msg);
 void gtkui_input(const char *title, char *input, size_t n, void (*callback)(void));
 
 char *gtkui_utf8_validate(char *data);
-   
+
 static void gtkui_init(void);
 static void gtkui_cleanup(void);
 static void gtkui_msg(const char *msg);
@@ -267,13 +267,13 @@ void set_gtk_interface(void)
    ops.input = &gtkui_input;
    ops.progress = &gtkui_progress_wrap;
 
-   
+
    ui_register(&ops);
 }
 
 
 /*
- * prepare GTK, create the menu/messages window, enter the first loop 
+ * prepare GTK, create the menu/messages window, enter the first loop
  */
 static void gtkui_init(void)
 {
@@ -302,7 +302,7 @@ static void gtkui_init(void)
 }
 
 /*
- * exit ettercap 
+ * exit ettercap
  */
 void gtkui_exit(void)
 {
@@ -315,7 +315,7 @@ void gtkui_exit(void)
    gtkui_conf_set("window_top", top);
    gtkui_conf_set("window_width", width);
    gtkui_conf_set("window_height", height);
- 
+
    gtk_main_quit();
    gtkui_conf_save();
    clean_exit(0);
@@ -328,7 +328,7 @@ static void gtkui_cleanup(void)
 {
    DEBUG_MSG("gtk_cleanup");
 
-   
+
 }
 
 /*
@@ -346,7 +346,7 @@ static void gtkui_msg(const char *msg)
 
    gtk_text_buffer_get_end_iter(msgbuffer, &iter);
    gtk_text_buffer_insert(msgbuffer, &iter, unicode, -1);
-   gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW (textview), 
+   gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW (textview),
                                 endmark, 0, FALSE, 0, 0);
    return;
 }
@@ -366,13 +366,13 @@ static void gtkui_error(const char *msg)
 {
    GtkWidget *dialog;
    gchar *unicode = NULL;
-   
+
    DEBUG_MSG("gtkui_error: %s", msg);
 
    if((unicode = gtkui_utf8_validate((char *)msg)) == NULL)
             return;
 
-   dialog = gtk_message_dialog_new(GTK_WINDOW (window), GTK_DIALOG_MODAL, 
+   dialog = gtk_message_dialog_new(GTK_WINDOW (window), GTK_DIALOG_MODAL,
                                    GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "%s", unicode);
    gtk_window_set_position(GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
 
@@ -413,27 +413,27 @@ void gtkui_input(const char *title, char *input, size_t n, void (*callback)(void
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_dialog_set_has_separator(GTK_DIALOG (dialog), FALSE);
    gtk_container_set_border_width(GTK_CONTAINER (dialog), 5);
-   
+
    hbox = gtk_hbox_new (FALSE, 6);
    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
-   
+
    image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
    gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
    gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-   
+
    label = gtk_label_new (title);
    gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
    gtk_label_set_selectable (GTK_LABEL (label), TRUE);
    gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
-   
+
    entry = gtk_entry_new_with_max_length(n);
    g_object_set_data(G_OBJECT (entry), "dialog", dialog);
    g_signal_connect(G_OBJECT (entry), "activate", G_CALLBACK (gtkui_dialog_enter), NULL);
 
-   
+
    if (input)
-      gtk_entry_set_text(GTK_ENTRY (entry), input); 
-   
+      gtk_entry_set_text(GTK_ENTRY (entry), input);
+
    gtk_box_pack_start(GTK_BOX (hbox), entry, FALSE, FALSE, 5);
    gtk_widget_show_all (hbox);
 
@@ -452,7 +452,7 @@ void gtkui_input(const char *title, char *input, size_t n, void (*callback)(void
 }
 
 
-/* 
+/*
  * show or update the progress bar
  */
 static void gtkui_progress(char *title, int value, int max)
@@ -471,7 +471,7 @@ static void gtkui_progress(char *title, int value, int max)
       hbox = gtk_hbox_new(FALSE, 3);
       gtk_container_add(GTK_CONTAINER (progress_dialog), hbox);
       gtk_widget_show(hbox);
-    
+
       progress_bar = gtk_progress_bar_new();
       gtk_box_pack_start(GTK_BOX (hbox), progress_bar, TRUE, TRUE, 0);
       gtk_widget_show(progress_bar);
@@ -482,8 +482,8 @@ static void gtkui_progress(char *title, int value, int max)
       gtk_widget_show(button);
 
       gtk_widget_show(progress_dialog);
-   } 
-   
+   }
+
    /* the subsequent calls have to only update the object */
    gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), title);
    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar), (gdouble)((gdouble)value / (gdouble)max));
@@ -491,8 +491,8 @@ static void gtkui_progress(char *title, int value, int max)
    /* a nasty little loop that lets gtk update the progress bar immediately */
    while (gtk_events_pending ())
       gtk_main_iteration ();
-   
-   /* 
+
+   /*
     * when 100%, destroy it
     */
    if (value == max) {
@@ -523,10 +523,10 @@ static gboolean gtkui_progress_cancel(GtkWidget *window, gpointer data) {
 void gtkui_message(const char *msg)
 {
    GtkWidget *dialog;
-   
+
    DEBUG_MSG("gtkui_message: %s", msg);
 
-   dialog = gtk_message_dialog_new(GTK_WINDOW (window), GTK_DIALOG_MODAL, 
+   dialog = gtk_message_dialog_new(GTK_WINDOW (window), GTK_DIALOG_MODAL,
                                    GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", msg);
    gtk_window_set_position(GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
 
@@ -549,13 +549,13 @@ void gtkui_start(void)
    DEBUG_MSG("gtk_start");
 
    idle_flush = gtk_timeout_add(500, gtkui_flush_msg, NULL);
-   
+
    /* which interface do we have to display ? */
    if (GBL_OPTIONS->read)
       gtkui_sniff_offline();
    else
       gtkui_sniff_live();
-   
+
    /* the main gui loop, once this exits the gui will be destroyed */
    gtk_main();
 
@@ -743,9 +743,9 @@ static void gtkui_file_open(void)
 static void read_pcapfile(const char *file)
 {
    char pcap_errbuf[PCAP_ERRBUF_SIZE];
-   
+
    DEBUG_MSG("read_pcapfile %s", file);
-   
+
    SAFE_CALLOC(GBL_OPTIONS->pcapfile_in, strlen(file)+1, sizeof(char));
 
    snprintf(GBL_OPTIONS->pcapfile_in, strlen(file)+1, "%s", file);
@@ -756,7 +756,7 @@ static void read_pcapfile(const char *file)
       SAFE_FREE(GBL_OPTIONS->pcapfile_in);
       return;
    }
-   
+
    /* set the options for reading from file */
    GBL_OPTIONS->silent = 1;
    GBL_OPTIONS->unoffensive = 1;
@@ -772,9 +772,9 @@ static void read_pcapfile(const char *file)
 static void gtkui_file_write(void)
 {
 #define FILE_LEN  40
-   
+
    DEBUG_MSG("gtk_file_write");
-   
+
    SAFE_CALLOC(GBL_OPTIONS->pcapfile_out, FILE_LEN, sizeof(char));
 
    gtkui_input("Output file :", GBL_OPTIONS->pcapfile_out, FILE_LEN, write_pcapfile);
@@ -783,9 +783,9 @@ static void gtkui_file_write(void)
 static void write_pcapfile(void)
 {
    FILE *f;
-   
+
    DEBUG_MSG("write_pcapfile");
-   
+
    /* check if the file is writeable */
    f = fopen(GBL_OPTIONS->pcapfile_out, "w");
    if (f == NULL) {
@@ -793,7 +793,7 @@ static void write_pcapfile(void)
       SAFE_FREE(GBL_OPTIONS->pcapfile_out);
       return;
    }
- 
+
    /* if ok, delete it */
    fclose(f);
    unlink(GBL_OPTIONS->pcapfile_out);
@@ -822,14 +822,14 @@ static void gtkui_unified_sniff(void)
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_dialog_set_has_separator(GTK_DIALOG (dialog), FALSE);
    gtk_container_set_border_width(GTK_CONTAINER (dialog), 5);
-  
+
    hbox = gtk_hbox_new (FALSE, 6);
    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
-  
+
    image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
    gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
    gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-  
+
    label = gtk_label_new ("Network interface : ");
    gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
    gtk_label_set_selectable (GTK_LABEL (label), TRUE);
@@ -851,7 +851,7 @@ static void gtkui_unified_sniff(void)
    g_signal_connect(G_OBJECT (GTK_COMBO (iface_combo)->entry), "activate", G_CALLBACK (gtkui_dialog_enter), NULL);
 
    /* list is stored in the widget, can safely free this copy */
-   g_list_free(iface_list); 
+   g_list_free(iface_list);
 
    /* render the contents of the dialog */
    gtk_widget_show_all (hbox);
@@ -861,7 +861,7 @@ static void gtkui_unified_sniff(void)
       iface_desc = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO (iface_combo)->entry));
       for(dev = (pcap_if_t *)GBL_PCAP->ifs; dev != NULL; dev = dev->next) {
          if(!strncmp(dev->description, iface_desc, IFACE_LEN)) {
-            
+
             SAFE_FREE(GBL_OPTIONS->iface);
             SAFE_CALLOC(GBL_OPTIONS->iface, IFACE_LEN, sizeof(char));
 
@@ -886,13 +886,13 @@ static void gtkui_unified_sniff(void)
    gtk_widget_destroy(dialog);
 }
 
-/* 
+/*
  * start unified sniffing with default interface
  */
-static void gtkui_unified_sniff_default(void) 
+static void gtkui_unified_sniff_default(void)
 {
    char err[PCAP_ERRBUF_SIZE];
-   
+
    DEBUG_MSG("gtkui_unified_sniff_default");
 
    /* the ec_capture will find the interface for us */
@@ -902,7 +902,7 @@ static void gtkui_unified_sniff_default(void)
       SAFE_CALLOC(GBL_OPTIONS->iface, IFACE_LEN, sizeof(char));
       iface = pcap_lookupdev(err);
       ON_ERROR(iface, NULL, "pcap_lookupdev: %s", err);
-   
+
       strncpy(GBL_OPTIONS->iface, iface, IFACE_LEN - 1);
    }
 
@@ -993,13 +993,13 @@ static void gtkui_bridged_sniff(void)
       iface_desc = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO (combo1)->entry));
       for(dev = (pcap_if_t *)GBL_PCAP->ifs; dev != NULL; dev = dev->next) {
          if(!strncmp(dev->description, iface_desc, IFACE_LEN)) {
-            
+
             SAFE_FREE(GBL_OPTIONS->iface);
             SAFE_CALLOC(GBL_OPTIONS->iface, IFACE_LEN, sizeof(char));
 
             strncpy(GBL_OPTIONS->iface, dev->name, IFACE_LEN);
-            break;                      
-         }                              
+            break;
+         }
       }
 
       /* if no match in list */
@@ -1013,7 +1013,7 @@ static void gtkui_bridged_sniff(void)
       iface_desc = gtk_entry_get_text(GTK_ENTRY (GTK_COMBO (combo2)->entry));
       for(dev = (pcap_if_t *)GBL_PCAP->ifs; dev != NULL; dev = dev->next) {
          if(!strncmp(dev->description, iface_desc, IFACE_LEN)) {
-               
+
             SAFE_FREE(GBL_OPTIONS->iface_bridge);
             SAFE_CALLOC(GBL_OPTIONS->iface_bridge, IFACE_LEN, sizeof(char));
 
@@ -1039,7 +1039,7 @@ static void gtkui_bridged_sniff(void)
 static void bridged_sniff(void)
 {
    set_bridge_sniff();
-   
+
    /* leaves setup menu, goes to main interface */
    gtk_main_quit();
 }
@@ -1050,12 +1050,12 @@ static void bridged_sniff(void)
 static void gtkui_pcap_filter(void)
 {
 #define PCAP_FILTER_LEN  50
-   
+
    DEBUG_MSG("gtk_pcap_filter");
-   
+
    SAFE_CALLOC(GBL_PCAP->filter, PCAP_FILTER_LEN, sizeof(char));
 
-   /* 
+   /*
     * no callback, the filter is set but we have to return to
     * the interface for other user input
     */
@@ -1063,18 +1063,18 @@ static void gtkui_pcap_filter(void)
 }
 
 /*
- * set a different netmask than the system one 
+ * set a different netmask than the system one
  */
 static void gtkui_set_netmask(void)
 {
    struct in_addr net;
-   
+
    DEBUG_MSG("gtkui_set_netmask");
-  
+
    if (GBL_OPTIONS->netmask == NULL)
       SAFE_CALLOC(GBL_OPTIONS->netmask, IP_ASCII_ADDR_LEN, sizeof(char));
 
-   /* 
+   /*
     * no callback, the filter is set but we have to return to
     * the interface for other user input
     */
@@ -1083,7 +1083,7 @@ static void gtkui_set_netmask(void)
    /* sanity check */
    if (strcmp(GBL_OPTIONS->netmask, "") && inet_aton(GBL_OPTIONS->netmask, &net) == 0)
       ui_error("Invalid netmask %s", GBL_OPTIONS->netmask);
-            
+
    /* if no netmask was specified, free it */
    if (!strcmp(GBL_OPTIONS->netmask, ""))
       SAFE_FREE(GBL_OPTIONS->netmask);
@@ -1097,7 +1097,7 @@ GtkTextBuffer *gtkui_details_window(char *title)
    GdkGeometry hints;
 
    DEBUG_MSG("gtkui_details_window");
-   
+
    dwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
    gtk_window_set_title(GTK_WINDOW (dwindow), title);
 
@@ -1109,12 +1109,12 @@ GtkTextBuffer *gtkui_details_window(char *title)
    gtk_container_set_border_width(GTK_CONTAINER (dwindow), 5);
    gtk_window_set_position(GTK_WINDOW (dwindow), GTK_WIN_POS_CENTER);
    g_signal_connect (G_OBJECT (dwindow), "delete_event", G_CALLBACK (gtk_widget_destroy), NULL);
-   
+
    vbox = gtk_vbox_new(FALSE, 5);
    gtk_container_add(GTK_CONTAINER (dwindow), vbox);
    gtk_widget_show(vbox);
-   
-   dscrolled = gtk_scrolled_window_new(NULL, NULL); 
+
+   dscrolled = gtk_scrolled_window_new(NULL, NULL);
    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (dscrolled), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (dscrolled), GTK_SHADOW_IN);
    gtk_box_pack_start(GTK_BOX(vbox), dscrolled, TRUE, TRUE, 0);
@@ -1204,7 +1204,7 @@ GtkWidget *gtkui_page_new(char *title, void (*callback)(void), void (*detacher)(
 
       #if GTK_MINOR_VERSION == 2
       g_signal_connect(G_OBJECT (notebook), "switch-page", G_CALLBACK(gtkui_page_defocus_tabs), NULL);
-      #endif 
+      #endif
 
       gtkui_create_tab_menu();
    }
@@ -1311,7 +1311,7 @@ void gtkui_page_detach_current(void) {
    g_object_ref(G_OBJECT(child));
 
    gtk_notebook_remove_page(GTK_NOTEBOOK(notebook), num);
-   
+
    detacher = g_object_get_data(G_OBJECT (child), "detach");
    if(detacher)
       detacher(child);
@@ -1343,17 +1343,17 @@ void gtkui_page_left(void) {
 
 /* for connecting to browse buttons, pass entry widget as callback "data" */
 void gtkui_filename_browse(GtkWidget *widget, gpointer data)
-{  
+{
    GtkWidget *dialog = NULL;
    gint response = 0;
    const char *filename = NULL;
-   
+
    dialog = gtk_file_selection_new ("Select a file...");
-   
+
    response = gtk_dialog_run (GTK_DIALOG (dialog));
-   
+
    if (response == GTK_RESPONSE_OK) {
-      gtk_widget_hide(dialog); 
+      gtk_widget_hide(dialog);
       filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (dialog));
 
       gtk_entry_set_text(GTK_ENTRY (data), filename);

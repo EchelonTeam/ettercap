@@ -44,7 +44,7 @@ struct wdg_menu menu_start[] = { {"Start",          'S',       "",    NULL},
 static void curses_start_sniffing(void)
 {
    DEBUG_MSG("curses_start_sniffing");
-   
+
    /* start the sniffing method */
    EXECUTE(GBL_SNIFF->start);
 }
@@ -52,7 +52,7 @@ static void curses_start_sniffing(void)
 static void curses_stop_sniffing(void)
 {
    DEBUG_MSG("curses_stop_sniffing");
-   
+
    /* terminate the sniffing engine */
    EXECUTE(GBL_SNIFF->cleanup);
 }

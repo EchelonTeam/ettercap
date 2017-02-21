@@ -50,7 +50,7 @@ int is_mitm_active(char *name);
 /*******************************************/
 
 /*
- * register a new mitm method in the table 
+ * register a new mitm method in the table
  */
 void mitm_add(struct mitm_method *mm)
 {
@@ -60,11 +60,11 @@ void mitm_add(struct mitm_method *mm)
 
    /* copy the mm struct */
    SAFE_CALLOC(e->mm, 1, sizeof(struct mitm_method));
-   
+
    memcpy(e->mm, mm, sizeof(struct mitm_method));
-   
+
    SLIST_INSERT_HEAD(&mitm_table, e, next);
-   
+
 }
 
 
@@ -82,9 +82,9 @@ int mitm_set(char *name)
    } else {
       mitm_args = "";
    }
-   
+
    DEBUG_MSG("mitm_set: %s (%s)", name, mitm_args);
-   
+
    /* search the name and set it */
    SLIST_FOREACH(e, &mitm_table, next) {
       if (!strcasecmp(e->mm->name, name)) {
@@ -102,16 +102,16 @@ int mitm_set(char *name)
 int is_mitm_active(char *name)
 {
    struct mitm_entry *e;
-   
+
    /* search the name and set it */
    SLIST_FOREACH(e, &mitm_table, next)
       if (!strcasecmp(e->mm->name, name))
          return e->started;
-         
+
    return 0;
 }
 
-/* 
+/*
  * starts all the method with the selected flag set.
  * it is possible to start multiple method simultaneusly
  */
@@ -125,23 +125,23 @@ int mitm_start(void)
       return -EINVALID;
    }
 
-      
+
    DEBUG_MSG("mitm_start");
-   
+
    /* start all the selected methods */
    SLIST_FOREACH(e, &mitm_table, next) {
       if (e->selected && !e->started) {
-   
+
          /* cant use -R with mitm methods */
          if (GBL_OPTIONS->reversed)
             SEMIFATAL_ERROR("Reverse target matching can't be used with MITM attacks");
-  
+
          if (!GBL_IFACE->is_ready)
             SEMIFATAL_ERROR("MITM attacks can't be used on unconfigured interfaces");
-         
+
          DEBUG_MSG("mitm_start: starting %s", e->mm->name);
 
-         /* 
+         /*
           * if the mitm method does not start correctly,
           * deselect it !
           */
@@ -164,7 +164,7 @@ void mitm_stop(void)
    struct mitm_entry *e;
 
    DEBUG_MSG("mitm_stop");
-   
+
    /* stop all the started methods */
    SLIST_FOREACH(e, &mitm_table, next) {
       if (e->started) {
@@ -174,7 +174,7 @@ void mitm_stop(void)
          e->selected = 0;
       }
    }
-   
+
 }
 
 
@@ -184,10 +184,10 @@ void mitm_stop(void)
 void only_mitm(void)
 {
    char ch = 0;
-   
+
    /* build the list of active hosts */
    build_hosts_list();
-   
+
    /* start the mitm attack */
    mitm_start();
 
@@ -197,7 +197,7 @@ void only_mitm(void)
        LOOP {
            sleep(1);
        }
-  
+
    /* wait for user to exit */
    while (ch != 'q' && ch != 'Q') {
       /* if there is a pending char to be read */
@@ -209,7 +209,7 @@ void only_mitm(void)
             ch = getchar();
       }
    }
-   
+
    INSTANT_USER_MSG("Exiting...\n\n");
 
    /* stop the process */

@@ -42,7 +42,7 @@ struct packet_object* packet_allocate_object(u_char *data, bpf_u_int32 len)
    SAFE_CALLOC(po, 1, sizeof(struct packet_object));
    packet_create_object(po, data, len);
    po->flags |= PO_FORGED;
-   
+
    return po;
 }
 
@@ -54,11 +54,11 @@ inline int packet_create_object(struct packet_object *po, u_char *buf, bpf_u_int
 {
    /* clear the memory */
    memset(po, 0, sizeof(struct packet_object));
-   
+
    /* set the buffer and the len of the received packet */
    po->packet = buf;
    po->len = len;
-   
+
    return (0);
 }
 
@@ -94,18 +94,18 @@ int packet_disp_data(struct packet_object *po, u_char *buf, bpf_u_int32 len)
 
 int packet_destroy_object(struct packet_object *po)
 {
-   
-   /* 
+
+   /*
     * the packet is a duplicate
     * we have to free even the packet buffer.
     * alse free data directed to top_half
     */
    if (po->flags & PO_DUP) {
-     
+
       SAFE_FREE(po->packet);
-      
-      /* 
-       * free the dissector info 
+
+      /*
+       * free the dissector info
        * during the duplication, the pointers where
        * passed to the dup, so we have to free them
        * here.
@@ -117,13 +117,13 @@ int packet_destroy_object(struct packet_object *po)
       SAFE_FREE(po->DISSECTOR.banner);
       SAFE_FREE(po->DISSECTOR.os);
    }
-      
-   /* 
+
+   /*
     * free the disp_data pointer
     * it was malloced by tcp or udp decoder.
     * If the packet was duplicated, disp_data points to NULL
     * (the dup func set it)
-    * because the duplicate points to the real data and will 
+    * because the duplicate points to the real data and will
     * free them.
     */
    SAFE_FREE(po->DATA.disp_data);
@@ -133,7 +133,7 @@ int packet_destroy_object(struct packet_object *po)
       SAFE_FREE(po->packet);
       SAFE_FREE(po);
    }
-   
+
    return 0;
 }
 
@@ -148,9 +148,9 @@ struct packet_object * packet_dup(struct packet_object *po, u_char flag)
 
    SAFE_CALLOC(dup_po, 1, sizeof(struct packet_object));
 
-   /* 
-    * copy the po over the dup_po 
-    * but this is not sufficient, we have to adjust all 
+   /*
+    * copy the po over the dup_po
+    * but this is not sufficient, we have to adjust all
     * the pointer to the po->packet.
     * so allocate a new packet, then recalculate the
     * pointers
@@ -158,20 +158,20 @@ struct packet_object * packet_dup(struct packet_object *po, u_char flag)
    memcpy(dup_po, po, sizeof(struct packet_object));
 
    /*
-    * We set disp_data to NULL to avoid free in the 
+    * We set disp_data to NULL to avoid free in the
     * original packet. Descending decoder chain doesn't
-    * care about disp_data. top_half will free it when 
+    * care about disp_data. top_half will free it when
     * necessary, destroying the packet duplicate.
     */
    dup_po->DATA.disp_data = po->DATA.disp_data;
    po->DATA.disp_data = NULL;
    po->DATA.disp_len = 0;
-   
+
    /* copy only if the buffer exists */
-   if ( (flag & PO_DUP_PACKET) && po->packet != NULL) {  
+   if ( (flag & PO_DUP_PACKET) && po->packet != NULL) {
       /* duplicate the po buffer */
       SAFE_CALLOC(dup_po->packet, po->len, sizeof(u_char));
-  
+
       /* copy the buffer */
       memcpy(dup_po->packet, po->packet, po->len);
    } else {
@@ -179,11 +179,11 @@ struct packet_object * packet_dup(struct packet_object *po, u_char flag)
       dup_po->packet = NULL;
    }
 
-   /* 
-    * If we want to duplicate packet content we don't want 
+   /*
+    * If we want to duplicate packet content we don't want
     * user, pass, etc. Otherwise we would free them twice
     * (they are freed by the other duplicate into top half).
-    */      
+    */
    if (flag & PO_DUP_PACKET) {
       dup_po->DISSECTOR.user = NULL;
       dup_po->DISSECTOR.pass = NULL;
@@ -191,19 +191,19 @@ struct packet_object * packet_dup(struct packet_object *po, u_char flag)
       dup_po->DISSECTOR.banner = NULL;
       dup_po->DISSECTOR.os = NULL;
    }
-   
-   /* 
+
+   /*
     * adjust all the pointers as the difference
     * between the old buffer and the pointer
     */
    dup_po->L2.header = dup_po->packet + (po->L2.header - po->packet);
-   
+
    dup_po->L3.header = dup_po->packet + (po->L3.header - po->packet);
    dup_po->L3.options = dup_po->packet + (po->L3.options - po->packet);
-   
+
    dup_po->L4.header = dup_po->packet + (po->L4.header - po->packet);
    dup_po->L4.options = dup_po->packet + (po->L4.options - po->packet);
-   
+
    dup_po->DATA.data = dup_po->packet + (po->DATA.data - po->packet);
 
    dup_po->fwd_packet = dup_po->packet + (po->fwd_packet - po->packet);
@@ -214,7 +214,7 @@ struct packet_object * packet_dup(struct packet_object *po, u_char flag)
    return dup_po;
 }
 
-   
+
 /* EOF */
 
 // vim:ts=3:expandtab

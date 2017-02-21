@@ -70,23 +70,23 @@ FUNC_DECODER(decode_udp)
    PACKET->L4.len = DECODED_LEN;
    PACKET->L4.header = (u_char *)DECODE_DATA;
    PACKET->L4.options = NULL;
-   
+
    /* this is UDP */
    PACKET->L4.proto = NL_TYPE_UDP;
 
    /* set up the data poiters */
    PACKET->DATA.data = ((u_char *)udp) + sizeof(struct udp_header);
    /* check for bogus len */
-   if (ntohs(udp->ulen) < (u_int16)sizeof(struct udp_header) || 
+   if (ntohs(udp->ulen) < (u_int16)sizeof(struct udp_header) ||
        ntohs(udp->ulen) > PACKET->L3.payload_len)
       return NULL;
    PACKET->DATA.len = ntohs(udp->ulen) - (u_int16)sizeof(struct udp_header);
-  
+
    /* create the buffer to be displayed */
    packet_disp_data(PACKET, PACKET->DATA.data, PACKET->DATA.len);
 
-   /* 
-    * if the checsum is wrong, don't parse it (avoid ettercap spotting) 
+   /*
+    * if the checsum is wrong, don't parse it (avoid ettercap spotting)
     * the checksum is should be CSUM_RESULT and not equal to udp->csum ;)
     *
     * don't perform the check in unoffensive mode
@@ -95,9 +95,9 @@ FUNC_DECODER(decode_udp)
       if (!GBL_OPTIONS->unoffensive && (sum = L4_checksum(PACKET)) != CSUM_RESULT) {
          char tmp[MAX_ASCII_ADDR_LEN];
 #if defined(OS_DARWIN) || defined(OS_WINDOWS) || defined(OS_LINUX)
-         /* 
+         /*
           * XXX - hugly hack here !  Mac OS X really sux
-          * 
+          *
           * Packets transmitted on interfaces with TCP checksum offloading
           * don't have valid checksums as presented to the machine's packet-capture
           * mechanism, as those packets are wrapped around internally rather
@@ -105,11 +105,11 @@ FUNC_DECODER(decode_udp)
           * the OS doesn't bother computing the checksum and adding it to the packet
           * it leaves that up to the network interface.
           *                (taken from a bug report by Guy Harris - libpcap engineer)
-          * 
+          *
           * For Windows at least, TCP checksum off-loading can be disabled with a
           * registry setting.
           *
-          * if the source is the ettercap host, don't display the message 
+          * if the source is the ettercap host, don't display the message
           */
          if (!ip_addr_is_ours(&PACKET->L3.src) == EFOUND)
             return NULL;
@@ -123,12 +123,12 @@ FUNC_DECODER(decode_udp)
 
    /* HOOK POINT: HOOK_PACKET_UDP */
    hook_point(HOOK_PACKET_UDP, po);
-   
+
    /* get the next decoder */
    next_decoder =  get_decoder(APP_LAYER, PL_DEFAULT);
    EXECUTE_DECODER(next_decoder);
-   
-   /* 
+
+   /*
     * in unoffensive mode the filters don't touch
     * the packet, so we don't have to check here
     * for unoffensive option
@@ -136,9 +136,9 @@ FUNC_DECODER(decode_udp)
 
    /* Adjustments after filters */
    if ((PACKET->flags & PO_MODIFIED) && (PACKET->flags & PO_FORWARDABLE)) {
-            
+
       /* Recalculate checksum */
-      udp->csum = CSUM_INIT; 
+      udp->csum = CSUM_INIT;
       udp->csum = L4_checksum(PACKET);
    }
 
@@ -151,7 +151,7 @@ FUNC_INJECTOR(inject_udp)
 {
    struct udp_header *udph;
    u_char *udp_payload;
-       
+
    /* Rember where the payload has to start */
    udp_payload = PACKET->packet;
 
@@ -164,31 +164,31 @@ FUNC_INJECTOR(inject_udp)
    udph->sport = PACKET->L4.src;
    udph->dport = PACKET->L4.dst;
    udph->csum  = CSUM_INIT;
-      
-   /* 
-    * Go deeper into injectors chain. 
+
+   /*
+    * Go deeper into injectors chain.
     * XXX We assume next layer is IP.
     */
-   LENGTH += sizeof(struct udp_header);     
+   LENGTH += sizeof(struct udp_header);
    PACKET->session = NULL;
    EXECUTE_INJECTOR(CHAIN_LINKED, STATELESS_IP_MAGIC);
 
-   /* 
+   /*
     * Attach the data (LENGTH was adjusted by LINKED injectors).
     * Set LENGTH to injectable data len.
     */
    LENGTH = GBL_IFACE->mtu - LENGTH;
    if (LENGTH > PACKET->DATA.inject_len)
       LENGTH = PACKET->DATA.inject_len;
-   memcpy(udp_payload, PACKET->DATA.inject, LENGTH);   
+   memcpy(udp_payload, PACKET->DATA.inject, LENGTH);
 
    /* Set datagram len and calculate checksum */
    PACKET->L4.header = (u_char *)udph;
    PACKET->L4.len = sizeof(struct udp_header);
-   PACKET->DATA.len = LENGTH; 
+   PACKET->DATA.len = LENGTH;
    udph->ulen = htons(PACKET->DATA.len + PACKET->L4.len);
    udph->csum = L4_checksum(PACKET);
-      
+
    return ESUCCESS;
 }
 

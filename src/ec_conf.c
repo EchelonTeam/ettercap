@@ -25,11 +25,11 @@
 #include <ec_dissect.h>
 
 /* globals */
-   
+
 /* used only to keep track of how many dissector are loaded */
 int number_of_dissectors;
 int number_of_ports;
-   
+
 static struct conf_entry privs[] = {
    { "ec_uid", NULL },
    { "ec_gid", NULL },
@@ -145,9 +145,9 @@ static void * search_entry(struct conf_entry *section, char *name);
 static void init_structures(void)
 {
    int i = 0, j = 0;
-   
+
    DEBUG_MSG("init_structures");
-   
+
    set_pointer((struct conf_entry *)&privs, "ec_uid", &GBL_CONF->ec_uid);
    set_pointer((struct conf_entry *)&privs, "ec_gid", &GBL_CONF->ec_gid);
    set_pointer((struct conf_entry *)&mitm, "arp_storm_delay", &GBL_CONF->arp_storm_delay);
@@ -209,7 +209,7 @@ static void init_structures(void)
    } while (sections[++i].title != NULL);
 }
 
-/* 
+/*
  * associate the pointer to a struct
  */
 
@@ -222,7 +222,7 @@ static void set_pointer(struct conf_entry *entry, char *name, void *ptr)
       /* found ! set the pointer */
       if (!strcmp(entry[i].name, name))
          entry[i].value = ptr;
-      
+
    } while (entry[++i].name != NULL);
 }
 
@@ -241,9 +241,9 @@ void load_conf(void)
 
    /* initialize the structures */
    init_structures();
-   
+
    DEBUG_MSG("load_conf");
-  
+
    /* the user has specified an alternative config file */
    if (GBL_CONF->file) {
       DEBUG_MSG("load_conf: alternative config: %s", GBL_CONF->file);
@@ -254,60 +254,60 @@ void load_conf(void)
       fc = open_data("etc", ETTER_CONF, FOPEN_READ_TEXT);
       ON_ERROR(fc, NULL, "Cannot open %s", ETTER_CONF);
    }
-  
+
    /* read the file */
    while (fgets(line, 128, fc) != 0) {
-      
+
       /* update the line count */
       lineno++;
-      
+
       /* trim out the comments */
       if ((p = strchr(line, '#')))
          *p = '\0';
-      
+
       /* trim out the new line */
       if ((p = strchr(line, '\n')))
          *p = '\0';
 
       q = line;
-      
+
       /* trim the initial spaces */
       while (q < line + sizeof(line) && *q == ' ')
          q++;
-      
+
       /* skip empty lines */
       if (line[0] == '\0' || *q == '\0')
          continue;
-      
+
       /* here starts a new section [...] */
       if (*q == '[') {
-         
+
          /* remove the square brackets */
          if ((p = strchr(line, ']')))
             *p = '\0';
          else
             FATAL_ERROR("Missing ] in %s line %d", ETTER_CONF, lineno);
-         
+
          p = q + 1;
-         
+
          DEBUG_MSG("load_conf: SECTION: %s", p);
 
          /* get the pointer to the right structure */
          if ( (curr_section = search_section(p)) == NULL)
             FATAL_ERROR("Invalid section in %s line %d", ETTER_CONF, lineno);
-         
+
          /* read the next line */
          continue;
       }
-   
+
       /* variable outside a section */
       if (curr_section == NULL)
          FATAL_ERROR("Entry outside a section in %s line %d", ETTER_CONF, lineno);
-      
+
       /* sanity check */
       if (!strchr(q, '='))
          FATAL_ERROR("Parse error %s line %d", ETTER_CONF, lineno);
-      
+
       p = q;
 
       /* split the entry name from the value */
@@ -317,15 +317,15 @@ void load_conf(void)
             break;
          }
       } while (p++ < line + sizeof(line) );
-      
+
       /* move p to the value */
       p++;
       do {
          if (*p != ' ' && *p != '=')
             break;
       } while (p++ < line + sizeof(line) );
-      
-      /* 
+
+      /*
        * if it is the "dissector" section,
        * do it in a different way
        */
@@ -333,58 +333,58 @@ void load_conf(void)
          set_dissector(q, p, lineno);
          continue;
       }
-     
+
       /* search the entry name */
       if ( (value = search_entry(curr_section, q)) == NULL)
          FATAL_ERROR("Invalid entry in %s line %d", ETTER_CONF, lineno);
-   
+
       /* strings must be handled in a different way */
       if (curr_section == (struct conf_entry *)&strings) {
          /* trim the quotes */
          if (*p == '\"')
             p++;
-         
-         /* set the string value */ 
+
+         /* set the string value */
          tmp = (char **)value;
          *tmp = strdup(p);
-         
+
          /* trim the ending quotes */
          p = *tmp;
          do {
             if (*p == '\"')
                *p = 0;
          } while (p++ < *tmp + strlen(*tmp) );
-         
+
          DEBUG_MSG("load_conf: \tENTRY: %s  [%s]", q, *tmp);
       } else {
-         /* set the integer value */ 
+         /* set the integer value */
          *(int *)value = strtol(p, (char **)NULL, 10);
          DEBUG_MSG("load_conf: \tENTRY: %s  %d", q, *(int *)value);
       }
    }
-  
+
    fclose(fc);
 }
 
-/* 
+/*
  * returns the pointer to the struct
  * named "title"
  */
 static struct conf_entry * search_section(char *title)
 {
    int i = 0;
-  
+
    do {
-      /* the section was found */ 
+      /* the section was found */
       if (!strcasecmp(sections[i].title, title))
          return sections[i].entries;
-      
+
    } while (sections[++i].title != NULL);
 
    return NULL;
 }
 
-/* 
+/*
  * returns the pointer to the value
  * named "name" of the sections "section"
  */
@@ -392,19 +392,19 @@ static struct conf_entry * search_section(char *title)
 static void * search_entry(struct conf_entry *section, char *name)
 {
    int i = 0;
-  
+
    do {
-      /* the section was found */ 
+      /* the section was found */
       if (!strcasecmp(section[i].name, name))
          return section[i].value;
-      
+
    } while (section[++i].name != NULL);
 
    return NULL;
 }
 
 /*
- * handle the special case of dissectors 
+ * handle the special case of dissectors
  */
 static void set_dissector(char *name, char *values, int lineno)
 {
@@ -415,7 +415,7 @@ static void set_dissector(char *name, char *values, int lineno)
    /* remove trailing spaces */
    if ((p = strchr(values, ' ')) != NULL)
       *p = '\0';
-   
+
    /* expand multiple ports dissectors */
    for(p=strsep(&values, ","); p != NULL; p=strsep(&values, ",")) {
       /* get the value for the port */
@@ -430,7 +430,7 @@ static void set_dissector(char *name, char *values, int lineno)
             first = 1;
          }
       }
-    
+
       /* the first value replaces all the previous */
       if (p == q) {
          if (dissect_modify(MODE_REP, name, value) != ESUCCESS)
@@ -440,19 +440,19 @@ static void set_dissector(char *name, char *values, int lineno)
          if (dissect_modify(MODE_ADD, name, value) != ESUCCESS)
             fprintf(stderr, "Dissector \"%s\" not supported (%s line %d)\n", name, ETTER_CONF, lineno);
       }
-      
+
    }
 
 }
 
 
 /*
- * print the number of dissectors loaded 
+ * print the number of dissectors loaded
  */
 void conf_dissectors(void)
 {
-   USER_MSG("%4d protocol dissectors\n", number_of_dissectors);   
-   USER_MSG("%4d ports monitored\n", number_of_ports);   
+   USER_MSG("%4d protocol dissectors\n", number_of_dissectors);
+   USER_MSG("%4d ports monitored\n", number_of_ports);
 }
 
 /* EOF */

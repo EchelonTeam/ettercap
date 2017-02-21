@@ -67,7 +67,7 @@ static void curses_icmp_redir(void)
    DEBUG_MSG("curses_icmp_redir");
 
    snprintf(params, 5, "icmp:");
-   
+
    curses_input("Parameters :", params + strlen("icmp:"), PARAMS_LEN - strlen("icmp:"), curses_start_mitm);
 }
 
@@ -76,7 +76,7 @@ static void curses_port_stealing(void)
    DEBUG_MSG("curses_port_stealing");
 
    snprintf(params, 5, "port:");
-   
+
    curses_input("Parameters :", params + strlen("port:"), PARAMS_LEN - strlen("port:"), curses_start_mitm);
 }
 
@@ -85,7 +85,7 @@ static void curses_dhcp_spoofing(void)
    DEBUG_MSG("curses_dhcp_spoofing");
 
    snprintf(params, 5, "dhcp:");
-   
+
    curses_input("Parameters :", params + strlen("dhcp:"), PARAMS_LEN - strlen("dhcp:"), curses_start_mitm);
 }
 
@@ -98,13 +98,13 @@ static void curses_ndp_poisoning(void)
    curses_input("Parameters :", params + strlen("nadv:"), PARAMS_LEN - strlen("nadv:"), curses_start_mitm);
 }
 
-/* 
- * start the mitm attack by passing the name and parameters 
+/*
+ * start the mitm attack by passing the name and parameters
  */
 static void curses_start_mitm(void)
 {
    DEBUG_MSG("curses_start_mitm");
-   
+
    mitm_set(params);
    mitm_start();
 }
@@ -116,28 +116,28 @@ static void curses_start_mitm(void)
 static void curses_mitm_stop(void)
 {
    wdg_t *dlg;
-   
+
    DEBUG_MSG("curses_mitm_stop");
 
    /* create the dialog */
    wdg_create_object(&dlg, WDG_DIALOG, WDG_OBJ_WANT_FOCUS);
-   
+
    wdg_set_color(dlg, WDG_COLOR_SCREEN, EC_COLOR);
    wdg_set_color(dlg, WDG_COLOR_WINDOW, EC_COLOR);
    wdg_set_color(dlg, WDG_COLOR_FOCUS, EC_COLOR_FOCUS);
    wdg_set_color(dlg, WDG_COLOR_TITLE, EC_COLOR_TITLE);
    wdg_dialog_text(dlg, WDG_NO_BUTTONS, "Stopping the mitm attack...");
    wdg_draw_object(dlg);
-   
+
    wdg_set_focus(dlg);
-  
+
    wdg_update_screen();
-   
+
    /* stop the mitm process */
    mitm_stop();
 
    wdg_destroy_object(&dlg);
-   
+
    curses_message("MITM attack(s) stopped");
 }
 

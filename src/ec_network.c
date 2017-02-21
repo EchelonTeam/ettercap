@@ -58,7 +58,7 @@ void network_init()
    DEBUG_MSG("init_network");
 
    GBL_PCAP->snaplen = UINT16_MAX;
-   
+
    if(GBL_OPTIONS->read) {
       source_init(GBL_OPTIONS->pcapfile_in, GBL_IFACE, true, false);
       source_print(GBL_IFACE);
@@ -81,10 +81,10 @@ void network_init()
       else
          FATAL_ERROR("Interface \"%s\" not supported (%s)", GBL_OPTIONS->iface, pcap_datalink_val_to_description(GBL_PCAP->dlt));
    }
-   
+
    if(GBL_OPTIONS->write)
       pcap_winit(GBL_IFACE->pcap);
-   
+
    GBL_PCAP->align = get_alignment(GBL_PCAP->dlt);
    SAFE_CALLOC(GBL_PCAP->buffer, UINT16_MAX + GBL_PCAP->align + 256, sizeof(char));
 
@@ -96,7 +96,7 @@ void network_init()
    /* Layer 3 handlers initialization */
    if(!GBL_OPTIONS->unoffensive)
       l3_init();
-      
+
    atexit(close_network);
 }
 
@@ -307,8 +307,8 @@ static void source_close(struct iface_env *iface)
 
    if(iface->lnet != NULL)
       libnet_destroy(iface->lnet);
-  
-#ifdef WITH_IPV6 
+
+#ifdef WITH_IPV6
    LIST_FOREACH(n, &iface->ip6_list, next) {
       LIST_REMOVE(n, next);
       SAFE_FREE(n);
@@ -333,7 +333,7 @@ static int secondary_sources_init(char **sources)
       source_init(sources[n], &se->iface, true, false);
       if(se->iface.is_ready)
          LIST_INSERT_HEAD(&sources_list, se, next);
-      else 
+      else
          SAFE_FREE(se);
    }
 
@@ -381,13 +381,13 @@ static void l3_init(void)
    DEBUG_MSG("l3_init");
 
    /* open the socket at layer 3 */
-   l4 = libnet_init(LIBNET_RAW4_ADV, NULL, lnet_errbuf);               
+   l4 = libnet_init(LIBNET_RAW4_ADV, NULL, lnet_errbuf);
    if (l4 == NULL) {
       DEBUG_MSG("send_init: libnet_init(LIBNET_RAW4_ADV) failed: %s", lnet_errbuf);
       USER_MSG("Libnet failed IPv4 initialization. Don't send IPv4 packets.\n");
    }
 
-   GBL_LNET->lnet_IP4 = l4;               
+   GBL_LNET->lnet_IP4 = l4;
 
 #ifdef WITH_IPV6
    /* open the socket at layer 3 for IPv6 */
@@ -396,7 +396,7 @@ static void l3_init(void)
       DEBUG_MSG("%s: libnet_init(LIBNET_RAW6_ADV) failed: %s", __func__, lnet_errbuf);
       USER_MSG("Libnet failed IPv6 initialization. Don't send IPv6 packets.\n");
    }
-   
+
    GBL_LNET->lnet_IP6 = l6;
 #endif
 
@@ -411,7 +411,7 @@ static void l3_close(void)
    if(GBL_LNET->lnet_IP6)
       libnet_destroy(GBL_LNET->lnet_IP6);
 #endif
-   
+
    DEBUG_MSG("ATEXIT: send_closed");
 }
 

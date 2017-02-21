@@ -3,7 +3,7 @@
                                 only demostrates how to write a plugin !
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -29,9 +29,9 @@
 
 /* prototypes is required for -Wmissing-prototypes */
 
-/* 
+/*
  * this function must be present.
- * it is the entry point of the plugin 
+ * it is the entry point of the plugin
  */
 int plugin_load(void *);
 
@@ -42,25 +42,25 @@ static int dummy_fini(void *);
 
 /* plugin operations */
 
-struct plugin_ops dummy_ops = { 
+struct plugin_ops dummy_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "dummy",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "A plugin template (for developers)",  
-   /* the plugin version. */ 
-   .version =           "3.0",   
+   .name =              "dummy",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "A plugin template (for developers)",
+   /* the plugin version. */
+   .version =           "3.0",
    /* activation function */
    .init =              &dummy_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &dummy_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    DEBUG_MSG("dummy plugin load function");
    /*
@@ -74,11 +74,11 @@ int plugin_load(void *handle)
 
 /*********************************************************/
 
-static int dummy_init(void *dummy) 
+static int dummy_init(void *dummy)
 {
    /* the control is given to this function
     * and ettercap is suspended until its return.
-    * 
+    *
     * you can create a thread and return immediately
     * and then kill it in the fini function.
     *
@@ -86,7 +86,7 @@ static int dummy_init(void *dummy)
     * hook_add(), in this case you have to set the
     * plugin type to PL_HOOK.
     */
-   
+
    USER_MSG("DUMMY: plugin running...\n");
 
    /* return PLUGIN_FINISHED if the plugin has terminated
@@ -99,12 +99,12 @@ static int dummy_init(void *dummy)
 }
 
 
-static int dummy_fini(void *dummy) 
+static int dummy_fini(void *dummy)
 {
-   /* 
+   /*
     * called to terminate a plugin.
-    * usually to kill threads created in the 
-    * init function or to remove hook added 
+    * usually to kill threads created in the
+    * init function or to remove hook added
     * previously.
     */
    USER_MSG("DUMMY: plugin finalization\n");

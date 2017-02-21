@@ -2,7 +2,7 @@
     smb_down -- ettercap plugin -- Tries to force no NTLM2 key
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -53,32 +53,32 @@ static void parse_smb(struct packet_object *po);
 
 /* plugin operations */
 
-struct plugin_ops smb_down_ops = { 
+struct plugin_ops smb_down_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "smb_down",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "Tries to force SMB to not use NTLM2 key auth",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "smb_down",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "Tries to force SMB to not use NTLM2 key auth",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &smb_down_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &smb_down_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &smb_down_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int smb_down_init(void *dummy) 
+static int smb_down_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
@@ -87,13 +87,13 @@ static int smb_down_init(void *dummy)
    }
 
    USER_MSG("smb_down: plugin running...\n");
-   
+
    hook_add(HOOK_PROTO_SMB_CHL, &parse_smb);
-   return PLUGIN_RUNNING;   
+   return PLUGIN_RUNNING;
 }
 
 
-static int smb_down_fini(void *dummy) 
+static int smb_down_fini(void *dummy)
 {
    USER_MSG("smb_down: plugin terminated...\n");
 
@@ -111,11 +111,11 @@ static void parse_smb(struct packet_object *po)
    u_char *ptr;
    u_int32 *Flags;
    char tmp[MAX_ASCII_ADDR_LEN];
-   
+
    /* It is pointless to modify packets that won't be forwarded */
-   if (!(po->flags & PO_FORWARDABLE)) 
-      return; 
-      
+   if (!(po->flags & PO_FORWARDABLE))
+      return;
+
    /* Catch netbios and smb headers */
    NetBIOS = (NetBIOS_header *)po->DATA.data;
    smb = (SMB_header *)(NetBIOS + 1);
@@ -127,21 +127,21 @@ static void parse_smb(struct packet_object *po)
     * Let's check if it's NTLMSSP_NEGOTIATE
     */
     ptr += ( (*ptr) * 2 + 3 );
-    if ( (ptr = memmem(ptr, 128, "NTLMSSP", 8)) == NULL) 
+    if ( (ptr = memmem(ptr, 128, "NTLMSSP", 8)) == NULL)
        return;
-       
+
     ptr = (u_char*)strchr((char*)ptr, 0);
     ptr++;
 
-    /* NTLMSSP_NEGOTIATE */	  
+    /* NTLMSSP_NEGOTIATE */	
     if (*ptr != 1)
        return;
-    ptr+=4; 
+    ptr+=4;
     /* Catch the flags */
     Flags = (u_int32 *)ptr;
-    
+
     if (*Flags & ntohl(NTLM2_KEY)) {
-       *Flags ^= ntohl(NTLM2_KEY); 
+       *Flags ^= ntohl(NTLM2_KEY);
        USER_MSG("smb_down: Forced no NTLM2 key  %s -> ", ip_addr_ntoa(&po->L3.src, tmp));
        USER_MSG("%s\n", ip_addr_ntoa(&po->L3.dst, tmp));
        po->flags |= PO_MODIFIED;
@@ -151,4 +151,4 @@ static void parse_smb(struct packet_object *po)
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

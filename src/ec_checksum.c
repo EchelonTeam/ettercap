@@ -2,7 +2,7 @@
     ettercap -- checksumming functions
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -119,7 +119,7 @@ static u_int16 v4_checksum(struct packet_object *po)
 
    while(csum >> 16)
       csum = (csum >> 16) + (csum & 0xffff);
-   
+
    return (u_int16)(~csum);
 }
 
@@ -130,7 +130,7 @@ static u_int16 v6_checksum(struct packet_object *po)
    u_int32 csum;
 
    csum = sum(buf, plen);
-   
+
    csum += sum((uint8_t*)&po->L3.src.addr, ntohs(po->L3.src.addr_len));
    csum += sum((uint8_t*)&po->L3.dst.addr, ntohs(po->L3.dst.addr_len));
    csum += htons(plen + po->L4.proto);
@@ -181,12 +181,12 @@ u_int32 CRC_checksum(u_char *buf, size_t len, u_int32 init)
        0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
        0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
     };
-    
+
     u_int32 crc;
     size_t i;
 
     crc = init;
-    
+
     for(i = 0; i < len; i++)
       crc = crc_32_tab[(crc ^ buf[i]) & 0xff] ^ (crc>>8);
 

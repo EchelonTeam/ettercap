@@ -1,5 +1,5 @@
 /*
-    ettercap -- everything starts from this file... 
+    ettercap -- everything starts from this file...
 
     Copyright (C) ALoR & NaGA
 
@@ -60,30 +60,30 @@ int main(int argc, char *argv[])
     * Alloc the global structures
     * We can access these structs via the macro in ec_globals.h
     */
-        
+
    globals_alloc();
-  
+
    GBL_PROGRAM = strdup(EC_PROGRAM);
    GBL_VERSION = strdup(EC_VERSION);
    SAFE_CALLOC(GBL_DEBUG_FILE, strlen(EC_PROGRAM) + strlen("-") + strlen(EC_VERSION) + strlen("_debug.log") + 1, sizeof(char));
    sprintf(GBL_DEBUG_FILE, "%s-%s_debug.log", GBL_PROGRAM, EC_VERSION);
-   
+
    DEBUG_INIT();
    DEBUG_MSG("main -- here we go !!");
 
    /* initialize the filter mutex */
    filter_init_mutex();
-   
+
    /* register the main thread as "init" */
    ec_thread_register(EC_PTHREAD_SELF, "init", "initialization phase");
-   
+
    /* activate the signal handler */
    signal_handler();
-   
+
    /* ettercap copyright */
-   fprintf(stdout, "\n" EC_COLOR_BOLD "%s %s" EC_COLOR_END " copyright %s %s\n\n", 
+   fprintf(stdout, "\n" EC_COLOR_BOLD "%s %s" EC_COLOR_END " copyright %s %s\n\n",
          GBL_PROGRAM, GBL_VERSION, EC_COPYRIGHT, EC_AUTHORS);
-   
+
    /* getopt related parsing...  */
    parse_options(argc, argv);
 
@@ -92,23 +92,23 @@ int main(int argc, char *argv[])
 
    /* load the configuration file */
    load_conf();
-  
-   /* 
-    * get the list of available interfaces 
-    * 
+
+   /*
+    * get the list of available interfaces
+    *
     * this function will not return if the -I option was
     * specified on command line. it will instead print the
     * list and exit
     */
    capture_getifs();
-   
+
    /* initialize the user interface */
    ui_init();
-   
+
    /* initialize the network subsystem */
    network_init();
-   
-   /* 
+
+   /*
     * always disable the kernel ip forwarding (except when reading from file).
     * the forwarding will be done by ettercap.
     */
@@ -123,9 +123,9 @@ int main(int argc, char *argv[])
       if(GBL_SNIFF->type == SM_UNIFIED && GBL_OPTIONS->ssl_mitm)
          ssl_wrap_init();
    }
-   
-   /* 
-    * drop root privileges 
+
+   /*
+    * drop root privileges
     * we have already opened the sockets with high privileges
     * we don't need anymore root privs.
     */
@@ -138,16 +138,16 @@ int main(int argc, char *argv[])
 
    /* print how many dissectors were loaded */
    conf_dissectors();
-   
+
    /* load the mac-fingerprints */
    manuf_init();
 
    /* load the tcp-fingerprints */
    fingerprint_init();
-   
+
    /* load the services names */
    services_init();
-   
+
    /* load http known fileds for user/pass */
    http_fields_init();
 
@@ -158,22 +158,22 @@ int main(int argc, char *argv[])
 
    /* set the encoding for the UTF-8 visualization */
    set_utf8_encoding((u_char*)GBL_CONF->utf8_encoding);
-  
+
    /* print all the buffered messages */
    if (GBL_UI->type == UI_TEXT)
       USER_MSG("\n");
-   
+
    ui_msg_flush(MSG_ALL);
 
 /**** INITIALIZATION PHASE TERMINATED ****/
-   
-   /* 
+
+   /*
     * we are interested only in the mitm attack i
     * if entered, this function will not return...
     */
    if (GBL_OPTIONS->only_mitm)
       only_mitm();
-   
+
    /* create the dispatcher thread */
    ec_thread_new("top_half", "dispatching module", &top_half, NULL);
 
@@ -181,12 +181,12 @@ int main(int argc, char *argv[])
    ec_thread_register(EC_PTHREAD_SELF, GBL_PROGRAM, "the user interface");
    ui_start();
 
-/******************************************** 
- * reached only when the UI is shutted down 
+/********************************************
+ * reached only when the UI is shutted down
  ********************************************/
 
    /* Call all the proper stop methods to ensure
-    * that no matter what UI was selected, everything is 
+    * that no matter what UI was selected, everything is
     * turned off gracefully */
    clean_exit(0);
 
@@ -194,8 +194,8 @@ int main(int argc, char *argv[])
 }
 
 
-/* 
- * drop root privs 
+/*
+ * drop root privs
  */
 static void drop_privs(void)
 {
@@ -206,53 +206,53 @@ static void drop_privs(void)
    /* do not drop privs under windows */
    return;
 #endif
-   
+
    /* are we root ? */
    if (getuid() != 0)
       return;
 
    /* get the env variable for the UID to drop privs to */
    var = getenv("EC_UID");
-   
+
    /* if the EC_UID variable is not set, default to GBL_CONF->ec_uid (nobody) */
    if (var != NULL)
       uid = atoi(var);
    else
       uid = GBL_CONF->ec_uid;
-   
+
    /* get the env variable for the GID to drop privs to */
    var = getenv("EC_GID");
-   
+
    /* if the EC_UID variable is not set, default to GBL_CONF->ec_gid (nobody) */
    if (var != NULL)
       gid = atoi(var);
    else
       gid = GBL_CONF->ec_gid;
-   
+
    DEBUG_MSG("drop_privs: setuid(%d) setgid(%d)", uid, gid);
-   
+
    /* drop to a good uid/gid ;) */
    if ( setgid(gid) < 0 )
       ERROR_MSG("setgid()");
-   
+
    if ( setuid(uid) < 0 )
       ERROR_MSG("setuid()");
 
    DEBUG_MSG("privs: UID: %d %d  GID: %d %d", (int)getuid(), (int)geteuid(), (int)getgid(), (int)getegid() );
-   USER_MSG("Privileges dropped to UID %d GID %d...\n\n", (int)getuid(), (int)getgid() ); 
+   USER_MSG("Privileges dropped to UID %d GID %d...\n\n", (int)getuid(), (int)getgid() );
 }
 
 
 static void time_check(void)
 {
-   /* 
-    * a nice easter egg... 
-    * just to waste some time of code reviewers... ;) 
+   /*
+    * a nice easter egg...
+    * just to waste some time of code reviewers... ;)
     * ALoR, keeping this for you buddy! :)
     *
     * trust me, it's not evil ;) only a boring afternoon, and nothing to do...
     */
-   time_t K9=time(NULL);char G5P[1<<6],*o=G5P,*O;uint U4M, _,__=0; char dMG[]= 
+   time_t K9=time(NULL);char G5P[1<<6],*o=G5P,*O;uint U4M, _,__=0; char dMG[]=
    "\n*\n^1U4Mm\x04wW#K\x2e\x0e+X\x7f\f,N'U!I-L5?";struct{char X5T[7];int dMG;
    int U4M;} X5T[]={{"N!WwFr", 0x414c6f52,0},{"S6FfUe", 0x4e614741,0}};sprintf
    (G5P,"%s",ctime(&K9));o+=4;O=strchr(o+4,' ');*O=0; for(U4M=(1<<5)-(1<<2)+1;

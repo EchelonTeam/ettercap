@@ -12,7 +12,7 @@ EC_API_EXTERN EC_THREAD_FUNC(sslw_start);
 EC_API_EXTERN void ssl_wrap_init(void);
 
 #define SSL_DISABLED	0
-#define SSL_ENABLED	1 
+#define SSL_ENABLED	1
 
 #endif
 

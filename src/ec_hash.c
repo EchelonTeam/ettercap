@@ -99,7 +99,7 @@ fnv_64(void *buf, size_t len)
 	   /* xor the bottom with the current octet */
 	   hval ^= (Fnv64_t)*bp++;
    }
- 
+
    /* return our new hash value */
    return hval;
 }

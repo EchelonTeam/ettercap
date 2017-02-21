@@ -1,5 +1,5 @@
---- 
--- Like that of shortport in the nselib, shortpacket is designed to provide a 
+---
+-- Like that of shortport in the nselib, shortpacket is designed to provide a
 -- way to easily generate packetrules.
 --
 --    Copyright (C) Ryan Linn and Mike Ryan
@@ -22,7 +22,7 @@
 local packet = require("packet")
 
 --- Inspects packet_object.DATA.data to see if it begins with the specified string.
--- @param str (string) 
+-- @param str (string)
 -- @return function(packet_object)
 data_starts_with = function(str)
   len = string.len(str)

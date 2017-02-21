@@ -51,7 +51,7 @@ FUNC_DECODER(dissector_ymsg)
    char tmp[MAX_ASCII_ADDR_LEN];
    u_char *q;
    u_int32 field_len;
-   
+
    /* Empty or not a yahoo messenger packet */
    if (PACKET->DATA.len == 0 || memcmp(ptr, "YMSG", 4))
       return NULL;
@@ -59,46 +59,46 @@ FUNC_DECODER(dissector_ymsg)
    DEBUG_MSG("ymsg --> TCP dissector_ymsg");
 
    /* standard ymesg separator */
-   if ( !(ptr = memmem(ptr, PACKET->DATA.len, "\xC0\x80", 2)) )  
+   if ( !(ptr = memmem(ptr, PACKET->DATA.len, "\xC0\x80", 2)) )
       return NULL;
-      
+
    /* Login is ASCII 0 */
    if (*(ptr-1) == '0' && FROM_CLIENT("ymsg", PACKET)) {
       /* Skip the separator and reach the end*/
-      ptr += 2; 
+      ptr += 2;
       for (q=ptr; *q != 0xc0 && q < end; q++);
-      if (q >= end) 
+      if (q >= end)
          return NULL;
-      
+
       /* Calculate the user len (no int overflow) */
       field_len = q - ptr;
       SAFE_CALLOC(PACKET->DISSECTOR.user, field_len + 1, sizeof(char));
       memcpy(PACKET->DISSECTOR.user, ptr, field_len);
-      
+
       /* Skip the separator */
-      ptr = q + 2; 
-      if (*ptr != '6') { 
+      ptr = q + 2;
+      if (*ptr != '6') {
          SAFE_FREE(PACKET->DISSECTOR.user);
-         return NULL;  
+         return NULL;
       }
-      
+
       /* Login is ASCII 6 */
       ptr += 3; /* skip the separator and the "6" */
       for (q=ptr; *q != 0xc0 && q < end; q++);
-      if (q >= end) { 
+      if (q >= end) {
          SAFE_FREE(PACKET->DISSECTOR.user);
-         return NULL;  
-      } 
+         return NULL;
+      }
 
       /* Calculate the pass len (no int overflow) */
       field_len = q - ptr;
       SAFE_CALLOC(PACKET->DISSECTOR.pass, field_len + 1, sizeof(char));
       memcpy(PACKET->DISSECTOR.pass, ptr, field_len);
-         
+
       PACKET->DISSECTOR.info = strdup("The pass is in MD5 format ( _2s43d5f is the salt )");
-      
+
       DISSECT_MSG("YMSG : %s:%d -> USER: %s  HASH: %s  - %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                                                ntohs(PACKET->L4.dst), 
+                                                                ntohs(PACKET->L4.dst),
                                                                 PACKET->DISSECTOR.user,
                                                                 PACKET->DISSECTOR.pass,
                                                                 PACKET->DISSECTOR.info);
@@ -106,9 +106,9 @@ FUNC_DECODER(dissector_ymsg)
       u_char *from=NULL, *to=NULL, *message=NULL, *temp_disp_data;
 
       /* Skip the separator and reach the end*/
-      ptr += 2; 
+      ptr += 2;
       for (q=ptr; *q != 0xc0 && q < end; q++);
-      if (q >= end) 
+      if (q >= end)
          return NULL;
 
       field_len = q - ptr;
@@ -116,19 +116,19 @@ FUNC_DECODER(dissector_ymsg)
       memcpy(from, ptr, field_len);
 
       /* Skip the two separators and the ASCII 5 */
-      ptr = q + 5; 
+      ptr = q + 5;
       for (q=ptr; *q != 0xc0 && q < end; q++);
       if (q >= end) {
          SAFE_FREE(from);
          return NULL;
       }
-      
+
       field_len = q - ptr;
       SAFE_CALLOC(to, field_len + 1, sizeof(char));
       memcpy(to, ptr, field_len);
-      
+
       /* Skip the two separators and the ASCII 14 */
-      ptr = q + 6; 
+      ptr = q + 6;
       for (q=ptr; *q != 0xc0 && q < end; q++);
       if (q >= end) {
          SAFE_FREE(from);
@@ -139,15 +139,15 @@ FUNC_DECODER(dissector_ymsg)
       field_len = q - ptr;
       SAFE_CALLOC(message, field_len + 1, sizeof(char));
       memcpy(message, ptr, field_len);
-      
+
       /* Update disp_data in the packet object (128 byte will be enough for ****YAHOOO.... string */
       temp_disp_data = (u_char *)realloc(PACKET->DATA.disp_data, strlen((const char*)from) + strlen((const char*)to) + strlen((const char*)message) + 128);
       if (temp_disp_data != NULL) {
          PACKET->DATA.disp_data = temp_disp_data;
-         snprintf((char*)PACKET->DATA.disp_data, strlen((const char*)from) + strlen((const char*)to) + strlen((const char*)message) + 128, "*** Yahoo Message ***\n From: %s\n To: %s\n\n Message: %s\n", from, to, message); 		  	       
+         snprintf((char*)PACKET->DATA.disp_data, strlen((const char*)from) + strlen((const char*)to) + strlen((const char*)message) + 128, "*** Yahoo Message ***\n From: %s\n To: %s\n\n Message: %s\n", from, to, message); 		  	
          PACKET->DATA.disp_len = strlen((const char*)PACKET->DATA.disp_data);
       }
-            
+
       SAFE_FREE(from);
       SAFE_FREE(to);
       SAFE_FREE(message);

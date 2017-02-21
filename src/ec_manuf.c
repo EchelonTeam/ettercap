@@ -102,7 +102,7 @@ static void discard_macdb(void)
    }
 
    DEBUG_MSG("ATEXIT: discard_macdb");
-   
+
    return;
 }
 
@@ -144,7 +144,7 @@ int manuf_init(void)
 
    DEBUG_MSG("manuf_init -- %d fingers loaded", i);
    USER_MSG("%4d mac vendor fingerprint\n", i);
-   
+
    fclose(f);
 
    atexit(discard_macdb);
@@ -166,7 +166,7 @@ char * manuf_search(const char *m)
    mac[3] = 0;
 
    h = fnv_32(mac, 4) & TABMASK;
-   
+
    SLIST_FOREACH(l, &manuf_head[h], entries) {
       if (l->mac == *(u_int *) mac)
          return (l->vendor);

@@ -91,18 +91,18 @@ static handler_t *signal_handle(int signo, handler_t *handler, int flags)
 {
 #ifdef OS_WINDOWS
    handler_t *old = signal (signo, handler);
-   
+
    /* avoid "unused variable" warning */
    (void)flags;
-   
+
    return (old);
 #else
    struct sigaction act, old_act;
 
    act.sa_handler = handler;
-   
+
    /* don't permit nested signal handling */
-   sigfillset(&act.sa_mask); 
+   sigfillset(&act.sa_mask);
 
    act.sa_flags = flags;
 
@@ -110,7 +110,7 @@ static handler_t *signal_handle(int signo, handler_t *handler, int flags)
       ERROR_MSG("sigaction() failed");
 
    return (old_act.sa_handler);
-#endif   
+#endif
 }
 
 
@@ -131,9 +131,9 @@ static void signal_SEGV(int sig)
    else
 #endif
       DEBUG_MSG(" !!! SEGMENTATION FAULT !!!");
-   
+
    ui_cleanup();
-   
+
    fprintf (stderr, "\n"EC_COLOR_YELLOW"Ooops !! This shouldn't happen...\n\n"EC_COLOR_END);
 #ifdef SIGBUS
    if (sig == SIGBUS)
@@ -155,7 +155,7 @@ static void signal_SEGV(int sig)
                     "  \t - copy and paste this output.\n\n", EC_PROGRAM);
    fprintf (stderr, "  6) mail us the output of gdb and the error.tar.gz\n");
    fprintf (stderr, "============================================================================\n");
-   
+
    fprintf (stderr, EC_COLOR_CYAN"\n Core dumping... (use the 'core' file for gdb analysis)\n\n"EC_COLOR_END);
 #ifdef HAVE_EC_LUA
    fprintf (stderr, EC_COLOR_CYAN" Lua stack trace: \n"EC_COLOR_END);
@@ -164,7 +164,7 @@ static void signal_SEGV(int sig)
    fprintf (stderr, "\n");
 #endif
    fprintf (stderr, EC_COLOR_YELLOW" Have a nice day!\n"EC_COLOR_END);
-   
+
    /* force the coredump */
 #ifndef OS_WINDOWS
    setrlimit(RLIMIT_CORE, &corelimit);
@@ -173,9 +173,9 @@ static void signal_SEGV(int sig)
    raise(sig);
 
 #else
-   
+
    ui_cleanup();
-   
+
    fprintf(stderr, EC_COLOR_YELLOW"Ooops ! This shouldn't happen...\n"EC_COLOR_END);
 #ifdef SIGBUS
    if (sig == SIGBUS)
@@ -186,7 +186,7 @@ static void signal_SEGV(int sig)
    fprintf(stderr, "Please recompile in debug mode, reproduce the bug and send a bugreport\n\n");
    fprintf (stderr, EC_COLOR_YELLOW" Have a nice day!\n"EC_COLOR_END);
 
-   
+
    clean_exit(666);
 #endif
 }
@@ -203,7 +203,7 @@ static void signal_TERM(int sig)
    #else
       DEBUG_MSG("Signal handler... (caught SIGNAL: %d)", sig);
    #endif
-      
+
    /* terminate the UI */
    ui_cleanup();
 
@@ -216,7 +216,7 @@ static void signal_TERM(int sig)
       fprintf(stderr, "\n\n Shutting down %s (received SIGNAL: %d)\n\n", GBL_PROGRAM, sig);
    #endif
    }
-   
+
    signal(sig, SIG_IGN);
 
    /* flush and close the log file */
@@ -234,7 +234,7 @@ static void signal_CHLD(int sig)
 {
 #ifndef OS_WINDOWS
    int stat;
-   
+
    /* wait for the child to return and not become a zombie */
    while (waitpid (-1, &stat, WNOHANG) > 0);
 #endif

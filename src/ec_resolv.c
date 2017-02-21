@@ -54,17 +54,17 @@ void resolv_cache_insert(struct ip_addr *ip, char *name);
  * before doing the real gethostbyaddr it search in
  * a cache of previously resolved hosts to increase
  * speed.
- * after each gethostbyaddr the result is inserted 
+ * after each gethostbyaddr the result is inserted
  * in the cache.
  */
 
 int host_iptoa(struct ip_addr *ip, char *name)
 {
    struct hostent *host = NULL;
-   
+
    /* initialize the name */
    strncpy(name, "", 1);
-  
+
    /* sanity check */
    if (ip_addr_is_zero(ip))
       return -ENOTHANDLED;
@@ -85,31 +85,31 @@ int host_iptoa(struct ip_addr *ip, char *name)
     */
    if (!GBL_OPTIONS->resolve)
       return -ENOTFOUND;
-  
+
    /* XXX - IPv6 compatible */
    DEBUG_MSG("host_iptoa: %#x", (unsigned int)ip_addr_to_int32(&ip->addr));
-   
+
    /* if not found in the cache, resolve it */
-  
+
    /* XXX - add support for IPv6 */
    host = gethostbyaddr((char *)ip->addr, sizeof(struct in_addr), AF_INET);
 
    /* not found or error */
    if (host == NULL) {
-      /* 
+      /*
        * insert the "" in the cache so we don't search for
        * non existent hosts every new query.
        */
       resolv_cache_insert(ip, name);
       return -ENOTFOUND;
-   } 
- 
+   }
+
    /* the host was resolved... */
    strlcpy(name, host->h_name, MAX_HOSTNAME_LEN - 1);
 
    /* insert the result in the cache for later use */
    resolv_cache_insert(ip, name);
-   
+
    return ESUCCESS;
 }
 
@@ -125,18 +125,18 @@ static int resolv_cache_search(struct ip_addr *ip, char *name)
 
    /* calculate the hash */
    h = fnv_32(ip->addr, ntohs(ip->addr_len)) & TABMASK;
-      
+
    SLIST_FOREACH(r, &resolv_cache_head[h], next) {
       if (!ip_addr_cmp(&r->ip, ip)) {
          /* found in the cache */
-         
+
          DEBUG_MSG("DNS cache_search: found: %s", r->hostname);
-         
+
          strlcpy(name, r->hostname, MAX_HOSTNAME_LEN - 1);
          return ESUCCESS;
       }
    }
-   
+
    /* cache miss */
    return -ENOTFOUND;
 }
@@ -153,7 +153,7 @@ void resolv_cache_insert(struct ip_addr *ip, char *name)
    /* calculate the hash */
    h = fnv_32(ip->addr, ntohs(ip->addr_len)) & TABMASK;
 
-   /* 
+   /*
     * search if it is already in the cache.
     * this will pervent passive insertion to overwrite
     * previous cached results
@@ -161,14 +161,14 @@ void resolv_cache_insert(struct ip_addr *ip, char *name)
    SLIST_FOREACH(r, &resolv_cache_head[h], next) {
       /* found in the cache skip it */
       if (!ip_addr_cmp(&r->ip, ip))
-         return; 
+         return;
    }
-   
+
    SAFE_CALLOC(r, 1, sizeof(struct resolv_entry));
 
    memcpy(&r->ip, ip, sizeof(struct ip_addr));
    r->hostname = strdup(name);
-   
+
    SLIST_INSERT_HEAD(&(resolv_cache_head[h]), r, next);
 
    DEBUG_MSG("DNS cache_insert: %s", r->hostname);

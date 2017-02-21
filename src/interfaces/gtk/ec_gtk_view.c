@@ -53,8 +53,8 @@ static char vregex[RLEN];
 static char wkey[WLEN];
 static guint stats_idle; /* for removing the idle call */
 /* for stats window */
-static GtkWidget *stats_window, *packets_recv, *packets_drop, *packets_forw, 
-                 *queue_len, *sample_rate, *recv_bottom, *recv_top, *interesting, 
+static GtkWidget *stats_window, *packets_recv, *packets_drop, *packets_forw,
+                 *queue_len, *sample_rate, *recv_bottom, *recv_top, *interesting,
                  *rate_bottom, *rate_top, *through_bottom, *through_top;
 
 /*******************************************/
@@ -87,7 +87,7 @@ void gtkui_show_stats(void)
          gtkui_page_present(stats_window);
       return;
    }
-   
+
    stats_window = gtkui_page_new("Statistics", &gtkui_stop_stats, &gtkui_stats_detach);
 
    /* alright, this is a lot of code but it'll keep everything lined up nicely */
@@ -206,9 +206,9 @@ void gtkui_show_stats(void)
 
    gtk_widget_show_all(table);
    gtk_widget_show(stats_window);
-  
+
    /* display the stats */
-   refresh_stats(NULL); 
+   refresh_stats(NULL);
 
    /* refresh the stats window every 200 ms */
    /* GTK has a gtk_idle_add also but it calls too much and uses 100% cpu */
@@ -224,7 +224,7 @@ static void gtkui_stats_detach(GtkWidget *child)
 
    /* make <ctrl>d shortcut turn the window back into a tab */
    gtkui_page_attach_shortcut(stats_window, gtkui_stats_attach);
-   
+
    gtk_container_add(GTK_CONTAINER (stats_window), child);
 
    gtk_window_present(GTK_WINDOW (stats_window));
@@ -250,14 +250,14 @@ static gboolean refresh_stats(gpointer data)
    char line[50];
 
    /* if not focused don't refresh it */
-   /* this also removes the idle call, but should 
+   /* this also removes the idle call, but should
       only occur if the window isn't visible */
    if (!GTK_WIDGET_VISIBLE(stats_window))
       return FALSE;
 
    snprintf(line, 50, "%8lld", GBL_STATS->ps_recv);
    gtk_label_set_text(GTK_LABEL (packets_recv), line);
-   snprintf(line, 50, "%8lld  %.2f %%", GBL_STATS->ps_drop, 
+   snprintf(line, 50, "%8lld  %.2f %%", GBL_STATS->ps_drop,
          (GBL_STATS->ps_recv) ? (float)GBL_STATS->ps_drop * 100 / GBL_STATS->ps_recv : 0 );
    gtk_label_set_text(GTK_LABEL (packets_drop), line);
    snprintf(line, 50, "%8lld  bytes: %8lld ", GBL_STATS->ps_sent, GBL_STATS->bs_sent);
@@ -266,25 +266,25 @@ static gboolean refresh_stats(gpointer data)
    gtk_label_set_text(GTK_LABEL (queue_len), line);
    snprintf(line, 50, "%d ", GBL_CONF->sampling_rate);
    gtk_label_set_text(GTK_LABEL (sample_rate), line);
-   snprintf(line, 50, "pck: %8lld  bytes: %8lld", 
+   snprintf(line, 50, "pck: %8lld  bytes: %8lld",
          GBL_STATS->bh.pck_recv, GBL_STATS->bh.pck_size);
    gtk_label_set_text(GTK_LABEL (recv_bottom), line);
-   snprintf(line, 50, "pck: %8lld  bytes: %8lld", 
+   snprintf(line, 50, "pck: %8lld  bytes: %8lld",
          GBL_STATS->th.pck_recv, GBL_STATS->th.pck_size);
    gtk_label_set_text(GTK_LABEL (recv_top), line);
    snprintf(line, 50, "%.2f %%",
          (GBL_STATS->bh.pck_recv) ? (float)GBL_STATS->th.pck_recv * 100 / GBL_STATS->bh.pck_recv : 0 );
    gtk_label_set_text(GTK_LABEL (interesting), line);
-   snprintf(line, 50, "worst: %8d  adv: %8d p/s", 
+   snprintf(line, 50, "worst: %8d  adv: %8d p/s",
          GBL_STATS->bh.rate_worst, GBL_STATS->bh.rate_adv);
    gtk_label_set_text(GTK_LABEL (rate_bottom), line);
-   snprintf(line, 50, "worst: %8d  adv: %8d p/s", 
+   snprintf(line, 50, "worst: %8d  adv: %8d p/s",
          GBL_STATS->th.rate_worst, GBL_STATS->th.rate_adv);
    gtk_label_set_text(GTK_LABEL (rate_top), line);
-   snprintf(line, 50, "worst: %8d  adv: %8d b/s", 
+   snprintf(line, 50, "worst: %8d  adv: %8d b/s",
          GBL_STATS->bh.thru_worst, GBL_STATS->bh.thru_adv);
    gtk_label_set_text(GTK_LABEL (through_bottom), line);
-   snprintf(line, 50, "worst: %8d  adv: %8d b/s", 
+   snprintf(line, 50, "worst: %8d  adv: %8d b/s",
          GBL_STATS->th.thru_worst, GBL_STATS->th.thru_adv);
    gtk_label_set_text(GTK_LABEL (through_top), line);
 
@@ -292,7 +292,7 @@ static gboolean refresh_stats(gpointer data)
 }
 
 /*
- * change the visualization method 
+ * change the visualization method
  */
 void gtkui_vis_method(void)
 {
@@ -307,15 +307,15 @@ void gtkui_vis_method(void)
 
    DEBUG_MSG("gtk_vis_method");
 
-   dialog = gtk_dialog_new_with_buttons("Visualization method...", GTK_WINDOW (window), 
+   dialog = gtk_dialog_new_with_buttons("Visualization method...", GTK_WINDOW (window),
                GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-               GTK_STOCK_OK, GTK_RESPONSE_OK, 
+               GTK_STOCK_OK, GTK_RESPONSE_OK,
                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_container_set_border_width(GTK_CONTAINER(dialog), 10);
 
    vbox = GTK_DIALOG (dialog)->vbox;
 
-   button = gtk_radio_button_new_with_label(NULL, 
+   button = gtk_radio_button_new_with_label(NULL,
                "hex     Print the packets in hex format.");
    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), button, FALSE, FALSE, 0);
    if(strcmp(vmethod, "hex") == 0)
@@ -393,7 +393,7 @@ void gtkui_vis_method(void)
    /* list is stored in the widget, can safely free this copy */
    g_list_free(lang_list);
 /* end UTF8 */
-      
+
    gtk_widget_show_all(GTK_DIALOG(dialog)->vbox);
 
    response = gtk_dialog_run(GTK_DIALOG (dialog));
@@ -412,7 +412,7 @@ void gtkui_vis_method(void)
       int i=0;
       switch(active) {
          case 6: strncpy(vmethod, "hex", 3); break;
-         case 5: strncpy(vmethod, "ascii", 5); break; 
+         case 5: strncpy(vmethod, "ascii", 5); break;
          case 4: strncpy(vmethod, "text", 4); break;
          case 3: strncpy(vmethod, "ebcdic", 6); break;
          case 2: strncpy(vmethod, "html", 4); break;
@@ -436,7 +436,7 @@ void gtkui_vis_method(void)
 }
 
 /*
- * set the visualization regex 
+ * set the visualization regex
  */
 void gtkui_vis_regex(void)
 {

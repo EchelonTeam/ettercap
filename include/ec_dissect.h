@@ -30,9 +30,9 @@ EC_API_EXTERN int dissect_modify(int mode, char *name, u_int32 port);
 #define MODE_REP  1
 
 EC_API_EXTERN int dissect_match(void *id_sess, void *id_curr);
-EC_API_EXTERN void dissect_create_session(struct ec_session **s, struct packet_object *po, u_int64 code); 
+EC_API_EXTERN void dissect_create_session(struct ec_session **s, struct packet_object *po, u_int64 code);
 EC_API_EXTERN void dissect_wipe_session(struct packet_object *po, u_int64 code);
-EC_API_EXTERN size_t dissect_create_ident(void **i, struct packet_object *po, u_int64 code); 
+EC_API_EXTERN size_t dissect_create_ident(void **i, struct packet_object *po, u_int64 code);
 
 EC_API_EXTERN int dissect_on_port(char *name, u_int16 port);
 EC_API_EXTERN int dissect_on_port_level(char *name, u_int16 port, u_int8 level);
@@ -61,14 +61,14 @@ EC_API_EXTERN int dissect_on_port_level(char *name, u_int16 port, u_int8 level);
    }while(0)
 
 /*
- * helper macros to get the banner of a service if it is the first thing 
+ * helper macros to get the banner of a service if it is the first thing
  * the server send to the client.
  * it must be used this way:
  *
  * IF_FIRST_PACKET_FROM_SERVER(21, s, i) {
- * 
+ *
  *    ... do something with PACKET->DISSECTOR.banner
- *    
+ *
  * } ENDIF_FIRST_PACKET_FROM_SERVER(21, s, i)
  *
  */
@@ -79,16 +79,16 @@ EC_API_EXTERN int dissect_on_port_level(char *name, u_int16 port, u_int8 level);
       /* the session exist */                                                 \
       if (session_get(&session, ident, sizeof(struct dissect_ident)) != -ENOTFOUND) { \
          /* prevent the deletion of session created for the user and pass */  \
-         if (session->data == NULL)                                        
-         
-         
+         if (session->data == NULL)
+
+
 #define IF_FIRST_PACKET_FROM_SERVER_SSL(name, names, session, ident, func)    \
    if ((FROM_SERVER(name, PACKET) || FROM_SERVER(names, PACKET)) && PACKET->L4.flags & TH_PSH) {  \
       dissect_create_ident(&ident, PACKET, DISSECT_CODE(func));               \
       /* the session exist */                                                 \
       if (session_get(&session, ident, sizeof(struct dissect_ident)) != -ENOTFOUND) { \
          /* prevent the deletion of session created for the user and pass */  \
-         if (session->data == NULL)                                        
+         if (session->data == NULL)
 
 
 #define ENDIF_FIRST_PACKET_FROM_SERVER(session, ident)         \
@@ -97,7 +97,7 @@ EC_API_EXTERN int dissect_on_port_level(char *name, u_int16 port, u_int8 level);
       }                                                        \
       SAFE_FREE(ident);                                        \
       return NULL;                                             \
-   }  
+   }
 
 
 #define DISSECT_MSG(x, ...) do {    \

@@ -63,31 +63,31 @@ FUNC_DECODER(dissector_irc)
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    DEBUG_MSG("IRC --> TCP dissector_irc");
- 
+
 /*
  * authentication method: PASS
  *
  * /PASS password
- * 
+ *
  */
    if ( !strncasecmp((const char*)ptr, "PASS ", 5) ) {
 
       DEBUG_MSG("\tDissector_irc PASS");
-      
+
       ptr += 5;
 
       dissect_create_ident(&ident, PACKET, DISSECT_CODE(dissector_irc));
-      
+
       /* get the saved nick */
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS)
          PACKET->DISSECTOR.user = strdup(s->data);
       else
          PACKET->DISSECTOR.user = strdup("unknown");
-     
+
       SAFE_FREE(ident);
-      
+
       PACKET->DISSECTOR.pass = strdup((const char*)ptr);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
          *ptr = '\0';
@@ -95,28 +95,28 @@ FUNC_DECODER(dissector_irc)
          *ptr = '\0';
 
       PACKET->DISSECTOR.info = strdup("/PASS password");
-      
+
       DISSECT_MSG("IRC : %s:%d -> USER: %s  PASS: %s  INFO: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass,
                                     PACKET->DISSECTOR.info);
-      
+
       return NULL;
    }
-   
+
 /*
  * changing a channel key
  *
  * /MODE #channel +k password
- * 
+ *
  */
    if ( !strncasecmp((const char*)ptr, "MODE ", 5) && match_pattern((const char*)ptr + 5, "#* +k *") ) {
 
       DEBUG_MSG("\tDissector_irc MODE");
-      
+
       ptr += 5;
-      
+
       /* fill the structure */
       PACKET->DISSECTOR.user = strdup((const char*)ptr);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.user, ' ')) != NULL )
@@ -125,7 +125,7 @@ FUNC_DECODER(dissector_irc)
          SAFE_FREE(PACKET->DISSECTOR.user);
          return NULL;
       }
-     
+
       /* skip the " +k " */
       PACKET->DISSECTOR.pass = strdup((const char*)ptr + 4);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
@@ -134,13 +134,13 @@ FUNC_DECODER(dissector_irc)
          *ptr = '\0';
 
       PACKET->DISSECTOR.info = strdup("/MODE #channel +k password");
-      
+
       DISSECT_MSG("IRC : %s:%d -> CHANNEL: %s  PASS: %s  INFO: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass,
                                     PACKET->DISSECTOR.info);
-      
+
       return NULL;
    }
 
@@ -148,14 +148,14 @@ FUNC_DECODER(dissector_irc)
  * entering in a channel with a key
  *
  * /JOIN #channel password
- * 
+ *
  */
    if ( !strncasecmp((const char*)ptr, "JOIN ", 5) && match_pattern((const char*)ptr + 5, "#* *") ) {
 
       DEBUG_MSG("\tDissector_irc JOIN");
-      
+
       ptr += 5;
-      
+
       /* fill the structure */
       PACKET->DISSECTOR.user = strdup((const char*)ptr);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.user, ' ')) != NULL )
@@ -164,7 +164,7 @@ FUNC_DECODER(dissector_irc)
          SAFE_FREE(PACKET->DISSECTOR.user);
          return NULL;
       }
-     
+
       PACKET->DISSECTOR.pass = strdup((const char*)ptr + 1);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
          *ptr = '\0';
@@ -172,13 +172,13 @@ FUNC_DECODER(dissector_irc)
          *ptr = '\0';
 
       PACKET->DISSECTOR.info = strdup("/JOIN #channel password");
-      
+
       DISSECT_MSG("IRC : %s:%d -> CHANNEL: %s  PASS: %s  INFO: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass,
                                     PACKET->DISSECTOR.info);
-      
+
       return NULL;
    }
 
@@ -186,28 +186,28 @@ FUNC_DECODER(dissector_irc)
  * identifying to the nickserv
  *
  * /msg nickserv identify password
- * 
+ *
  */
    if ( !strncasecmp((const char*)ptr, "PRIVMSG ", 8) && match_pattern((const char*)ptr + 8, "* :identify *\r\n") ) {
       char *pass;
 
       DEBUG_MSG("\tDissector_irc PRIVMSG");
-      
+
       if (!(pass = strcasestr((char*)ptr, "identify")))
          return NULL;
-      
+
       pass += 9;
 
       dissect_create_ident(&ident, PACKET, DISSECT_CODE(dissector_irc));
-      
+
       /* get the saved nick */
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS)
          PACKET->DISSECTOR.user = strdup(s->data);
       else
          PACKET->DISSECTOR.user = strdup("unknown");
-      
+
       SAFE_FREE(ident);
-     
+
       PACKET->DISSECTOR.pass = strdup(pass);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
          *ptr = '\0';
@@ -215,57 +215,57 @@ FUNC_DECODER(dissector_irc)
          *ptr = '\0';
 
       PACKET->DISSECTOR.info = strdup("/msg nickserv identify password");
-      
+
       DISSECT_MSG("IRC : %s:%d -> USER: %s  PASS: %s  INFO: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass,
                                     PACKET->DISSECTOR.info);
-      
+
       return NULL;
    }
-   
+
 /*
  * identifying to the nickserv
  *
  * /nickserv identify password
- * 
+ *
  */
    if ( !strncasecmp((const char*)ptr, "NICKSERV ", 9) || !strncasecmp((const char*)ptr, "NS ", 3) ) {
       char *pass;
 
       DEBUG_MSG("\tDissector_irc NICKSERV");
-      
+
       if (!(pass = strcasestr((const char*)ptr, "identify")))
          return NULL;
-      
+
       pass += 9;
 
       dissect_create_ident(&ident, PACKET, DISSECT_CODE(dissector_irc));
-      
+
       /* get the saved nick */
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS)
          PACKET->DISSECTOR.user = strdup(s->data);
       else
          PACKET->DISSECTOR.user = strdup("unknown");
-      
+
       SAFE_FREE(ident);
-     
+
       PACKET->DISSECTOR.pass = strdup(pass);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
          *ptr = '\0';
-      
+
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\n')) != NULL )
          *ptr = '\0';
 
       PACKET->DISSECTOR.info = strdup("/nickserv identify password");
-      
+
       DISSECT_MSG("IRC : %s:%d -> USER: %s  PASS: %s  INFO: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass,
                                     PACKET->DISSECTOR.info);
-      
+
       return NULL;
    }
 
@@ -273,30 +273,30 @@ FUNC_DECODER(dissector_irc)
  * identifying to the nickserv
  *
  * /identify password
- * 
+ *
  */
    if ( !strncasecmp((const char*)ptr, "IDENTIFY ", 9) ) {
       char *pass;
 
       DEBUG_MSG("\tDissector_irc IDENTIFY");
-      
+
       if (!(pass = strcasestr((const char*)ptr, " ")))
          return NULL;
-      
+
       /* adjust the pointer */
-      if (*++pass == ':') 
+      if (*++pass == ':')
          pass += 1;
 
       dissect_create_ident(&ident, PACKET, DISSECT_CODE(dissector_irc));
-      
+
       /* get the saved nick */
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS)
          PACKET->DISSECTOR.user = strdup(s->data);
       else
          PACKET->DISSECTOR.user = strdup("unknown");
-     
+
       SAFE_FREE(ident);
-     
+
       PACKET->DISSECTOR.pass = strdup(pass);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
          *ptr = '\0';
@@ -304,19 +304,19 @@ FUNC_DECODER(dissector_irc)
          *ptr = '\0';
 
       PACKET->DISSECTOR.info = strdup("/identify password");
-      
+
       DISSECT_MSG("IRC : %s:%d -> USER: %s  PASS: %s  INFO: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass,
                                     PACKET->DISSECTOR.info);
-      
+
       return NULL;
    }
 
 /*
  * register the nick in the session
- * list, we need it later when printing 
+ * list, we need it later when printing
  * passwords.
  */
 
@@ -329,12 +329,12 @@ FUNC_DECODER(dissector_irc)
 
       if (*ptr == ':')
          ptr++;
-      
+
       /* delete any previous saved nick */
       dissect_wipe_session(PACKET, DISSECT_CODE(dissector_irc));
       /* create the new session */
       dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_irc));
-     
+
       /* save the nick */
       s->data = strdup((const char*)ptr);
       if ( (p = strchr(s->data, '\r')) != NULL )
@@ -349,10 +349,10 @@ FUNC_DECODER(dissector_irc)
             *p = '\0';
          if ( (p = strchr(user, '\n')) != NULL )
             *p = '\0';
-         
+
          DISSECT_MSG("IRC : %s:%d -> USER: %s (%s)\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
-                                    s->data, 
+                                    ntohs(PACKET->L4.dst),
+                                    s->data,
                                     user);
          SAFE_FREE(user);
       }
@@ -368,7 +368,7 @@ FUNC_DECODER(dissector_irc)
 
       return NULL;
    }
-   
+
    return NULL;
 }
 

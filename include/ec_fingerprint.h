@@ -12,26 +12,26 @@ EC_API_EXTERN int fingerprint_submit(const char *finger, char *os);
 
 
 /*
- *  The fingerprint database has the following structure:                  
- *                                                                         
- *  WWWW:MSS:TTL:WS:S:N:D:T:F:LEN:OS                                       
- *                                                                         
- *  WWWW: 4 digit hex field indicating the TCP Window Size                 
- *  MSS : 4 digit hex field indicating the TCP Option Maximum Segment Size 
- *        if omitted in the packet or unknown it is "_MSS"                 
- *  TTL : 2 digit hex field indicating the IP Time To Live                 
- *  WS  : 2 digit hex field indicating the TCP Option Window Scale         
- *        if omitted in the packet or unknown it is "WS"                   
+ *  The fingerprint database has the following structure:
+ *
+ *  WWWW:MSS:TTL:WS:S:N:D:T:F:LEN:OS
+ *
+ *  WWWW: 4 digit hex field indicating the TCP Window Size
+ *  MSS : 4 digit hex field indicating the TCP Option Maximum Segment Size
+ *        if omitted in the packet or unknown it is "_MSS"
+ *  TTL : 2 digit hex field indicating the IP Time To Live
+ *  WS  : 2 digit hex field indicating the TCP Option Window Scale
+ *        if omitted in the packet or unknown it is "WS"
  *  S   : 1 digit field indicating if the TCP Option SACK permitted is true
- *  N   : 1 digit field indicating if the TCP Options contain a NOP        
- *  D   : 1 digit field indicating if the IP Don't Fragment flag is set    
- *  T   : 1 digit field indicating if the TCP Timestamp is present         
- *  F   : 1 digit ascii field indicating the flag of the packet            
- *        S = SYN                                                          
- *        A = SYN + ACK                                                    
- *  LEN : 2 digit hex field indicating the length of the packet            
- *        if irrilevant or unknown it is "LT"                              
- *  OS  : an ascii string representing the OS                              
+ *  N   : 1 digit field indicating if the TCP Options contain a NOP
+ *  D   : 1 digit field indicating if the IP Don't Fragment flag is set
+ *  T   : 1 digit field indicating if the TCP Timestamp is present
+ *  F   : 1 digit ascii field indicating the flag of the packet
+ *        S = SYN
+ *        A = SYN + ACK
+ *  LEN : 2 digit hex field indicating the length of the packet
+ *        if irrilevant or unknown it is "LT"
+ *  OS  : an ascii string representing the OS
  */
 
 
@@ -50,7 +50,7 @@ enum {
    FINGER_LT         = 26,
 };
 
-/* 
+/*
  * the structure for passive information
  * carried by PO
  */

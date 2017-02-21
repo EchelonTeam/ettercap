@@ -1,4 +1,4 @@
---- This provides a very simple registry 
+--- This provides a very simple registry
 --
 --    Copyright (C) Ryan Linn and Mike Ryan
 --
@@ -27,7 +27,7 @@ workspace_exists = function(ns)
 end
 
 --- Creates a namespace if it does not already exist, and then returns it.
--- @param ns 
+-- @param ns
 -- @return A table
 create_namespace = function(ns)
   local ret = ettercap_registry[ns]
@@ -47,7 +47,7 @@ get_namespace = function(ns)
   return ettercap_registry[ns]
 end
 
---- Delete's a namespace, effectively. 
+--- Delete's a namespace, effectively.
 -- @param ns
 delete_namespace = function(ns)
   -- Fun fact, if you set a table entry to nil, it deletes the key as well.

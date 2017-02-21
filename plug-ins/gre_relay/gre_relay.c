@@ -2,7 +2,7 @@
     gre_relay -- ettercap plugin -- Tunnel broker for redirected GRE tunnels
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -30,7 +30,7 @@ struct ip_header {
 #ifndef WORDS_BIGENDIAN
    u_int8   ihl:4;
    u_int8   version:4;
-#else 
+#else
    u_int8   version:4;
    u_int8   ihl:4;
 #endif
@@ -61,32 +61,32 @@ static void parse_gre(struct packet_object *po);
 static void parse_arp(struct packet_object *po);
 
 /* plugin operations */
-struct plugin_ops gre_relay_ops = { 
+struct plugin_ops gre_relay_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "gre_relay",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "Tunnel broker for redirected GRE tunnels",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "gre_relay",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "Tunnel broker for redirected GRE tunnels",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &gre_relay_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &gre_relay_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &gre_relay_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int gre_relay_init(void *dummy) 
+static int gre_relay_init(void *dummy)
 {
    char tmp[MAX_ASCII_ADDR_LEN];
 
@@ -100,7 +100,7 @@ static int gre_relay_init(void *dummy)
    GBL_OPTIONS->quiet = 1;
 
    memset(tmp, 0, sizeof(tmp));
-   
+
    ui_input("Unused IP address: ", tmp, sizeof(tmp), NULL);
    if (!inet_aton(tmp, &fake_ip)) {
       INSTANT_USER_MSG("gre_relay: Bad IP address\n");
@@ -108,15 +108,15 @@ static int gre_relay_init(void *dummy)
    }
 
    USER_MSG("gre_relay: plugin running...\n");
-   
+
    hook_add(HOOK_PACKET_GRE, &parse_gre);
    hook_add(HOOK_PACKET_ARP_RQ, &parse_arp);
 
-   return PLUGIN_RUNNING;      
+   return PLUGIN_RUNNING;
 }
 
 
-static int gre_relay_fini(void *dummy) 
+static int gre_relay_fini(void *dummy)
 {
    USER_MSG("gre_relay: plugin terminated...\n");
 
@@ -132,21 +132,21 @@ static int gre_relay_fini(void *dummy)
 static void parse_gre(struct packet_object *po)
 {
    struct ip_header *iph;
-      
+
    /* Chek if this is a packet for our fake host */
-   if (!(po->flags & PO_FORWARDABLE)) 
-      return; 
+   if (!(po->flags & PO_FORWARDABLE))
+      return;
 
    if ( (iph = (struct ip_header *)po->L3.header) == NULL)
       return;
-      
+
    if ( iph->daddr != fake_ip.s_addr )
       return;
-      
+
    /* Switch source and dest IP address */
    iph->daddr = iph->saddr;
    iph->saddr = fake_ip.s_addr;
-   
+
    /* Increase ttl */
    iph->ttl = 128;
 
@@ -158,7 +158,7 @@ static void parse_gre(struct packet_object *po)
 static void parse_arp(struct packet_object *po)
 {
    struct ip_addr sa;
-   
+
    ip_addr_init(&sa, AF_INET, (u_char *)&(fake_ip.s_addr));
    if (!ip_addr_cmp(&sa, &po->L3.dst))
       send_arp(ARPOP_REPLY, &sa, GBL_IFACE->mac, &po->L3.src, po->L2.src);
@@ -167,4 +167,4 @@ static void parse_arp(struct packet_object *po)
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

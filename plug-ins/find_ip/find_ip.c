@@ -2,7 +2,7 @@
     find_ip -- ettercap plugin -- Search an unused IP address in the subnet
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -34,42 +34,42 @@ static struct ip_addr *search_targets(void);
 
 /* plugin operations */
 
-struct plugin_ops find_ip_ops = { 
+struct plugin_ops find_ip_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "find_ip",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "Search an unused IP address in the subnet",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "find_ip",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "Search an unused IP address in the subnet",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &find_ip_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &find_ip_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &find_ip_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int find_ip_init(void *dummy) 
+static int find_ip_init(void *dummy)
 {
-   
+
    char tmp[MAX_ASCII_ADDR_LEN];
    struct ip_addr *e;
-   
+
    /* don't show packets while operating */
    GBL_OPTIONS->quiet = 1;
-      
+
    if (LIST_EMPTY(&GBL_HOSTLIST)) {
-      INSTANT_USER_MSG("find_ip: You have to build host-list to run this plugin.\n\n"); 
+      INSTANT_USER_MSG("find_ip: You have to build host-list to run this plugin.\n\n");
       return PLUGIN_FINISHED;
    }
 
@@ -80,17 +80,17 @@ static int find_ip_init(void *dummy)
       e = search_netmask();
    else
       e = search_targets();
-     
-   if (e == NULL) 
+
+   if (e == NULL)
       INSTANT_USER_MSG("find_ip: No free IP address in this range :(\n");
    else
       INSTANT_USER_MSG("find_ip: %s seems to be unused\n", ip_addr_ntoa(e, tmp));
-         
+
    return PLUGIN_FINISHED;
 }
 
 
-static int find_ip_fini(void *dummy) 
+static int find_ip_fini(void *dummy)
 {
    return PLUGIN_FINISHED;
 }
@@ -98,7 +98,7 @@ static int find_ip_fini(void *dummy)
 /*********************************************************/
 
 /* Check if the IP is in the host list */
-static int in_list(struct ip_addr *scanip) 
+static int in_list(struct ip_addr *scanip)
 {
    struct hosts_list *h;
 
@@ -120,10 +120,10 @@ static struct ip_addr *search_netmask(void)
 
    netmask = ip_addr_to_int32(&GBL_IFACE->netmask.addr);
    myip = ip_addr_to_int32(&GBL_IFACE->ip.addr);
-   
+
    /* the number of hosts in this netmask */
    nhosts = ntohl(~netmask);
-  
+
    /* scan the netmask */
    for (i = 1; i <= nhosts; i++) {
       /* calculate the ip */
@@ -132,7 +132,7 @@ static struct ip_addr *search_netmask(void)
       if (!in_list(&scanip))
          return(&scanip);
    }
-   
+
    return NULL;
 }
 
@@ -141,7 +141,7 @@ static struct ip_addr *search_netmask(void)
 static struct ip_addr *search_targets(void)
 {
    struct ip_list *i;
-  
+
    LIST_FOREACH(i, &GBL_TARGET1->ips, next) {
       if (!in_list(&i->ip))
          return(&i->ip);
@@ -151,11 +151,11 @@ static struct ip_addr *search_targets(void)
       if (!in_list(&i->ip))
          return(&i->ip);
    }
-   
+
    return NULL;
 }
 
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

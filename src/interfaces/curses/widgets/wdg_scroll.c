@@ -56,13 +56,13 @@ static void wdg_mouse_scroll(struct wdg_object *wo, int s);
 
 /*******************************************/
 
-/* 
+/*
  * called to create a window
  */
 void wdg_create_scroll(struct wdg_object *wo)
 {
    WDG_DEBUG_MSG("wdg_create_scroll");
-   
+
    /* set the callbacks */
    wo->destroy = wdg_scroll_destroy;
    wo->resize = wdg_scroll_resize;
@@ -74,13 +74,13 @@ void wdg_create_scroll(struct wdg_object *wo)
    WDG_SAFE_CALLOC(wo->extend, 1, sizeof(struct wdg_scroll));
 }
 
-/* 
+/*
  * called to destroy a window
  */
 static int wdg_scroll_destroy(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_scroll, ww);
-   
+
    WDG_DEBUG_MSG("wdg_scroll_destroy");
 
    /* erase the window */
@@ -89,7 +89,7 @@ static int wdg_scroll_destroy(struct wdg_object *wo)
    werase(ww->sub);
    werase(ww->win);
    wnoutrefresh(ww->win);
-   
+
    /* dealloc the structures */
    delwin(ww->sub);
    delwin(ww->win);
@@ -99,7 +99,7 @@ static int wdg_scroll_destroy(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to resize a window
  */
 static int wdg_scroll_resize(struct wdg_object *wo)
@@ -109,7 +109,7 @@ static int wdg_scroll_resize(struct wdg_object *wo)
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called to redraw a window
  */
 static int wdg_scroll_redraw(struct wdg_object *wo)
@@ -119,9 +119,9 @@ static int wdg_scroll_redraw(struct wdg_object *wo)
    size_t l = wdg_get_nlines(wo);
    size_t x = wdg_get_begin_x(wo);
    size_t y = wdg_get_begin_y(wo);
-   
+
    WDG_DEBUG_MSG("wdg_scroll_redraw");
- 
+
    /* the window already exist */
    if (ww->win) {
       /* erase the border */
@@ -129,12 +129,12 @@ static int wdg_scroll_redraw(struct wdg_object *wo)
       werase(ww->win);
       touchwin(ww->win);
       wnoutrefresh(ww->win);
-      
+
       /* resize the window and draw the new border */
       mvwin(ww->win, y, x);
       wresize(ww->win, l, c);
       wdg_scroll_border(wo);
-      
+
       /* set the window color */
       wbkgd(ww->sub, COLOR_PAIR(wo->window_color));
       touchwin(ww->sub);
@@ -146,7 +146,7 @@ static int wdg_scroll_redraw(struct wdg_object *wo)
 
    /* the first time we have to allocate the window */
    } else {
-      
+
       /* a default value waiting for wdg_scroll_set_lines() */
       ww->y_max = l * 5;
 
@@ -158,11 +158,11 @@ static int wdg_scroll_redraw(struct wdg_object *wo)
       wdg_scroll_border(wo);
       /* initialize the pointer */
       wdg_set_scroll(wo, ww->y_max - l + 1);
-      
+
       /* create the inner (actual) window */
       if ((ww->sub = newpad(ww->y_max, c - 2)) == NULL)
          return -WDG_EFATAL;
-      
+
       /* set the window color */
       wbkgd(ww->sub, COLOR_PAIR(wo->window_color));
       touchwin(ww->sub);
@@ -173,18 +173,18 @@ static int wdg_scroll_redraw(struct wdg_object *wo)
       /* permit scroll in the pad */
       scrollok(ww->sub, TRUE);
    }
-  
+
    /* refresh the window */
    touchwin(ww->sub);
    wnoutrefresh(ww->win);
    WDG_PAD_REFRESH(ww, c, l, x, y);
-   
+
    wo->flags |= WDG_OBJ_VISIBLE;
 
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the window gets the focus
  */
 static int wdg_scroll_get_focus(struct wdg_object *wo)
@@ -194,25 +194,25 @@ static int wdg_scroll_get_focus(struct wdg_object *wo)
 
    /* redraw the window */
    wdg_scroll_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called when the window looses the focus
  */
 static int wdg_scroll_lost_focus(struct wdg_object *wo)
 {
    /* set the flag */
    wo->flags &= ~WDG_OBJ_FOCUSED;
-   
+
    /* redraw the window */
    wdg_scroll_redraw(wo);
-   
+
    return WDG_ESUCCESS;
 }
 
-/* 
+/*
  * called by the messages dispatcher when the window is focused
  */
 static int wdg_scroll_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_event *mouse)
@@ -222,10 +222,10 @@ static int wdg_scroll_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_e
    size_t l = wdg_get_nlines(wo);
    size_t x = wdg_get_begin_x(wo);
    size_t y = wdg_get_begin_y(wo);
-  
+
    /* handle the message */
    switch (key) {
-         
+
       case KEY_MOUSE:
          /* is the mouse event within our edges ? */
          if (wenclose(ww->win, mouse->y, mouse->x)) {
@@ -237,7 +237,7 @@ static int wdg_scroll_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_e
                WDG_PAD_REFRESH(ww, c, l, x, y);
                wnoutrefresh(ww->win);
             }
-         } else 
+         } else
             return -WDG_ENOTHANDLED;
          break;
 
@@ -247,31 +247,31 @@ static int wdg_scroll_get_msg(struct wdg_object *wo, int key, struct wdg_mouse_e
          WDG_PAD_REFRESH(ww, c, l, x, y);
          wnoutrefresh(ww->win);
          break;
-         
+
       case KEY_DOWN:
          wdg_set_scroll(wo, ww->y_scroll + 1);
          WDG_PAD_REFRESH(ww, c, l, x, y);
          wnoutrefresh(ww->win);
          break;
-         
+
       case KEY_NPAGE:
          wdg_set_scroll(wo, ww->y_scroll + (l - 2));
          WDG_PAD_REFRESH(ww, c, l, x, y);
          wnoutrefresh(ww->win);
          break;
-         
+
       case KEY_PPAGE:
          wdg_set_scroll(wo, ww->y_scroll - (l - 2));
          WDG_PAD_REFRESH(ww, c, l, x, y);
          wnoutrefresh(ww->win);
          break;
-         
+
       /* message not handled */
       default:
          return -WDG_ENOTHANDLED;
          break;
    }
-  
+
    return WDG_ESUCCESS;
 }
 
@@ -282,7 +282,7 @@ static void wdg_scroll_border(struct wdg_object *wo)
 {
    WDG_WO_EXT(struct wdg_scroll, ww);
    size_t c = wdg_get_ncols(wo);
-      
+
    /* the object was focused */
    if (wo->flags & WDG_OBJ_FOCUSED) {
       wattron(ww->win, A_BOLD);
@@ -295,10 +295,10 @@ static void wdg_scroll_border(struct wdg_object *wo)
 
    /* draw the elevator */
    wdg_set_scroll(wo, ww->y_scroll);
-   
+
    /* set the title color */
    wbkgdset(ww->win, COLOR_PAIR(wo->title_color));
-   
+
    /* there is a title: print it */
    if (wo->title) {
       switch (wo->align) {
@@ -314,7 +314,7 @@ static void wdg_scroll_border(struct wdg_object *wo)
       }
       wprintw(ww->win, wo->title);
    }
-   
+
    /* restore the attribute */
    if (wo->flags & WDG_OBJ_FOCUSED) {
       wattroff(ww->win, A_BOLD);
@@ -333,9 +333,9 @@ void wdg_scroll_erase(wdg_t *wo)
    size_t l = wdg_get_nlines(wo);
    size_t x = wdg_get_begin_x(wo);
    size_t y = wdg_get_begin_y(wo);
-   
+
    werase(ww->sub);
-   
+
    WDG_PAD_REFRESH(ww, c, l, x, y);
 }
 
@@ -350,7 +350,7 @@ void wdg_scroll_print(wdg_t *wo, int color, char *fmt, ...)
    size_t x = wdg_get_begin_x(wo);
    size_t y = wdg_get_begin_y(wo);
    va_list ap;
-   
+
    WDG_DEBUG_MSG("wdg_scroll_print");
 
    /* move to the bottom of the pad */
@@ -362,9 +362,9 @@ void wdg_scroll_print(wdg_t *wo, int color, char *fmt, ...)
    va_start(ap, fmt);
    vw_printw(ww->sub, fmt, ap);
    va_end(ap);
-   
+
    wbkgdset(ww->sub, COLOR_PAIR(wo->window_color));
-   
+
    WDG_PAD_REFRESH(ww, c, l, x, y);
 }
 
@@ -377,23 +377,23 @@ void wdg_scroll_set_lines(wdg_t *wo, size_t lines)
    size_t c = wdg_get_ncols(wo);
    size_t l = wdg_get_nlines(wo);
    size_t oldlines = ww->y_max;
-   
+
    WDG_DEBUG_MSG("wdg_scroll_set_lines");
-  
+
    /* resize the pad */
    wresize(ww->sub, lines, c - 2);
-    
+
    /* do the proper adjustements to the scroller */
    ww->y_max = lines;
    wdg_set_scroll(wo, ww->y_max - l + 1);
-   
+
    /* adjust only the first time (when the user requests the change) */
    if (oldlines != lines)
       wmove(ww->sub, ww->y_scroll + 1, 0);
 }
 
 /*
- * set the scroll pointer and redraw 
+ * set the scroll pointer and redraw
  * the window elevator
  */
 static void wdg_set_scroll(struct wdg_object *wo, int s)
@@ -404,11 +404,11 @@ static void wdg_set_scroll(struct wdg_object *wo, int s)
    int min = 0;
    int max = ww->y_max - l + 1;
    size_t height, vpos;
-   
+
    /* don't go above max and below min */
    if (s < min) s = min;
    if (s > max) s = max;
-   
+
    ww->y_scroll = s;
 
    /* compute the scroller cohordinates */
@@ -431,11 +431,11 @@ static void wdg_set_scroll(struct wdg_object *wo, int s)
    wmove(ww->win, vpos, c - 1);
    wvline(ww->win, ACS_DIAMOND, height);
    wattroff(ww->win, A_REVERSE);
-   
+
 }
 
 /*
- * jump to a scroll position with the mouse 
+ * jump to a scroll position with the mouse
  */
 static void wdg_mouse_scroll(struct wdg_object *wo, int s)
 {

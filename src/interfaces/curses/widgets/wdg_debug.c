@@ -1,7 +1,7 @@
 /*
     WDG -- debug module
 
-    Copyright (C) ALoR 
+    Copyright (C) ALoR
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,9 +48,9 @@ void wdg_debug_init(void)
 {
    wdg_debug_file = fopen ("libwdg-"LIBWDG_VERSION"_debug.log", "w");
    WDG_ON_ERROR(wdg_debug_file, NULL, "Couldn't open for writing %s", "libwdg-"LIBWDG_VERSION"_debug.log");
-   
+
    fprintf (wdg_debug_file, "\n==============================================================\n");
-                   
+
   	fprintf (wdg_debug_file, "\n-> libwdg %s\n\n", LIBWDG_VERSION);
    #if defined (__GNUC__) && defined (__GNUC_MINOR__)
       fprintf (wdg_debug_file, "-> compiled with gcc %d.%d (%s)\n", __GNUC__, __GNUC_MINOR__, CC_VERSION);
@@ -58,7 +58,7 @@ void wdg_debug_init(void)
    #if defined (__GLIBC__) && defined (__GLIBC_MINOR__)
       fprintf (wdg_debug_file, "-> glibc version %d.%d\n", __GLIBC__, __GLIBC_MINOR__);
    #endif
-   #ifdef HAVE_NCURSES 
+   #ifdef HAVE_NCURSES
       fprintf (wdg_debug_file, "-> %s\n", curses_version());
    #endif
    fprintf (wdg_debug_file, "\n\nDEVICE OPENED FOR libwdg DEBUGGING\n\n");
@@ -87,7 +87,7 @@ void wdg_debug_msg(const char *message, ...)
       return;
 
    memset(debug_message, 0, sizeof(debug_message));
-   
+
    strncpy(debug_message, message, sizeof(debug_message) - 2);
    strcat(debug_message, "\n");
 

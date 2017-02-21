@@ -2,7 +2,7 @@
     ettercap -- SSL support
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -98,7 +98,7 @@ struct accepted_entry {
    #define SSL_SERVER 1
 };
 
-/* Session identifier 
+/* Session identifier
  * It has to be of even length for session hash matching */
 struct sslw_ident {
    u_int32 magic;
@@ -148,7 +148,7 @@ static void sslw_init(void);
 static void sslw_initialize_po(struct packet_object *po, u_char *p_data);
 static int sslw_match(void *id_sess, void *id_curr);
 static void sslw_create_session(struct ec_session **s, struct packet_object *po);
-static size_t sslw_create_ident(void **i, struct packet_object *po);            
+static size_t sslw_create_ident(void **i, struct packet_object *po);
 static void sslw_hook_handled(struct packet_object *po);
 static X509 *sslw_create_selfsigned(X509 *serv_cert);
 static int sslw_insert_redirect(u_int16 sport, u_int16 dport);
@@ -162,37 +162,37 @@ static int sslw_remove_sts(struct packet_object *po);
 
 /*******************************************/
 
-/* 
- * Register a new ssl wrapper 
+/*
+ * Register a new ssl wrapper
  */
 void sslw_dissect_add(char *name, u_int32 port, FUNC_DECODER_PTR(decoder), u_char status)
 {
    struct listen_entry *le;
-   
+
    SAFE_CALLOC(le, 1, sizeof(struct listen_entry));
- 
+
    le->sslw_port = port;
    le->status = status;
    le->name = name;
 
-   /* Insert it in the port list where listen for connections */ 
-   LIST_INSERT_HEAD(&listen_ports, le, next);    
+   /* Insert it in the port list where listen for connections */
+   LIST_INSERT_HEAD(&listen_ports, le, next);
 
-   dissect_add(name, APP_LAYER_TCP, port, decoder); 
+   dissect_add(name, APP_LAYER_TCP, port, decoder);
 }
 
-/* 
+/*
  * Move a ssl_wrapper on another port
  */
 void sslw_dissect_move(char *name, u_int16 port)
 {
    struct listen_entry *le, *tmp;
 
-   LIST_FOREACH_SAFE(le, &listen_ports, next, tmp) 
+   LIST_FOREACH_SAFE(le, &listen_ports, next, tmp)
       if(!strcmp(name, le->name)) {
          DEBUG_MSG("sslw_dissect_move: %s [%u]", name, port);
          le->sslw_port = port;
-	 
+	
       /* Move to zero means disable */
       if (port == 0) {
          LIST_REMOVE(le, next);
@@ -201,7 +201,7 @@ void sslw_dissect_move(char *name, u_int16 port)
    }
 }
 
-/* 
+/*
  * Initialize the ssl wrappers
  */
 void ssl_wrap_init(void)
@@ -211,7 +211,7 @@ void ssl_wrap_init(void)
 #ifndef HAVE_OPENSSL
    /* avoid gcc warning about unused variable */
    (void)le;
-   
+
    DEBUG_MSG("ssl_wrap_init: not supported");
    return;
 #else
@@ -220,7 +220,7 @@ void ssl_wrap_init(void)
       DEBUG_MSG("ssl_wrap_init: not aggressive");
       return;
    }
-   
+
    /* a valid script for the redirection must be set */
    if (!GBL_CONF->redir_command_on) {
       DEBUG_MSG("ssl_wrap_init: no redirect script");
@@ -231,14 +231,14 @@ void ssl_wrap_init(void)
    DEBUG_MSG("ssl_wrap_init");
    sslw_init();
    sslw_bind_wrapper();
-   
+
    /* Add the hook to block real ssl packet going to top half */
    hook_add(HOOK_HANDLED, &sslw_hook_handled);
 
    number_of_services = 0;
-   LIST_FOREACH(le, &listen_ports, next) 
+   LIST_FOREACH(le, &listen_ports, next)
       number_of_services++;
-   
+
    SAFE_CALLOC(poll_fd, 1, sizeof(struct pollfd) * number_of_services);
 
    atexit(ssl_wrap_fini);
@@ -252,7 +252,7 @@ static void ssl_wrap_fini(void)
    struct listen_entry *le, *old;
 
    DEBUG_MSG("ATEXIT: ssl_wrap_fini");
-   /* remove every redirect rule */   
+   /* remove every redirect rule */
    LIST_FOREACH_SAFE(le, &listen_ports, next, old) {
       sslw_remove_redirect(le->sslw_port, le->redir_port);
       LIST_REMOVE(le, next);
@@ -265,7 +265,7 @@ static void ssl_wrap_fini(void)
 }
 #endif
 
-/* 
+/*
  * SSL thread main function.
  */
 EC_THREAD_FUNC(sslw_start)
@@ -283,17 +283,17 @@ EC_THREAD_FUNC(sslw_start)
    DEBUG_MSG("sslw_start: openssl support not compiled in");
    return NULL;
 #else
-   
+
    /* disabled if not aggressive */
    if (!GBL_CONF->aggressive_dissectors)
       return NULL;
-   
+
    /* a valid script for the redirection must be set */
    if (!GBL_CONF->redir_command_on)
       return NULL;
-   
+
    DEBUG_MSG("sslw_start: initialized and ready");
-   
+
    /* Set the polling on all registered ssl services */
    i=0;
    LIST_FOREACH(le, &listen_ports, next) {
@@ -303,49 +303,49 @@ EC_THREAD_FUNC(sslw_start)
 
    LOOP {
       poll(poll_fd, number_of_services, -1);
-      
+
       /* Check which port received connection */
-      for(i=0; i<number_of_services; i++) 
+      for(i=0; i<number_of_services; i++)
          if (poll_fd[i].revents & POLLIN) {
-	 
-            LIST_FOREACH(le, &listen_ports, next) 
+	
+            LIST_FOREACH(le, &listen_ports, next)
                if (poll_fd[i].fd == le->fd)
                   break;
-	    
+	
             DEBUG_MSG("ssl_wrapper -- got a connection on port %d [%d]", le->redir_port, le->sslw_port);
             SAFE_CALLOC(ae, 1, sizeof(struct accepted_entry));
-	    
+	
             ae->fd[SSL_CLIENT] = accept(poll_fd[i].fd, (struct sockaddr *)&client_sin, &len);
-            
+
             /* Error checking */
             if (ae->fd[SSL_CLIENT] == -1) {
                SAFE_FREE(ae);
                continue;
             }
-	    
+	
             /* Set the server original port for protocol dissection */
             ae->port[SSL_SERVER] = htons(le->sslw_port);
-            
+
             /* Check if we have to enter SSL status */
             ae->status = le->status;
-	       
+	
             /* Set the peer (client) in the connection list entry */
             ae->port[SSL_CLIENT] = client_sin.sin_port;
             ip_addr_init(&(ae->ip[SSL_CLIENT]), AF_INET, (u_char *)&(client_sin.sin_addr.s_addr));
-	   
-            /* create a detached thread */ 
+	
+            /* create a detached thread */
             ec_thread_new_detached("sslw_child", "ssl child", &sslw_child, ae, 1);
          }
    }
 
    return NULL;
 #endif /* HAVE_OPENSSL */
-   
-}	 
+
+}	
 
 #ifdef HAVE_OPENSSL
 
-/* 
+/*
  * Filter SSL related packets and create NAT sessions.
  * It hooks HOOK_HANDLED.
  */
@@ -356,12 +356,12 @@ static void sslw_hook_handled(struct packet_object *po)
    /* We have nothing to do with this packet */
    if (!sslw_is_ssl(po))
       return;
-     
+
    /* If it's an ssl packet don't forward */
    po->flags |= PO_DROPPED;
-   
+
    /* If it's a new connection */
-   if ( (po->flags & PO_FORWARDABLE) && 
+   if ( (po->flags & PO_FORWARDABLE) &&
         (po->L4.flags & TH_SYN) &&
         !(po->L4.flags & TH_ACK) ) {
 	
@@ -389,7 +389,7 @@ static int sslw_insert_redirect(u_int16 sport, u_int16 dport)
    int ret_val, i = 0;
    char *command, *p;
    char **param = NULL;
- 
+
    /* the script is not defined */
    if (GBL_CONF->redir_command_on == NULL)
    {
@@ -408,24 +408,24 @@ static int sslw_insert_redirect(u_int16 sport, u_int16 dport)
 #if defined(OS_DARWIN) || defined(OS_BSD)
    str_replace(&command, "%set", SSLW_SET);
 #endif
-   
+
    DEBUG_MSG("sslw_insert_redirect: [%s]", command);
-   
+
    /* split the string in the parameter array */
    for (p = strsep(&command, " "); p != NULL; p = strsep(&command, " ")) {
       /* allocate the array */
       SAFE_REALLOC(param, (i + 1) * sizeof(char *));
-                        
+
       /* copy the tokens in the array */
       param[i++] = strdup(p);
    }
    /* NULL terminate the array */
    SAFE_REALLOC(param, (i + 1) * sizeof(char *));
-               
+
    param[i] = NULL;
    param_length= i + 1; //because there is a SAFE_REALLOC after the for.
-               
-   /* execute the script */ 
+
+   /* execute the script */
    switch (fork()) {
       case 0:
          execvp(param[0], param);
@@ -440,8 +440,8 @@ static int sslw_insert_redirect(u_int16 sport, u_int16 dport)
          wait(&ret_val);
          if (ret_val == EINVALID)
             return -EINVALID;
-   }    
-   
+   }
+
    return ESUCCESS;
 }
 
@@ -456,7 +456,7 @@ static int sslw_remove_redirect(u_int16 sport, u_int16 dport)
    int ret_val, i = 0;
    char *command, *p;
    char **param = NULL;
- 
+
    /* the script is not defined */
    if (GBL_CONF->redir_command_off == NULL)
    {
@@ -476,24 +476,24 @@ static int sslw_remove_redirect(u_int16 sport, u_int16 dport)
 #if defined(OS_DARWIN) || defined(OS_BSD)
    str_replace(&command, "%set", SSLW_SET);
 #endif
-   
+
    DEBUG_MSG("sslw_remove_redirect: [%s]", command);
-   
+
    /* split the string in the parameter array */
    for (p = strsep(&command, " "); p != NULL; p = strsep(&command, " ")) {
       /* allocate the array */
       SAFE_REALLOC(param, (i + 1) * sizeof(char *));
-                        
+
       /* copy the tokens in the array */
       param[i++] = strdup(p);
    }
    /* NULL terminate the array */
    SAFE_REALLOC(param, (i + 1) * sizeof(char *));
-               
+
    param[i] = NULL;
    param_length= i + 1; //because there is a SAFE_REALLOC after the for.
-               
-   /* execute the script */ 
+
+   /* execute the script */
    switch (fork()) {
       case 0:
          execvp(param[0], param);
@@ -508,22 +508,22 @@ static int sslw_remove_redirect(u_int16 sport, u_int16 dport)
          wait(&ret_val);
          if (ret_val == EINVALID)
             return -EINVALID;
-   }    
-   
+   }
+
    return ESUCCESS;
 }
 
 
-/* 
- * Check if this packet is for ssl wrappers 
+/*
+ * Check if this packet is for ssl wrappers
  */
 static int sslw_is_ssl(struct packet_object *po)
 {
    struct listen_entry *le;
-   
-   /* If it's already coming from ssl wrapper 
-    * or the connection is not TCP */ 
-   if (po->flags & PO_FROMSSL || po->L4.proto != NL_TYPE_TCP) 
+
+   /* If it's already coming from ssl wrapper
+    * or the connection is not TCP */
+   if (po->flags & PO_FROMSSL || po->L4.proto != NL_TYPE_TCP)
       return 0;
 
    LIST_FOREACH(le, &listen_ports, next) {
@@ -536,23 +536,23 @@ static int sslw_is_ssl(struct packet_object *po)
 
 
 /*
- * Bind all registered wrappers to free ports 
+ * Bind all registered wrappers to free ports
  * and isnert redirects.
- */ 
+ */
 static void sslw_bind_wrapper(void)
 {
-   u_int16 bind_port = EC_MAGIC_16; 
+   u_int16 bind_port = EC_MAGIC_16;
    struct listen_entry *le;
    struct sockaddr_in sa_in;
 
-   LIST_FOREACH(le, &listen_ports, next) { 
-   
+   LIST_FOREACH(le, &listen_ports, next) {
+
       le->fd = socket(AF_INET, SOCK_STREAM, 0);
 
       memset(&sa_in, 0, sizeof(sa_in));
       sa_in.sin_family = AF_INET;
       sa_in.sin_addr.s_addr = INADDR_ANY;
-   
+
       do {
          bind_port++;
          sa_in.sin_port = htons(bind_port);
@@ -560,20 +560,20 @@ static void sslw_bind_wrapper(void)
       } while ( bind(le->fd, (struct sockaddr *)&sa_in, sizeof(sa_in)) != 0);
 
       DEBUG_MSG("sslw - bind %d on %d", le->sslw_port, le->redir_port);
-      listen(le->fd, 100);      
+      listen(le->fd, 100);
       if (sslw_insert_redirect(le->sslw_port, le->redir_port) != ESUCCESS)
         FATAL_ERROR("Can't insert firewall redirects");
    }
 }
 
-/* 
- * Create TCP a connection to the real SSL server 
+/*
+ * Create TCP a connection to the real SSL server
  */
 static int sslw_sync_conn(struct accepted_entry *ae)
-{      
+{
    if(sslw_get_peer(ae) != ESUCCESS)
          return -EINVALID;
-	 
+	
    if(sslw_connect_server(ae) != ESUCCESS)
          return -EINVALID;
 
@@ -585,12 +585,12 @@ static int sslw_sync_conn(struct accepted_entry *ae)
 }
 
 
-/* 
+/*
  * Perform a blocking SSL_connect with a
- * configurable timeout on a non-blocing socket 
+ * configurable timeout on a non-blocing socket
  */
 static int sslw_ssl_connect(SSL *ssl_sk)
-{ 
+{
    int loops = (GBL_CONF->connect_timeout * 10e5) / TSLEEP;
    int ret, ssl_err;
 
@@ -599,18 +599,18 @@ static int sslw_ssl_connect(SSL *ssl_sk)
    tm.tv_sec = 0;
    tm.tv_nsec = TSLEEP * 1000;
 #endif
-   
+
    do {
       /* connect to the server */
       if ( (ret = SSL_connect(ssl_sk)) == 1)
          return ESUCCESS;
 
       ssl_err = SSL_get_error(ssl_sk, ret);
-      
+
       /* there was an error... */
-      if (ssl_err != SSL_ERROR_WANT_READ && ssl_err != SSL_ERROR_WANT_WRITE) 
+      if (ssl_err != SSL_ERROR_WANT_READ && ssl_err != SSL_ERROR_WANT_WRITE)
          return -EINVALID;
-      
+
       /* sleep a quirk of time... */
 #if defined(OS_WINDOWS)
       usleep(TSLEEP);
@@ -623,12 +623,12 @@ static int sslw_ssl_connect(SSL *ssl_sk)
 }
 
 
-/* 
+/*
  * Perform a blocking SSL_accept with a
- * configurable timeout on a non-blocing socket 
+ * configurable timeout on a non-blocing socket
  */
 static int sslw_ssl_accept(SSL *ssl_sk)
-{ 
+{
    int loops = (GBL_CONF->connect_timeout * 10e5) / TSLEEP;
    int ret, ssl_err;
 
@@ -637,18 +637,18 @@ static int sslw_ssl_accept(SSL *ssl_sk)
    tm.tv_sec = 0;
    tm.tv_nsec = TSLEEP * 1000;
 #endif
-   
+
    do {
       /* accept the ssl connection */
       if ( (ret = SSL_accept(ssl_sk)) == 1)
          return ESUCCESS;
 
       ssl_err = SSL_get_error(ssl_sk, ret);
-      
+
       /* there was an error... */
-      if (ssl_err != SSL_ERROR_WANT_READ && ssl_err != SSL_ERROR_WANT_WRITE) 
+      if (ssl_err != SSL_ERROR_WANT_READ && ssl_err != SSL_ERROR_WANT_WRITE)
          return -EINVALID;
-      
+
       /* sleep a quirk of time... */
 #if defined(OS_WINDOWS)
       usleep(TSLEEP);
@@ -661,24 +661,24 @@ static int sslw_ssl_accept(SSL *ssl_sk)
 }
 
 
-/* 
+/*
  * Create an SSL connection to the real server.
  * Grab server certificate and create a fake one
  * for the poor client.
  * Then accept the SSL connection from the client.
- */   
-static int sslw_sync_ssl(struct accepted_entry *ae) 
-{   
+ */
+static int sslw_sync_ssl(struct accepted_entry *ae)
+{
 
    X509 *server_cert;
-   
+
    ae->ssl[SSL_SERVER] = SSL_new(ssl_ctx_server);
    SSL_set_connect_state(ae->ssl[SSL_SERVER]);
    SSL_set_fd(ae->ssl[SSL_SERVER], ae->fd[SSL_SERVER]);
    ae->ssl[SSL_CLIENT] = SSL_new(ssl_ctx_client);
    SSL_set_fd(ae->ssl[SSL_CLIENT], ae->fd[SSL_CLIENT]);
-    
-   if (sslw_ssl_connect(ae->ssl[SSL_SERVER]) != ESUCCESS) 
+
+   if (sslw_ssl_connect(ae->ssl[SSL_SERVER]) != ESUCCESS)
       return -EINVALID;
 
    /* XXX - NULL cypher can give no certificate */
@@ -689,7 +689,7 @@ static int sslw_sync_ssl(struct accepted_entry *ae)
 
    if (!GBL_OPTIONS->ssl_cert) {
    	/* Create the fake certificate */
-   	ae->cert = sslw_create_selfsigned(server_cert);  
+   	ae->cert = sslw_create_selfsigned(server_cert);
    	X509_free(server_cert);
 
    	if (ae->cert == NULL)
@@ -698,17 +698,17 @@ static int sslw_sync_ssl(struct accepted_entry *ae)
    	SSL_use_certificate(ae->ssl[SSL_CLIENT], ae->cert);
 
    }
-   
-   if (sslw_ssl_accept(ae->ssl[SSL_CLIENT]) != ESUCCESS) 
+
+   if (sslw_ssl_accept(ae->ssl[SSL_CLIENT]) != ESUCCESS)
       return -EINVALID;
 
 
-   return ESUCCESS;   
+   return ESUCCESS;
 }
 
 
-/* 
- * Take the IP address of the server 
+/*
+ * Take the IP address of the server
  * that the client wants to talk to.
  */
 static int sslw_get_peer(struct accepted_entry *ae)
@@ -722,12 +722,12 @@ static int sslw_get_peer(struct accepted_entry *ae)
    struct packet_object po;
    void *ident = NULL;
    int i;
- 
+
    /* Take the server IP address from the NAT sessions */
    memcpy(&po.L3.src, &ae->ip[SSL_CLIENT], sizeof(struct ip_addr));
    po.L4.src = ae->port[SSL_CLIENT];
    po.L4.dst = ae->port[SSL_SERVER];
-   
+
    sslw_create_ident(&ident, &po);
 
 #if !defined(OS_WINDOWS)
@@ -735,26 +735,26 @@ static int sslw_get_peer(struct accepted_entry *ae)
    tm.tv_sec = SSLW_WAIT;
    tm.tv_nsec = 0;
 #endif
-   
-   /* 
-    * A little waiting loop because the sniffing thread , 
+
+   /*
+    * A little waiting loop because the sniffing thread ,
     * which creates the session, may be slower than this
     */
    for (i=0; i<SSLW_RETRY && session_get_and_del(&s, ident, SSLW_IDENT_LEN)!=ESUCCESS; i++)
 #if defined(OS_WINDOWS)
       usleep(SSLW_WAIT);
 #else
-      nanosleep(&tm, NULL); 
+      nanosleep(&tm, NULL);
 #endif /* OS_WINDOWS */
 
    if (i==SSLW_RETRY) {
       SAFE_FREE(ident);
       return -EINVALID;
    }
-   
+
    /* Remember the server IP address in the sessions */
    memcpy(&ae->ip[SSL_SERVER], s->data, sizeof(struct ip_addr));
-   
+
    SAFE_FREE(s->data);
    SAFE_FREE(s);
    SAFE_FREE(ident);
@@ -770,56 +770,56 @@ static int sslw_get_peer(struct accepted_entry *ae)
 }
 
 
-/* 
+/*
  * Take the other peer (server) from ssl-decoders' sessions
- * and contact it. 
+ * and contact it.
  * Check if we have to enter SSL state.
  */
 static int sslw_connect_server(struct accepted_entry *ae)
 {
    char *dest_ip;
-   
-   /* 
-    * XXX - int_ntoa is not thread-safe. 
+
+   /*
+    * XXX - int_ntoa is not thread-safe.
     * strdup it to avoid race conditions.
     * Btw int_ntoa is not so used in the code.
     */
    dest_ip = strdup(int_ntoa(ip_addr_to_int32(ae->ip[SSL_SERVER].addr)));
- 
+
    /* Standard connection to the server */
    if (!dest_ip || (ae->fd[SSL_SERVER] = open_socket(dest_ip, ntohs(ae->port[SSL_SERVER]))) < 0) {
-      SAFE_FREE(dest_ip);   
+      SAFE_FREE(dest_ip);
       DEBUG_MSG("Could not open socket");
       return -EINVALID;
    }
-   
-   SAFE_FREE(dest_ip);	       
-   return ESUCCESS;   
+
+   SAFE_FREE(dest_ip);	
+   return ESUCCESS;
 }
 
 
-/* 
- * Read the data from an accepted connection. 
+/*
+ * Read the data from an accepted connection.
  * Check if it already entered SSL state.
- */ 
+ */
 static int sslw_read_data(struct accepted_entry *ae, u_int32 direction, struct packet_object *po)
 {
    int len, ret_err;
-   
+
    if (ae->status & SSL_ENABLED)
       len = SSL_read(ae->ssl[direction], po->DATA.data, 1024);
-   else       
+   else
       //len = socket_recv(ae->fd[direction], po->DATA.data, 1024);
       len = read(ae->fd[direction], po->DATA.data, 1024);
 
    /* XXX - Check when it returns 0 (it was a <)*/
    if (len <= 0 && (ae->status & SSL_ENABLED)) {
       ret_err = SSL_get_error(ae->ssl[direction], len);
-      
+
       /* XXX - Is it necessary? */
       if (len == 0)
          return -EINVALID;
-	       
+	
       if (ret_err == SSL_ERROR_WANT_READ || ret_err == SSL_ERROR_WANT_WRITE)
          return -ENOTHANDLED;
       else
@@ -834,10 +834,10 @@ static int sslw_read_data(struct accepted_entry *ae, u_int32 direction, struct p
          return -ENOTHANDLED;
       else
          return -EINVALID;
-   }      
+   }
 
    /* XXX - On standard reads, close is 0? (EOF)*/
-   if (len == 0) 
+   if (len == 0)
       return -EINVALID;
 
    po->len = len;
@@ -847,22 +847,22 @@ static int sslw_read_data(struct accepted_entry *ae, u_int32 direction, struct p
    /* NULL terminate the data buffer */
    po->DATA.data[po->DATA.len] = 0;
 
-   /* remove STS header */ 
+   /* remove STS header */
    if (direction == SSL_SERVER)
        sslw_remove_sts(po);
 
    /* create the buffer to be displayed */
    packet_destroy_object(po);
    packet_disp_data(po, po->DATA.data, po->DATA.len);
-   
+
    return ESUCCESS;
 }
 
 
-/* 
- * Write the data into an accepted connection. 
+/*
+ * Write the data into an accepted connection.
  * Check if it already entered SSL state.
- */ 
+ */
 static int sslw_write_data(struct accepted_entry *ae, u_int32 direction, struct packet_object *po)
 {
    int32 len, packet_len, not_written, ret_err;
@@ -878,7 +878,7 @@ static int sslw_write_data(struct accepted_entry *ae, u_int32 direction, struct 
 #else
    int timeout = 1000;
 #endif
-   
+
    if (packet_len == 0)
       return ESUCCESS;
 
@@ -887,7 +887,7 @@ static int sslw_write_data(struct accepted_entry *ae, u_int32 direction, struct 
       /* Write packet data */
       if (ae->status & SSL_ENABLED)
          len = SSL_write(ae->ssl[direction], p_data, packet_len);
-      else       
+      else
          //len = socket_send(ae->fd[direction], p_data, packet_len);
          len = write(ae->fd[direction], p_data, packet_len);
 
@@ -906,7 +906,7 @@ static int sslw_write_data(struct accepted_entry *ae, u_int32 direction, struct 
             not_written = 1;
          else
             return -EINVALID;
-      }      
+      }
 
       /* XXX - does some OS use partial writes for SSL? */
       if (len < packet_len && !not_written ) {
@@ -915,7 +915,7 @@ static int sslw_write_data(struct accepted_entry *ae, u_int32 direction, struct 
          p_data += len;
          not_written = 1;
       }
-      
+
       /* XXX - Set a proper sleep time */
       if (not_written)
 #if defined(OS_WINDOWS)
@@ -923,15 +923,15 @@ static int sslw_write_data(struct accepted_entry *ae, u_int32 direction, struct 
 #else
          nanosleep(&tm, NULL);
 #endif
-	 	 
+	 	
    } while (not_written);
-         
+
    return ESUCCESS;
 }
 
 
-/* 
- * Fill the packet object and put it in 
+/*
+ * Fill the packet object and put it in
  * the dissector stack (above protocols decoders)
  */
 static void sslw_parse_packet(struct accepted_entry *ae, u_int32 direction, struct packet_object *po)
@@ -939,7 +939,7 @@ static void sslw_parse_packet(struct accepted_entry *ae, u_int32 direction, stru
    FUNC_DECODER_PTR(start_decoder);
    int len;
 
-   /* 
+   /*
     * ssl childs keep the connection alive even if the sniffing thread
     * was stopped. But don't add packets to top-half queue.
     */
@@ -948,12 +948,12 @@ static void sslw_parse_packet(struct accepted_entry *ae, u_int32 direction, stru
 
    memcpy(&po->L3.src, &ae->ip[direction], sizeof(struct ip_addr));
    memcpy(&po->L3.dst, &ae->ip[!direction], sizeof(struct ip_addr));
-   
+
    po->L4.src = ae->port[direction];
    po->L4.dst = ae->port[!direction];
-   
+
    po->flags |= PO_FROMSSL;
-      
+
    /* get current time */
    gettimeofday(&po->ts, NULL);
 
@@ -978,18 +978,18 @@ static void sslw_parse_packet(struct accepted_entry *ae, u_int32 direction, stru
 }
 
 
-/* 
- * Remove the connection from the accepted 
+/*
+ * Remove the connection from the accepted
  * list and close both sockets.
  */
 static void sslw_wipe_connection(struct accepted_entry *ae)
 {
-   if (ae->ssl[SSL_CLIENT]) 
+   if (ae->ssl[SSL_CLIENT])
       SSL_free(ae->ssl[SSL_CLIENT]);
 
-   if (ae->ssl[SSL_SERVER]) 
+   if (ae->ssl[SSL_SERVER])
       SSL_free(ae->ssl[SSL_SERVER]);
- 
+
    close_socket(ae->fd[SSL_CLIENT]);
    close_socket(ae->fd[SSL_SERVER]);
 
@@ -1000,13 +1000,13 @@ static void sslw_wipe_connection(struct accepted_entry *ae)
      SAFE_FREE(ae);
 }
 
-/* 
+/*
  * Initialize a fake PO to be passed to top half
  */
 static void sslw_initialize_po(struct packet_object *po, u_char *p_data)
 {
-   /* 
-    * Allocate the data buffer and initialize 
+   /*
+    * Allocate the data buffer and initialize
     * fake headers. Headers len is set to 0.
     * XXX - Be sure to not modify these len.
     */
@@ -1019,43 +1019,43 @@ static void sslw_initialize_po(struct packet_object *po, u_char *p_data)
           po->DATA.data = p_data;
       }
    }
-      
-   po->L2.header  = po->DATA.data; 
+
+   po->L2.header  = po->DATA.data;
    po->L3.header  = po->DATA.data;
    po->L3.options = po->DATA.data;
    po->L4.header  = po->DATA.data;
    po->L4.options = po->DATA.data;
    po->fwd_packet = po->DATA.data;
    po->packet     = po->DATA.data;
-   
+
    po->L3.proto = htons(LL_TYPE_IP);
    po->L3.ttl = 64;
    po->L4.proto = NL_TYPE_TCP;
 }
 
 
-/* 
+/*
  * Create a self-signed certificate
  */
 static X509 *sslw_create_selfsigned(X509 *server_cert)
-{   
+{
    X509 *out_cert;
    X509_EXTENSION *ext;
    int index = 0;
-   
+
    if ((out_cert = X509_new()) == NULL)
       return NULL;
-      
+
    /* Set out public key, real server name... */
    X509_set_version(out_cert, X509_get_version(server_cert));
-   X509_set_serialNumber(out_cert, X509_get_serialNumber(server_cert));   
+   X509_set_serialNumber(out_cert, X509_get_serialNumber(server_cert));
    X509_set_notBefore(out_cert, X509_get_notBefore(server_cert));
    X509_set_notAfter(out_cert, X509_get_notAfter(server_cert));
    X509_set_pubkey(out_cert, global_pk);
    X509_set_subject_name(out_cert, X509_get_subject_name(server_cert));
-   X509_set_issuer_name(out_cert, X509_get_issuer_name(server_cert));  
-   
-   /* Modify the issuer a little bit */ 
+   X509_set_issuer_name(out_cert, X509_get_issuer_name(server_cert));
+
+   /* Modify the issuer a little bit */
    //X509_NAME_add_entry_by_txt(X509_get_issuer_name(out_cert), "L", MBSTRING_ASC, " ", -1, -1, 0);
 
    index = X509_get_ext_by_NID(server_cert, NID_authority_key_identifier, -1);
@@ -1074,13 +1074,13 @@ static X509 *sslw_create_selfsigned(X509 *server_cert)
       DEBUG_MSG("Error self-signing X509");
       return NULL;
    }
-     
+
    return out_cert;
 }
 
 
-/* 
- * Initialize SSL stuff 
+/*
+ * Initialize SSL stuff
  */
 static void sslw_init(void)
 {
@@ -1122,14 +1122,14 @@ static void sslw_init(void)
    }
 
    dummy_ssl = SSL_new(ssl_ctx_client);
-   if ( (global_pk = SSL_get_privatekey(dummy_ssl)) == NULL ) 
+   if ( (global_pk = SSL_get_privatekey(dummy_ssl)) == NULL )
       FATAL_ERROR("Can't get private key from file");
 
-   SSL_free(dummy_ssl);   
+   SSL_free(dummy_ssl);
 }
 
 
-/* 
+/*
  * SSL thread child function.
  */
 
@@ -1160,9 +1160,9 @@ EC_THREAD_FUNC(sslw_child)
       DEBUG_MSG("FAILED TO FIND PEER");
       SAFE_FREE(ae);
       ec_thread_exit();
-   }	    
-	    
-   if ((ae->status & SSL_ENABLED) && 
+   }	
+	
+   if ((ae->status & SSL_ENABLED) &&
       sslw_sync_ssl(ae) == -EINVALID) {
       sslw_wipe_connection(ae);
       ec_thread_exit();
@@ -1176,7 +1176,7 @@ EC_THREAD_FUNC(sslw_child)
 
    sslw_parse_packet(ae, SSL_SERVER, &po);
    sslw_initialize_po(&po, po.DATA.data);
-   
+
    LOOP {
 
       data_read = 0;
@@ -1184,7 +1184,7 @@ EC_THREAD_FUNC(sslw_child)
 
          ret_val = sslw_read_data(ae, direction, &po);
          BREAK_ON_ERROR(ret_val,ae,po);
-	 
+	
          /* if we have data to read */
          if (ret_val == ESUCCESS) {
             data_read = 1;
@@ -1197,15 +1197,15 @@ EC_THREAD_FUNC(sslw_child)
 	
             ret_val = sslw_write_data(ae, !direction, &po);
             BREAK_ON_ERROR(ret_val,ae,po);
-	    
+	
             if ((po.flags & PO_SSLSTART) && !(ae->status & SSL_ENABLED)) {
-               ae->status |= SSL_ENABLED; 
+               ae->status |= SSL_ENABLED;
                ret_val = sslw_sync_ssl(ae);
                BREAK_ON_ERROR(ret_val,ae,po);
             }
-	    
+	
             sslw_initialize_po(&po, po.DATA.data);
-         }  
+         }
       }
 
       /* XXX - Set a proper sleep time */
@@ -1285,7 +1285,7 @@ static size_t sslw_create_ident(void **i, struct packet_object *po)
 
    /* the magic */
    ident->magic = SSLW_MAGIC;
-      
+
    /* prepare the ident */
    memcpy(&ident->L3_src, &po->L3.src, sizeof(struct ip_addr));
 
@@ -1308,8 +1308,8 @@ static int sslw_match(void *id_sess, void *id_curr)
    /* sanity check */
    BUG_IF(ids == NULL);
    BUG_IF(id == NULL);
-  
-   /* 
+
+   /*
     * is this ident from our level ?
     * check the magic !
     */
@@ -1318,9 +1318,9 @@ static int sslw_match(void *id_sess, void *id_curr)
 
    if (ids->L4_src == id->L4_src &&
        ids->L4_dst == id->L4_dst &&
-       !ip_addr_cmp(&ids->L3_src, &id->L3_src)) 
+       !ip_addr_cmp(&ids->L3_src, &id->L3_src))
       return 1;
-   
+
    return 0;
 }
 
@@ -1333,10 +1333,10 @@ static void sslw_create_session(struct ec_session **s, struct packet_object *po)
 
    /* allocate the session */
    SAFE_CALLOC(*s, 1, sizeof(struct ec_session));
-   
+
    /* create the ident */
    (*s)->ident_len = sslw_create_ident(&ident, po);
-   
+
    /* link to the session */
    (*s)->ident = ident;
 

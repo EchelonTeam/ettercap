@@ -43,7 +43,7 @@ typedef u_int32_t  u_int32;
 typedef u_int64_t  u_int64;
 
 // This is just a hack structure so we can see the first int on the ident
-// structures. 
+// structures.
 struct ident_magic {
   u_int32 magic;
 };
@@ -86,10 +86,10 @@ struct timeval {
 };
 
 struct packet_object {
- 
+
    /* timestamp of the packet */
    struct timeval ts;
-   
+
    struct L2 {
       u_int8 proto;
       u_char * header;
@@ -98,7 +98,7 @@ struct packet_object {
       u_int8 dst[6];
       u_int8 flags;
    } L2;
-   
+
    struct L3 {
       u_int16 proto;
       u_char * header;
@@ -110,7 +110,7 @@ struct packet_object {
       struct ip_addr dst;
       u_int8 ttl;
    } L3;
-   
+
    struct L4 {
       u_int8 proto;
       u_int8 flags;
@@ -123,20 +123,20 @@ struct packet_object {
       u_int32 seq;
       u_int32 ack;
    } L4;
-   
+
    struct data {
       u_char * data;
       size_t len;
-      /* 
+      /*
        * buffer containing the data to be displayed.
        * some dissector decripts the traffic, but the packet must be forwarded as
-       * is, so the decripted data must be placed in a different buffer. 
+       * is, so the decripted data must be placed in a different buffer.
        * this is that bufffer and it is malloced by tcp or udp dissector.
        */
       size_t disp_len;
       u_char * disp_data;
       /* for modified packet this is the delta for the lenght */
-      int delta;  
+      int delta;
       size_t inject_len;      /* len of the injection */
       u_char *inject;         /* the fuffer used for injection */
 
@@ -144,25 +144,25 @@ struct packet_object {
 
    size_t fwd_len;         /* lenght of the packet to be forwarded */
    u_char * fwd_packet;    /* the pointer to the buffer to be forwarded */
-   
+
    size_t len;             /* total lenght of the packet */
    u_char * packet;        /* the buffer containing the real packet */
 
    /* Trace current session for injector chain */
-   struct ec_session *session;  
-    
-   
+   struct ec_session *session;
+
+
    u_int16 flags;                       /* flags relative to the packet */
-   
-   /* 
-    * here are stored the user and pass collected by dissectors 
+
+   /*
+    * here are stored the user and pass collected by dissectors
     * the "char *" are malloc(ed) by dissectors
     */
    struct dissector_info DISSECTOR;
-  
+
    /* the struct for passive identification */
    struct passive_info PASSIVE;
-   
+
 };
 
 enum {
@@ -175,7 +175,7 @@ enum {
 
    HOOK_PACKET_BASE  = 50,
    HOOK_PACKET_ETH,
-   HOOK_PACKET_FDDI,      
+   HOOK_PACKET_FDDI,
    HOOK_PACKET_TR,
    HOOK_PACKET_WIFI,
    HOOK_PACKET_ARP,
@@ -253,7 +253,7 @@ static const u_int16 PO_SSLSTART    = 1<<12;   /* ssl wrapper has to enter SSL s
 char *ip_addr_ntoa(struct ip_addr *sa, char *dst);
 uint16_t ntohs(uint16_t netshort);
 
-size_t tcp_create_ident(void **i, struct packet_object *po);            
+size_t tcp_create_ident(void **i, struct packet_object *po);
 int tcp_find_direction(void *ids, void *id);
 int session_get(struct ec_session **s, void *ident, size_t ident_len);
 ]]

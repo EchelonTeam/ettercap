@@ -18,9 +18,9 @@ EC_API_EXTERN char * get_local_path(const char *file);
 #define CERT_FILE          "etter.ssl.crt"
 
 /* fopen modes */
-#define FOPEN_READ_TEXT   "r"                                                                   
-#define FOPEN_READ_BIN    "rb"                                                                   
-#define FOPEN_WRITE_TEXT  "w"                                                                   
+#define FOPEN_READ_TEXT   "r"
+#define FOPEN_READ_BIN    "rb"
+#define FOPEN_WRITE_TEXT  "w"
 #define FOPEN_WRITE_BIN   "wb"
 
 #endif

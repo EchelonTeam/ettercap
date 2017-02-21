@@ -47,44 +47,44 @@ int ec_poll_in(int fd, u_int msec)
 #if defined(HAVE_POLL) && !defined(OS_DARWIN)
    int poll_result;
    struct pollfd poll_fd;
-   
+
    /* set the correct fd */
    poll_fd.fd = fd;
    poll_fd.events = POLLIN;
-         
+
    /* execute the syscall */
    poll_result = poll(&poll_fd, 1, msec);
-   
+
    /* the event has occurred, return 1 */
    if (poll_result > 0 && poll_fd.revents & POLLIN)
       return 1;
-  
+
    return 0;
-   
+
 #elif defined(HAVE_SELECT)
 
    fd_set msk_fd;
    struct timeval to;
-     
+
    memset(&to, 0, sizeof(struct timeval));
    /* timeval uses microseconds */
    to.tv_usec = msec * 1000;
-   
+
    FD_ZERO(&msk_fd);
-  
+
    /* set the correct fd */
    FD_SET(fd, &msk_fd);
 
    /* execute the syscall */
    int fds = select(FOPEN_MAX, &msk_fd, (fd_set *) 0, (fd_set *) 0, &to);
-  
+
    if (fds <= 0) {
       return 0;
-   } 
+   }
    /* the even has occurred */
    if (FD_ISSET(0, &msk_fd))
       return 1;
-               
+
    return 0;
 #else
    #error "you don't have neither poll nor select"
@@ -99,43 +99,43 @@ int ec_poll_out(int fd, u_int msec)
 {
 #if defined(HAVE_POLL) && !defined(OS_DARWIN)
    struct pollfd poll_fd;
-   
+
    /* set the correct fd */
    poll_fd.fd = fd;
    poll_fd.events = POLLOUT;
-         
+
    /* execute the syscall */
    poll(&poll_fd, 1, msec);
 
    /* the event has occurred, return 1 */
    if (poll_fd.revents & POLLOUT)
       return 1;
-  
+
    return 0;
-   
+
 #elif defined(HAVE_SELECT)
 
    fd_set msk_fd;
    struct timeval to;
-     
+
    memset(&to, 0, sizeof(struct timeval));
    /* timeval uses microseconds */
    to.tv_usec = msec * 1000;
-   
+
    FD_ZERO(&msk_fd);
-  
+
    /* set the correct fd */
    FD_SET(fd, &msk_fd);
 
    /* execute the syscall */
    int fds = select(FOPEN_MAX, (fd_set *) 0, &msk_fd, (fd_set *) 0, &to);
-    
+
    if (fds <=0)
-      return 0; 
+      return 0;
    /* the even has occurred */
    if (FD_ISSET(0, &msk_fd))
       return 1;
-               
+
    return 0;
 #else
    #error "you don't have neither poll nor select"

@@ -60,22 +60,22 @@ void gtkui_plugin_load(void)
 #else
    char *path = INSTALL_LIBDIR "/" EC_PROGRAM "/";
 #endif
-   
+
    DEBUG_MSG("gtk_plugin_load");
-   
+
    dialog = gtk_file_selection_new ("Select a plugin...");
-   gtk_file_selection_set_filename(GTK_FILE_SELECTION(dialog), path);   
+   gtk_file_selection_set_filename(GTK_FILE_SELECTION(dialog), path);
 
 #ifdef OS_WINDOWS
    SAFE_FREE(path);
 #endif
-   
+
    response = gtk_dialog_run (GTK_DIALOG (dialog));
-   
+
    if (response == GTK_RESPONSE_OK) {
       gtk_widget_hide(dialog);
       filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (dialog));
-      
+
       gtkui_load_plugin(filename);
 
       /* update the list */
@@ -134,7 +134,7 @@ void gtkui_plugin_mgmt(void)
    GtkTreeViewColumn *column;
 
    DEBUG_MSG("gtk_plugin_mgmt");
-   
+
    /* if the object already exist, set the focus to it */
    if (plugins_window) {
       if(GTK_IS_WINDOW (plugins_window))
@@ -145,18 +145,18 @@ void gtkui_plugin_mgmt(void)
    }
 
    plugins_window = gtkui_page_new("Plugins", &gtkui_plug_destroy, &gtkui_plugins_detach);
-   
+
    vbox = gtk_vbox_new(FALSE, 0);
    gtk_container_add(GTK_CONTAINER (plugins_window), vbox);
    gtk_widget_show(vbox);
-   
+
   /* list */
    scrolled = gtk_scrolled_window_new(NULL, NULL);
    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (scrolled), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (scrolled), GTK_SHADOW_IN);
    gtk_box_pack_start(GTK_BOX(vbox), scrolled, TRUE, TRUE, 0);
    gtk_widget_show(scrolled);
-   
+
    treeview = gtk_tree_view_new();
    gtk_container_add(GTK_CONTAINER (scrolled), treeview);
    gtk_widget_show(treeview);
@@ -164,7 +164,7 @@ void gtkui_plugin_mgmt(void)
    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
    gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
    g_signal_connect (G_OBJECT (treeview), "row_activated", G_CALLBACK (gtkui_select_plugin), NULL);
-   
+
    renderer = gtk_cell_renderer_text_new ();
    column = gtk_tree_view_column_new_with_attributes (" ", renderer, "text", 0, NULL);
    gtk_tree_view_column_set_sort_column_id (column, 0);
@@ -188,7 +188,7 @@ void gtkui_plugin_mgmt(void)
    /* create the array for the list widget */
    /* or refreshes it if it exists */
    gtkui_create_plug_array();
-   gtk_tree_view_set_model(GTK_TREE_VIEW (treeview), GTK_TREE_MODEL (ls_plugins));   
+   gtk_tree_view_set_model(GTK_TREE_VIEW (treeview), GTK_TREE_MODEL (ls_plugins));
 
    gtk_widget_show(plugins_window);
 }
@@ -223,24 +223,24 @@ static void gtkui_plug_destroy(void)
 
 /*
  * create the array for the widget.
- * erase any previously alloc'd array 
+ * erase any previously alloc'd array
  */
 static void gtkui_create_plug_array(void)
 {
    GtkTreeIter iter;
    int res;
    static int blocked = 0;
-   
+
    DEBUG_MSG("gtk_create_plug_array");
-   
+
    if(ls_plugins)
       gtk_list_store_clear(GTK_LIST_STORE (ls_plugins));
    else
       ls_plugins = gtk_list_store_new (4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
-   
+
    /* go thru the list of plugins */
    res = plugin_list_walk(PLP_MIN, PLP_MAX, &gtkui_add_plugin);
-   if (res == -ENOTFOUND) { 
+   if (res == -ENOTFOUND) {
       blocked = g_signal_handlers_block_by_func (G_OBJECT (treeview), G_CALLBACK (gtkui_select_plugin), NULL);
       gtk_list_store_append (ls_plugins, &iter);
       gtk_list_store_set (ls_plugins, &iter, 0, " ", 1, "No Plugins Loaded", -1);
@@ -251,7 +251,7 @@ static void gtkui_create_plug_array(void)
 }
 
 /*
- * callback function for displaying the plugin list 
+ * callback function for displaying the plugin list
  */
 static void gtkui_add_plugin(char active, struct plugin_ops *ops)
 {
@@ -270,7 +270,7 @@ static void gtkui_add_plugin(char active, struct plugin_ops *ops)
 }
 
 /*
- * callback function for a plugin 
+ * callback function for a plugin
  */
 static void gtkui_select_plugin(void)
 {
@@ -293,7 +293,7 @@ static void gtkui_select_plugin(void)
       INSTANT_USER_MSG("Activating %s plugin...\n", plugin);
    else
       INSTANT_USER_MSG("Deactivating %s plugin...\n", plugin);
-         
+
    /*
     * pay attention on this !
     * if the plugin init does not return,
@@ -302,10 +302,10 @@ static void gtkui_select_plugin(void)
     * and immediately return
     */
    if (plugin_is_activated(plugin) == 1)
-      plugin_fini(plugin);   
+      plugin_fini(plugin);
    else
       plugin_init(plugin);
-        
+
    /* refresh the list to mark plugin active */
    gtkui_create_plug_array();
 }

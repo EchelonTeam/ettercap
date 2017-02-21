@@ -58,7 +58,7 @@ int ip_addr_init(struct ip_addr *sa, u_int16 type, u_char *addr)
    sa->addr_type = htons(type);
    /* wipe the buffer */
    memset(sa->addr, 0, MAX_IP_ADDR_LEN);
-   
+
    switch (type) {
       case AF_INET:
          sa->addr_len = htons(IP_ADDR_LEN);
@@ -72,9 +72,9 @@ int ip_addr_init(struct ip_addr *sa, u_int16 type, u_char *addr)
          BUG("Invalid ip_addr type");
          return -EINVALID;
    }
-   
+
    memcpy(&sa->addr, addr, ntohs(sa->addr_len));
-   
+
    return ESUCCESS;
 };
 
@@ -88,7 +88,7 @@ int ip_addr_cpy(u_char *addr, struct ip_addr *sa)
    return ESUCCESS;
 }
 
-/* 
+/*
  * compare two ip_addr structure.
  */
 int ip_addr_cmp(struct ip_addr *sa, struct ip_addr *sb)
@@ -101,7 +101,7 @@ int ip_addr_cmp(struct ip_addr *sa, struct ip_addr *sb)
       return -EINVALID;
 
    return memcmp(sa->addr, sb->addr, ntohs(sa->addr_len));
-   
+
 }
 
 /*
@@ -109,9 +109,9 @@ int ip_addr_cmp(struct ip_addr *sa, struct ip_addr *sb)
  */
 int ip_addr_null(struct ip_addr *sa)
 {
-   if (ntohs(sa->addr_type) == AF_INET || ntohs(sa->addr_type) == AF_INET6) 
+   if (ntohs(sa->addr_type) == AF_INET || ntohs(sa->addr_type) == AF_INET6)
       return 0;
- 
+
    return 1;
 }
 
@@ -131,7 +131,7 @@ int ip_addr_is_zero(struct ip_addr *sa)
             return 0;
          break;
    };
-  
+
    return 1;
 }
 
@@ -190,7 +190,7 @@ char * ip_addr_ntoa(struct ip_addr *sa, char *dst)
          return dst;
          break;
    };
-   
+
    return "invalid";
 }
 
@@ -199,13 +199,13 @@ inet_ntop4(const u_char *src, char *dst, size_t size)
 {
    char str[IP_ASCII_ADDR_LEN];
    int n;
-   
+
 	n = snprintf(str, IP_ASCII_ADDR_LEN, "%u.%u.%u.%u", src[0], src[1], src[2], src[3]);
-   
+
    str[n] = '\0';
- 
+
    strncpy(dst, str, size);
-   
+
    return dst;
 }
 
@@ -284,7 +284,7 @@ inet_ntop6(const u_char *src, char *dst, size_t size)
 		tp += sprintf(tp, "%x", words[i]);
 	}
 	/* Was it a trailing run of 0x00's? */
-	if (best.base != -1 && (best.base + best.len) == 
+	if (best.base != -1 && (best.base + best.len) ==
 	    (NS_IN6ADDRSZ / NS_INT16SZ))
 		*tp++ = ':';
 	*tp++ = '\0';
@@ -298,7 +298,7 @@ inet_ntop6(const u_char *src, char *dst, size_t size)
 	}
 
    strncpy(dst, tmp, size);
-   
+
    return dst;
 }
 
@@ -309,7 +309,7 @@ int ip_addr_pton(char *str, struct ip_addr *addr)
    int proto;
 
    proto = (strchr(str, ':')) ? AF_INET6 : AF_INET;
-   
+
    if(inet_pton(proto, str, buf) == 1) {
       ip_addr_init(addr, proto, buf);
       return ESUCCESS;
@@ -325,16 +325,16 @@ char *mac_addr_ntoa(u_char *mac, char *dst)
 {
    char str[ETH_ASCII_ADDR_LEN];
    int n;
-   
-	n = snprintf(str, ETH_ASCII_ADDR_LEN, "%02X:%02X:%02X:%02X:%02X:%02X", 
+
+	n = snprintf(str, ETH_ASCII_ADDR_LEN, "%02X:%02X:%02X:%02X:%02X:%02X",
          mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-   
+
    str[n] = '\0';
- 
+
    strncpy(dst, str, ETH_ASCII_ADDR_LEN);
-   
+
    return dst;
-   
+
 }
 
 /*
@@ -345,19 +345,19 @@ int mac_addr_aton(char *str, u_char *mac)
    int i;
    u_int tmp[MEDIA_ADDR_LEN];
 
-   i = sscanf(str, "%02X:%02X:%02X:%02X:%02X:%02X", 
-         (u_int *)&tmp[0], (u_int *)&tmp[1], (u_int *)&tmp[2], 
-         (u_int *)&tmp[3], (u_int *)&tmp[4], (u_int *)&tmp[5]); 
- 
+   i = sscanf(str, "%02X:%02X:%02X:%02X:%02X:%02X",
+         (u_int *)&tmp[0], (u_int *)&tmp[1], (u_int *)&tmp[2],
+         (u_int *)&tmp[3], (u_int *)&tmp[4], (u_int *)&tmp[5]);
+
    /* incorrect parsing */
    if (i != MEDIA_ADDR_LEN) {
       memset(mac, 0, MEDIA_ADDR_LEN);
       return 0;
    }
-   
+
    for (i = 0; i < MEDIA_ADDR_LEN; i++)
       mac[i] = (u_char)tmp[i];
-      
+
    return i;
 }
 
@@ -429,7 +429,7 @@ int ip_addr_is_broadcast(struct ip_addr *sa, struct ip_addr *ifaddr)
           */
          if(!memcmp(sa->addr, IP6_ALL_NODES, IP6_ADDR_LEN))
             return ESUCCESS;
-         
+
 			break;
 	}
 
@@ -461,12 +461,12 @@ int ip_addr_is_local(struct ip_addr *sa, struct ip_addr *ifaddr)
          /* the address 0.0.0.0 is used by DHCP and it is local for us*/
          if ( !memcmp(&sa->addr, "\x00\x00\x00\x00", ntohs(sa->addr_len)) )
             return ESUCCESS;
-         
+
          /* make a check on GBL_IFACE (is it initialized ?) */
          if ( !memcmp(&nw->addr, "\x00\x00\x00\x00", ntohs(sa->addr_len)) )
             /* return UNKNOWN */
             return -EINVALID;
-   
+
          address = &ip_addr_to_int32(sa->addr);
          netmask = &ip_addr_to_int32(nm->addr);
          network = &ip_addr_to_int32(nw->addr);
@@ -497,7 +497,7 @@ int ip_addr_is_local(struct ip_addr *sa, struct ip_addr *ifaddr)
                }
             }
          }
-      
+
          break;
    };
 

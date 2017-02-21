@@ -194,7 +194,7 @@ specify table_ext:
       expect ("table expected").should_error (f, nil)
       expect ("table expected").should_error (f, nil)
 
-  
+
 - "describe table.values ()":
   - before:
       subject = { k1 = {1}, k2 = {2}, k3 = {3} }

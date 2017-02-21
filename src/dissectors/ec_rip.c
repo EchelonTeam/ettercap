@@ -50,7 +50,7 @@
  *       +---------------------------------------------------------------+
  *
  */
- 
+
 #include <ec.h>
 #include <ec_decode.h>
 #include <ec_dissect.h>
@@ -89,16 +89,16 @@ FUNC_DECODER(dissector_rip)
 
    /* don't complain about unused var */
    (void)end;
-   
+
    /* skip empty packets */
    if (PACKET->DATA.len == 0)
       return NULL;
 
    DEBUG_MSG("RIP --> UDP dissector_rip");
-   
+
    /* cast the struct */
    rip = (struct rip_hdr *)ptr;
-   
+
    /* switch on the version */
    switch(rip->version) {
       case 2:
@@ -107,9 +107,9 @@ FUNC_DECODER(dissector_rip)
             DEBUG_MSG("\tDissector_RIP version 2 simple AUTH");
             PACKET->DISSECTOR.user = strdup("RIPv2");
             PACKET->DISSECTOR.pass = strdup((char *)rip->auth);
-            
+
             DISSECT_MSG("RIPv2 : %s:%d -> AUTH: %s \n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                                   ntohs(PACKET->L4.dst), 
+                                                   ntohs(PACKET->L4.dst),
                                                    PACKET->DISSECTOR.pass);
          }
          break;
@@ -117,7 +117,7 @@ FUNC_DECODER(dissector_rip)
          /* XXX - TODO RIP v4 */
          break;
    }
-   
+
    return NULL;
 }
 

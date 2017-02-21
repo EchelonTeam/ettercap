@@ -38,7 +38,7 @@ EC_API_EXTERN int plugin_fini(char *name);
 
 EC_API_EXTERN void plugin_list(void);
 
-#endif 
+#endif
 
 /* EOF */
 

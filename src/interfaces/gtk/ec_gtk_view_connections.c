@@ -201,7 +201,7 @@ void gtkui_show_connections(void)
    g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_kill), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
-   
+
    button = gtk_button_new_with_mnemonic("E_xpunge Connections");
    g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_purge), NULL);
    gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
@@ -209,7 +209,7 @@ void gtkui_show_connections(void)
 
    /* context menu */
    context_menu = gtk_menu_new();
-   
+
    items = gtk_menu_item_new_with_label("View Details");
    gtk_menu_shell_append (GTK_MENU_SHELL (context_menu), items);
    g_signal_connect (G_OBJECT (items), "activate", G_CALLBACK (gtkui_connection_detail), NULL);
@@ -290,10 +290,10 @@ static gboolean refresh_connections(gpointer data)
    } else {
       /* Columns:   Flags, Host, Port, "-",   Host, Port,
                     Proto, State, Bytes, (hidden) pointer */
-      ls_conns = gtk_list_store_new (10, 
-                    G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT, 
-                    G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT, 
-                    G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT, 
+      ls_conns = gtk_list_store_new (10,
+                    G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT,
+                    G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT,
+                    G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT,
                     G_TYPE_POINTER);
       connections = NULL;
    }
@@ -344,7 +344,7 @@ static gboolean refresh_connections(gpointer data)
    gtkui_connection_list_row(1, &top);
    gtkui_connection_list_row(0, &bottom);
 
-   if(top.conn == NULL) 
+   if(top.conn == NULL)
       return(TRUE);
 
    iter = top.iter; /* copy iter by value */
@@ -359,7 +359,7 @@ static gboolean refresh_connections(gpointer data)
       flags[0] = desc[0];
       strncpy(status, desc+50, 7);
       int i =sscanf(desc+62, "%u", &xferred);
-      BUG_IF(i!=1);  
+      BUG_IF(i!=1);
 
       gtk_list_store_set (ls_conns, &iter, 0, flags, 7, status, 8, xferred, -1);
 
@@ -367,8 +367,8 @@ static gboolean refresh_connections(gpointer data)
       if(bottom.conn == list)
          break;
    } while(gtk_tree_model_iter_next(model, &iter));
-  
-   SAFE_FREE(desc); 
+
+   SAFE_FREE(desc);
    return(TRUE);
 }
 
@@ -441,7 +441,7 @@ static struct row_pairs *gtkui_connections_add(char *desc, void *conn, struct ro
    return(row);
 }
 
-/* 
+/*
  * get the top or bottom visible row in the connection list
  * returns TOP row if (int top) is > 0  and list is not empty
  * returns BOTTOM row if (int top) is 0 and visible area is full
@@ -481,7 +481,7 @@ static void gtkui_connection_list_row(int top, struct row_pairs *pair) {
    return;
 }
 
-/* 
+/*
  * details for a connection
  */
 static void gtkui_connection_detail(void)
@@ -518,7 +518,7 @@ static void gtkui_connection_detail(void)
 
    snprintf(line, 200, "Source IP address      : \t%s\n", ip_addr_ntoa(&(c->co->L3_addr1), tmp));
    gtkui_details_print(textbuf, line);
-   
+
    if (host_iptoa(&(c->co->L3_addr1), name) == ESUCCESS) {
       snprintf(line, 200, "                           %s\n", name);
       gtkui_details_print(textbuf, line);
@@ -526,7 +526,7 @@ static void gtkui_connection_detail(void)
 
    snprintf(line, 200, "Destination IP address : \t%s\n", ip_addr_ntoa(&(c->co->L3_addr2), tmp));
    gtkui_details_print(textbuf, line);
-   
+
    if (host_iptoa(&(c->co->L3_addr2), name) == ESUCCESS) {
       snprintf(line, 200, "                           %s\n", name);
       gtkui_details_print(textbuf, line);
@@ -584,8 +584,8 @@ static void gtkui_connection_data(void)
 
    if(c == NULL || c->co == NULL)
       return; /* just to be safe */
-  
-   /* 
+
+   /*
     * remove any hook on the open connection.
     * this is done to prevent a switch of connection
     * with the panel opened
@@ -596,11 +596,11 @@ static void gtkui_connection_data(void)
       /* remove the viewing flag */
       curr_conn->flags &= ~CONN_VIEWING;
    }
-   
+
    /* set the global variable to pass the parameter to other functions */
    curr_conn = c->co;
    curr_conn->flags |= CONN_VIEWING;
-   
+
    /* default is split view */
    gtkui_connection_data_split();
 }
@@ -626,7 +626,7 @@ static void gtkui_connection_data_split(void)
       gtk_container_remove(GTK_CONTAINER (data_window), child);
       textview3 = NULL;
       joinedbuf = NULL;
-      endmark3 = NULL;     
+      endmark3 = NULL;
    } else {
       data_window = gtkui_page_new("Connection data", &gtkui_destroy_conndata, &gtkui_connection_data_detach);
    }
@@ -644,7 +644,7 @@ static void gtkui_connection_data_split(void)
    gtk_widget_show(vbox);
 
   /* title */
-   snprintf(title, MAX_ASCII_ADDR_LEN+6, "%s:%d", 
+   snprintf(title, MAX_ASCII_ADDR_LEN+6, "%s:%d",
             ip_addr_ntoa(&curr_conn->L3_addr1, tmp), ntohs(curr_conn->L4_addr1));
    label = gtk_label_new(title);
    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
@@ -653,7 +653,7 @@ static void gtkui_connection_data_split(void)
 
   /* data */
    scrolled = gtk_scrolled_window_new(NULL, NULL);
-   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (scrolled), 
+   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (scrolled),
                                   GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (scrolled), GTK_SHADOW_IN);
    gtk_box_pack_start(GTK_BOX(vbox), scrolled, TRUE, TRUE, 0);
@@ -695,7 +695,7 @@ static void gtkui_connection_data_split(void)
    gtk_widget_show(vbox);
 
   /* title */
-   snprintf(title, MAX_ASCII_ADDR_LEN+6, "%s:%d", 
+   snprintf(title, MAX_ASCII_ADDR_LEN+6, "%s:%d",
             ip_addr_ntoa(&curr_conn->L3_addr2, tmp), ntohs(curr_conn->L4_addr2));
    label = gtk_label_new(title);
    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
@@ -730,7 +730,7 @@ static void gtkui_connection_data_split(void)
    gtk_box_pack_start(GTK_BOX(vbox), hbox_small, FALSE, FALSE, 0);
    gtk_widget_show(hbox_small);
 
-   button = gtk_button_new_with_mnemonic("Inject _File"); 
+   button = gtk_button_new_with_mnemonic("Inject _File");
    g_signal_connect(G_OBJECT (button), "clicked", G_CALLBACK (gtkui_connection_inject_file), NULL);
    gtk_box_pack_start(GTK_BOX(hbox_small), button, TRUE, TRUE, 0);
    gtk_widget_show(button);
@@ -781,7 +781,7 @@ static void gtkui_connection_data_attach(void)
       conntrack_hook_conn_del(curr_conn, split_print_po);
       conntrack_hook_conn_del(curr_conn, join_print_po);
    }
-   
+
    gtk_widget_destroy(data_window);
    textview1 = NULL;
    textview2 = NULL;
@@ -814,7 +814,7 @@ static void gtkui_destroy_conndata(void)
 /* int buffer - 1 for left split view, 2 for right split view, 3 for joined view */
 /* char *data - string to print */
 /* int color  - 2 for blue text (used in joined view) */
-static void gtkui_data_print(int buffer, char *data, int color) 
+static void gtkui_data_print(int buffer, char *data, int color)
 {
    GtkTextIter iter;
    GtkTextBuffer *textbuf = NULL;
@@ -842,7 +842,7 @@ static void gtkui_data_print(int buffer, char *data, int color)
          return;
    }
 
-   
+
    /* make sure data is valid UTF8 */
    unicode = gtkui_utf8_validate(data);
 
@@ -852,28 +852,28 @@ static void gtkui_data_print(int buffer, char *data, int color)
 
    gtk_text_buffer_get_end_iter(textbuf, &iter);
    if(color == 2)
-      gtk_text_buffer_insert_with_tags_by_name(textbuf, &iter, unicode, 
+      gtk_text_buffer_insert_with_tags_by_name(textbuf, &iter, unicode,
          -1, "blue_fg", "monospace", NULL);
    else
-      gtk_text_buffer_insert_with_tags_by_name(textbuf, &iter, unicode, 
+      gtk_text_buffer_insert_with_tags_by_name(textbuf, &iter, unicode,
          -1, "monospace", NULL);
-   gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW (textview), 
-      endmark, 0, FALSE, 0, 0); 
+   gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW (textview),
+      endmark, 0, FALSE, 0, 0);
 }
 
 static void split_print(u_char *text, size_t len, struct ip_addr *L3_src)
 {
    int ret;
-   
+
    /* check the regex filter */
-   if (GBL_OPTIONS->regex && 
+   if (GBL_OPTIONS->regex &&
        regexec(GBL_OPTIONS->regex, text, 0, NULL, 0) != 0) {
       return;
    }
 
    /* use the global to reuse the same memory region */
    SAFE_REALLOC(dispbuf, hex_len(len) * sizeof(u_char) + 1);
-   
+
    /* format the data */
    ret = GBL_FORMAT(text, len, dispbuf);
    dispbuf[ret] = 0;
@@ -887,24 +887,24 @@ static void split_print(u_char *text, size_t len, struct ip_addr *L3_src)
 static void split_print_po(struct packet_object *po)
 {
    int ret;
-   
+
    /* if not open don't refresh it */
    if (!data_window)
       return;
-   
+
    /* check the regex filter */
-   if (GBL_OPTIONS->regex && 
+   if (GBL_OPTIONS->regex &&
        regexec(GBL_OPTIONS->regex, po->DATA.disp_data, 0, NULL, 0) != 0) {
       return;
    }
-   
+
    /* use the global to reuse the same memory region */
    SAFE_REALLOC(dispbuf, hex_len(po->DATA.disp_len) * sizeof(u_char) + 1);
-      
+
    /* format the data */
    ret = GBL_FORMAT(po->DATA.disp_data, po->DATA.disp_len, dispbuf);
    dispbuf[ret] = 0;
-        
+
    if (!ip_addr_cmp(&po->L3.src, &curr_conn->L3_addr1))
       gtkui_data_print(1, dispbuf, 0);
    else
@@ -912,7 +912,7 @@ static void split_print_po(struct packet_object *po)
 }
 
 /*
- * show the data in a joined window 
+ * show the data in a joined window
  */
 static void gtkui_connection_data_join(void)
 {
@@ -943,28 +943,28 @@ static void gtkui_connection_data_join(void)
 
    /* don't timeout this connection */
    curr_conn->flags |= CONN_VIEWING;
-   
+
    vbox = gtk_vbox_new(FALSE, 0);
    gtk_container_add(GTK_CONTAINER(data_window), vbox);
    gtk_widget_show(vbox);
-   
+
   /* title */
-   snprintf(title, TITLE_LEN, "%s:%d - %s:%d", 
+   snprintf(title, TITLE_LEN, "%s:%d - %s:%d",
             ip_addr_ntoa(&curr_conn->L3_addr1, src), ntohs(curr_conn->L4_addr1),
             ip_addr_ntoa(&curr_conn->L3_addr2, dst), ntohs(curr_conn->L4_addr2));
    label = gtk_label_new(title);
    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
    gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
    gtk_widget_show(label);
-   
+
   /* data */
    scrolled = gtk_scrolled_window_new(NULL, NULL);
    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (scrolled),
                                   GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW (scrolled), GTK_SHADOW_IN);
    gtk_box_pack_start(GTK_BOX(vbox), scrolled, TRUE, TRUE, 0);
-   gtk_widget_show(scrolled);     
-   
+   gtk_widget_show(scrolled);
+
    textview3 = gtk_text_view_new();
    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW (textview3), GTK_WRAP_CHAR);
    gtk_text_view_set_editable(GTK_TEXT_VIEW (textview3), FALSE);
@@ -1016,7 +1016,7 @@ static gboolean gtkui_connections_scroll(gpointer data)
    if((int)data == 1 && textview1 && endmark1 && textview2 && endmark2) {
       /* scroll split data views to bottom */
       gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW (textview1), endmark1, 0, FALSE, 0, 0);
-      gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW (textview2), endmark2, 0, FALSE, 0, 0); 
+      gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW (textview2), endmark2, 0, FALSE, 0, 0);
    } else if(textview3 && endmark3) {
       /* scroll joined data view to bottom */
       gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW (textview3), endmark3, 0, FALSE, 0, 0);
@@ -1029,20 +1029,20 @@ static gboolean gtkui_connections_scroll(gpointer data)
 static void join_print(u_char *text, size_t len, struct ip_addr *L3_src)
 {
    int ret;
-   
+
    /* check the regex filter */
-   if (GBL_OPTIONS->regex && 
+   if (GBL_OPTIONS->regex &&
        regexec(GBL_OPTIONS->regex, text, 0, NULL, 0) != 0) {
       return;
    }
-   
+
    /* use the global to reuse the same memory region */
    SAFE_REALLOC(dispbuf, hex_len(len) * sizeof(u_char) + 1);
-   
+
    /* format the data */
    ret = GBL_FORMAT(text, len, dispbuf);
    dispbuf[ret] = 0;
-   
+
    if (!ip_addr_cmp(L3_src, &curr_conn->L3_addr1))
       gtkui_data_print(3, dispbuf, 1);
    else
@@ -1056,20 +1056,20 @@ static void join_print_po(struct packet_object *po)
    /* if not focused don't refresh it */
    if (!data_window)
       return;
-   
+
    /* check the regex filter */
-   if (GBL_OPTIONS->regex && 
+   if (GBL_OPTIONS->regex &&
        regexec(GBL_OPTIONS->regex, po->DATA.disp_data, 0, NULL, 0) != 0) {
       return;
    }
-   
+
    /* use the global to reuse the same memory region */
    SAFE_REALLOC(dispbuf, hex_len(po->DATA.disp_len) * sizeof(u_char) + 1);
-      
+
    /* format the data */
    ret = GBL_FORMAT(po->DATA.disp_data, po->DATA.disp_len, dispbuf);
    dispbuf[ret] = 0;
-        
+
    if (!ip_addr_cmp(&po->L3.src, &curr_conn->L3_addr1))
       gtkui_data_print(3, dispbuf, 1);
    else
@@ -1115,7 +1115,7 @@ static void gtkui_connection_kill(void *conn)
 
    if (!c || !c->co)
       return;
-   
+
    /* kill it */
    switch (user_kill(c->co)) {
       case ESUCCESS:
@@ -1130,13 +1130,13 @@ static void gtkui_connection_kill(void *conn)
 }
 
 /*
- * call the specialized funtion as this is a callback 
+ * call the specialized funtion as this is a callback
  * without the parameter
  */
 static void gtkui_connection_kill_curr_conn(void)
 {
    DEBUG_MSG("gtkui_connection_kill_curr_conn");
-   
+
    /* kill it */
    switch (user_kill(curr_conn)) {
       case ESUCCESS:
@@ -1207,7 +1207,7 @@ static void gtkui_connection_inject(void)
    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW (text), GTK_WRAP_CHAR);
    gtk_container_add(GTK_CONTAINER (frame), text);
    gtk_widget_show(text);
-    
+
    response = gtk_dialog_run(GTK_DIALOG(dialog));
    if(response == GTK_RESPONSE_OK) {
       gtk_widget_hide(dialog);
@@ -1222,7 +1222,7 @@ static void gtkui_connection_inject(void)
       gtk_text_buffer_get_start_iter(buf, &end);
       /* advance end iter to end of text, 500 char max */
       gtk_text_iter_forward_chars(&end, 500);
-      
+
       strncpy(injectbuf, gtk_text_buffer_get_text(buf, &start, &end, FALSE), 501);
 
       if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (button1)))
@@ -1237,7 +1237,7 @@ static void gtkui_connection_inject(void)
 static void gtkui_inject_user(int side)
 {
    size_t len;
-    
+
    /* escape the sequnces in the buffer */
    len = strescape(injectbuf, injectbuf);
 
@@ -1248,7 +1248,7 @@ static void gtkui_inject_user(int side)
 }
 
 /*
- * inject form a file 
+ * inject form a file
  */
 static void gtkui_connection_inject_file(void)
 {
@@ -1258,7 +1258,7 @@ static void gtkui_connection_inject_file(void)
    char tmp[MAX_ASCII_ADDR_LEN];
    const char *filename = NULL;
    gint response = 0;
-   
+
    DEBUG_MSG("gtk_connection_inject_file");
 
    if(curr_conn == NULL)
@@ -1280,16 +1280,16 @@ static void gtkui_connection_inject_file(void)
    hbox = gtk_hbox_new(FALSE, 5);
    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
    gtk_widget_show(hbox);
-      
+
    button1 = gtk_radio_button_new_with_label(NULL, ip_addr_ntoa(&curr_conn->L3_addr2, tmp));
    gtk_box_pack_start(GTK_BOX(hbox), button1, FALSE, FALSE, 0);
    gtk_widget_show(button1);
-   
+
    button2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON (button1),
                ip_addr_ntoa(&curr_conn->L3_addr1, tmp));
    gtk_box_pack_start(GTK_BOX(hbox), button2, FALSE, FALSE, 0);
    gtk_widget_show(button2);
-   
+
    label = gtk_label_new ("File to inject:");
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
@@ -1330,24 +1330,24 @@ static void gtkui_inject_file(char *filename, int side)
    int fd;
    void *buf;
    size_t size, ret;
-   
+
    DEBUG_MSG("inject_file %s", filename);
-   
+
    /* open the file */
    if ((fd = open(filename, O_RDONLY | O_BINARY)) == -1) {
       ui_error("Can't load the file");
       return;
    }
-      
+
    /* calculate the size of the file */
    size = lseek(fd, 0, SEEK_END);
-   
+
    /* load the file in memory */
    SAFE_CALLOC(buf, size, sizeof(char));
-            
+
    /* rewind the pointer */
    lseek(fd, 0, SEEK_SET);
-               
+
    ret = read(fd, buf, size);
 
    close(fd);
@@ -1356,7 +1356,7 @@ static void gtkui_inject_file(char *filename, int side)
       ui_error("Cannot read the file into memory");
       return;
    }
-      
+
    /* check where to inject */
    if (side == 1 || side == 2) {
       user_inject(buf, size, curr_conn, side);

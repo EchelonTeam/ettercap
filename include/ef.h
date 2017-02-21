@@ -53,7 +53,7 @@
 
 #define LOOP for(;;)
 
-/* file operations */ 
+/* file operations */
 #ifndef OS_WINDOWS
    #define O_BINARY  0
 #endif
@@ -95,7 +95,7 @@ extern struct globals gbls;
    /* Windows console doesn't grok ANSI */
    #define EC_COLOR_END
    #define EC_COLOR_BOLD
-   
+
    #define EC_COLOR_RED
    #define EC_COLOR_YELLOW
    #define EC_COLOR_GREEN

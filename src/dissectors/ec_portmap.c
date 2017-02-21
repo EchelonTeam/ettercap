@@ -1,5 +1,5 @@
 /*
-    ettercap -- dissector portmap 
+    ettercap -- dissector portmap
 
     Copyright (C) ALoR & NaGA
 
@@ -86,9 +86,9 @@ FUNC_DECODER(dissector_portmap)
    (void)end;
 
    /* skip packets which are not useful */
-   if (PACKET->DATA.len < 24)  
+   if (PACKET->DATA.len < 24)
       return NULL;
-   
+
    DEBUG_MSG("portmap --> dissector_portmap");
 
    /* Offsets differs from TCP to UDP (?) */
@@ -104,10 +104,10 @@ FUNC_DECODER(dissector_portmap)
    /* CALL */
    if (FROM_CLIENT("portmap", PACKET)) {
       if (type != 0 || session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS) {
-         SAFE_FREE(ident); 
+         SAFE_FREE(ident);
          return NULL;
       }
-      
+
       SAFE_FREE(ident);
       dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_portmap));
       SAFE_CALLOC(s->data, 1, sizeof(portmap_session));
@@ -119,7 +119,7 @@ FUNC_DECODER(dissector_portmap)
       pe->proto = pntol(ptr + 48);
 
       /* DUMP */
-      if ( proc == 4 ) 
+      if ( proc == 4 )
          pe->prog = DUMP;
 
       session_put(s);
@@ -137,16 +137,16 @@ FUNC_DECODER(dissector_portmap)
    pe = (portmap_session *)s->data;
    if (!pe)
       return NULL;
-   
+
    /* Unsuccess or not a reply */
-   if ( (pe->xid != xid || pntol(ptr + 8) != 0 || type != 1) 
-        && pe->status != MORE_FRAG) 
+   if ( (pe->xid != xid || pntol(ptr + 8) != 0 || type != 1)
+        && pe->status != MORE_FRAG)
       return NULL;
-      
+
    /* GETPORT Reply */
    if (pe->prog != DUMP) {
       port = pntol(ptr + 24);
-      
+
       for (i=0; Available_RPC_Dissectors[i].program != 0; i++ ) {
          if ( Available_RPC_Dissectors[i].program == pe->prog &&
               Available_RPC_Dissectors[i].version == pe->ver ) {
@@ -156,14 +156,14 @@ FUNC_DECODER(dissector_portmap)
                   break;
                dissect_add((char*)Available_RPC_Dissectors[i].name, APP_LAYER_TCP, port, Available_RPC_Dissectors[i].dissector);
                DISSECT_MSG("portmap : %s binds [%s] on port %d TCP\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                                                       Available_RPC_Dissectors[i].name, 
+                                                                       Available_RPC_Dissectors[i].name,
                                                                        port);
             } else {
                if (dissect_on_port_level((char*)Available_RPC_Dissectors[i].name, port, APP_LAYER_UDP) == ESUCCESS)
                   break;
                dissect_add((char*)Available_RPC_Dissectors[i].name, APP_LAYER_UDP, port, Available_RPC_Dissectors[i].dissector);
                DISSECT_MSG("portmap : %s binds [%s] on port %d UDP\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                                                       Available_RPC_Dissectors[i].name, 
+                                                                       Available_RPC_Dissectors[i].name,
                                                                        port);
             }
             break;
@@ -192,7 +192,7 @@ FUNC_DECODER(dissector_portmap)
 
                   dissect_add((char*)Available_RPC_Dissectors[i].name, APP_LAYER_TCP, port, Available_RPC_Dissectors[i].dissector);
                   DISSECT_MSG("portmap : %s binds [%s] on port %d TCP\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                                                          Available_RPC_Dissectors[i].name, 
+                                                                          Available_RPC_Dissectors[i].name,
                                                                           port);
                } else {
 
@@ -201,16 +201,16 @@ FUNC_DECODER(dissector_portmap)
 
                   dissect_add((char*)Available_RPC_Dissectors[i].name, APP_LAYER_UDP, port, Available_RPC_Dissectors[i].dissector);
                   DISSECT_MSG("portmap : %s binds [%s] on port %d UDP\n", ip_addr_ntoa(&PACKET->L3.src, tmp),
-                                                                          Available_RPC_Dissectors[i].name, 
+                                                                          Available_RPC_Dissectors[i].name,
                                                                           port);
-               }	 
+               }	
                break;
             }
          }
          offs += MAP_LEN;
       }
-      /* 
-       * Offset to the beginning of the first 
+      /*
+       * Offset to the beginning of the first
        * valid structure in the next packet
        */
       pe->next_offs = (MAP_LEN + 4) - (PACKET->DATA.len - offs);
@@ -220,7 +220,7 @@ FUNC_DECODER(dissector_portmap)
    if ( PACKET->L4.proto == NL_TYPE_TCP && !(pntol(ptr - 4)&LAST_FRAG) )
       pe->status = MORE_FRAG;
    else
-      dissect_wipe_session(PACKET, DISSECT_CODE(dissector_portmap));      
+      dissect_wipe_session(PACKET, DISSECT_CODE(dissector_portmap));
 
    return NULL;
 }

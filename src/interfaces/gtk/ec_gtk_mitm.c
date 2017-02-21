@@ -53,7 +53,7 @@ void gtkui_arp_poisoning(void)
 //   memset(params, '\0', PARAMS_LEN+1);
 
    dialog = gtk_dialog_new_with_buttons("MITM Attack: ARP Poisoning", GTK_WINDOW (window),
-                                        GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK, 
+                                        GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_container_set_border_width(GTK_CONTAINER (dialog), 5);
    gtk_dialog_set_has_separator(GTK_DIALOG (dialog), FALSE);
@@ -99,9 +99,9 @@ void gtkui_arp_poisoning(void)
          if(remote)
 		comma = ",";
 
-	 s_oneway = "oneway";	
+	 s_oneway = "oneway";
          oneway = TRUE;
-      } 
+      }
 
       if(!remote && !oneway) {
          ui_error("You must select at least one ARP mode");
@@ -159,7 +159,7 @@ void gtkui_icmp_redir(void)
 
    entry1 = gtk_entry_new();
    gtk_entry_set_max_length(GTK_ENTRY (entry1), ETH_ASCII_ADDR_LEN);
-   gtk_table_attach_defaults(GTK_TABLE (table), entry1, 1, 2, 0, 1); 
+   gtk_table_attach_defaults(GTK_TABLE (table), entry1, 1, 2, 0, 1);
    gtk_widget_show(entry1);
 
    label = gtk_label_new("IP Address");
@@ -196,24 +196,24 @@ void gtkui_port_stealing(void)
    GtkWidget *dialog, *vbox, *hbox, *image, *button1, *button2, *frame;
    gint response = 0;
    gboolean remote = FALSE;
-   
-   DEBUG_MSG("gtk_port_stealing"); 
-      
+
+   DEBUG_MSG("gtk_port_stealing");
+
    dialog = gtk_dialog_new_with_buttons("MITM Attack: Port Stealing", GTK_WINDOW (window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
    gtk_container_set_border_width(GTK_CONTAINER (dialog), 5);
    gtk_dialog_set_has_separator(GTK_DIALOG (dialog), FALSE);
-         
+
    hbox = gtk_hbox_new (FALSE, 5);
    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
    gtk_widget_show(hbox);
-         
+
    image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
    gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.1);
    gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 5);
    gtk_widget_show(image);
-      
+
    frame = gtk_frame_new("Optional parameters");
    gtk_container_set_border_width(GTK_CONTAINER (frame), 5);
    gtk_box_pack_start (GTK_BOX (hbox), frame, TRUE, TRUE, 0);
@@ -227,34 +227,34 @@ void gtkui_port_stealing(void)
    button1 = gtk_check_button_new_with_label("Sniff remote connections.");
    gtk_box_pack_start(GTK_BOX (vbox), button1, FALSE, FALSE, 0);
    gtk_widget_show(button1);
-   
+
    button2 = gtk_check_button_new_with_label("Propagate to other switches.");
    gtk_box_pack_start(GTK_BOX (vbox), button2, FALSE, FALSE, 0);
    gtk_widget_show(button2);
 
    response = gtk_dialog_run(GTK_DIALOG(dialog));
-   if(response == GTK_RESPONSE_OK) {    
-      gtk_widget_hide(dialog);          
+   if(response == GTK_RESPONSE_OK) {
+      gtk_widget_hide(dialog);
       const char *s_remote= "", *tree = "", *comma = "";
 
       if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (button1))) {
          s_remote="remote";
          remote = TRUE;
       }
-   
+
       if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (button2))) {
          if(remote)
               comma = ",";
 	 tree = "tree";
       }
-  
-      snprintf(params, PARAMS_LEN+1, "port:%s%s%s", s_remote, comma, tree); 
+
+      snprintf(params, PARAMS_LEN+1, "port:%s%s%s", s_remote, comma, tree);
       gtkui_start_mitm();
    }
 
    gtk_widget_destroy(dialog);
 
-   /* a simpler method: 
+   /* a simpler method:
       gtkui_input_call("Parameters :", params + strlen("port:"), PARAMS_LEN - strlen("port:"), gtkui_start_mitm);
     */
 }
@@ -263,10 +263,10 @@ void gtkui_dhcp_spoofing(void)
 {
    GtkWidget *dialog, *table, *hbox, *image, *label, *entry1, *entry2, *entry3, *frame;
    gint response = 0;
-   
+
    DEBUG_MSG("gtk_dhcp_spoofing");
 //   memset(params, '\0', PARAMS_LEN+1);
-   
+
    dialog = gtk_dialog_new_with_buttons("MITM Attack: DHCP Spoofing", GTK_WINDOW (window),
                                         GTK_DIALOG_MODAL, GTK_STOCK_OK, GTK_RESPONSE_OK,
                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
@@ -276,7 +276,7 @@ void gtkui_dhcp_spoofing(void)
    hbox = gtk_hbox_new (FALSE, 5);
    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, FALSE, FALSE, 0);
    gtk_widget_show(hbox);
-   
+
    image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
    gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.1);
    gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 5);
@@ -286,7 +286,7 @@ void gtkui_dhcp_spoofing(void)
    gtk_container_set_border_width(GTK_CONTAINER (frame), 5);
    gtk_box_pack_start (GTK_BOX (hbox), frame, TRUE, TRUE, 0);
    gtk_widget_show(frame);
-      
+
    table = gtk_table_new(3, 2, FALSE);
    gtk_table_set_row_spacings(GTK_TABLE (table), 5);
    gtk_table_set_col_spacings(GTK_TABLE (table), 5);
@@ -299,11 +299,11 @@ void gtkui_dhcp_spoofing(void)
    gtk_table_attach(GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
    gtk_widget_show(label);
 
-   entry1 = gtk_entry_new(); 
+   entry1 = gtk_entry_new();
    gtk_table_attach_defaults(GTK_TABLE (table), entry1, 1, 2, 0, 1);
    gtk_widget_show(entry1);
-   
-   label = gtk_label_new("Netmask"); 
+
+   label = gtk_label_new("Netmask");
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach(GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
    gtk_widget_show(label);
@@ -313,7 +313,7 @@ void gtkui_dhcp_spoofing(void)
    gtk_table_attach_defaults(GTK_TABLE (table), entry2, 1, 2, 1, 2);
    gtk_widget_show(entry2);
 
-   label = gtk_label_new("DNS Server IP");   
+   label = gtk_label_new("DNS Server IP");
    gtk_misc_set_alignment(GTK_MISC (label), 0, 0.5);
    gtk_table_attach(GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
    gtk_widget_show(label);
@@ -343,13 +343,13 @@ void gtkui_dhcp_spoofing(void)
 }
 
 
-/* 
- * start the mitm attack by passing the name and parameters 
+/*
+ * start the mitm attack by passing the name and parameters
  */
 static void gtkui_start_mitm(void)
 {
    DEBUG_MSG("gtk_start_mitm");
-   
+
    mitm_set(params);
    mitm_start();
 }
@@ -361,7 +361,7 @@ static void gtkui_start_mitm(void)
 void gtkui_mitm_stop(void)
 {
    GtkWidget *dialog;
-   
+
    DEBUG_MSG("gtk_mitm_stop");
 
    /* create the dialog */
@@ -380,7 +380,7 @@ void gtkui_mitm_stop(void)
    mitm_stop();
 
    gtk_widget_destroy(dialog);
-   
+
    gtkui_message("MITM attack(s) stopped");
 }
 

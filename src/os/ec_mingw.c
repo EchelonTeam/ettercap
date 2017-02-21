@@ -15,7 +15,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-    
+
     Various functions needed for native Windows compilers (not CygWin I guess??)
     We export these (for the plugins) with a "ec_win_" prefix in order not to accidentally
     link with other symbols in some foreign lib.
@@ -76,7 +76,7 @@ static BOOL attached_to_console;
 static void __init win_init(void)
 {
    /* Dr MingW JIT */
-   LoadLibrary ("exchndl.dll");   
+   LoadLibrary ("exchndl.dll");
    setup_console();
    pdc_ncurses_init();
 }
@@ -116,7 +116,7 @@ u_int16 get_iface_mtu(const char *iface)
          BOOL rc = get_interface_mtu (adapter, &mtu);
 
          DEBUG_MSG("get_interface_mtu(): mtu %lu, %s", mtu, rc ? "okay" : "failed");
-      
+
          PacketCloseAdapter (adapter);
          if (rc & mtu)
             return (mtu);
@@ -124,7 +124,7 @@ u_int16 get_iface_mtu(const char *iface)
          DEBUG_MSG("get_interface_mtu(): failed to open iface \"%s\"; %s",
                 iface, ec_win_strerror(GetLastError()));
    }
-   
+
    return (1514);  /* Assume ethernet */
 }
 
@@ -201,9 +201,9 @@ static int __inline win_kbhit (void)
 #endif
    return _kbhit();
 }
-      
+
 /*
- * A poll() using select() 
+ * A poll() using select()
  */
 int ec_win_poll (struct pollfd *p, int num, int timeout)
 {
@@ -276,12 +276,12 @@ int ec_win_poll (struct pollfd *p, int num, int timeout)
 static char *slashify (char *path)
 {
   char *p;
-  
+
   for (p = strchr(path,'\\'); p && *p; p = strchr(p,'\\'))
       *p++ = '/';
   if (p >= path+2 && *p == '\0' && p[-1] == '/' && p[-2] == '/')
      *(--p) = '\0';
-  
+
   return (path);
 }
 
@@ -657,11 +657,11 @@ int ec_win_dn_expand (const u_char *msg, const u_char *eom_orig,
   }
 
   *dn = '\0';
-  
+
   for (dn = exp_dn; (c = *dn) != '\0'; dn++)
     if (isascii(c) && isspace(c))
       return (-1);
-    
+
   if (len < 0)
      len = cp - comp_dn;
   return (len);
@@ -998,8 +998,8 @@ static char *get_winsock_error (int err, char *buf, size_t len)
 char *ec_win_strerror (int err)
 {
   static char buf[512];
-   
-  
+
+
   DWORD  lang  = MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT);
   DWORD  flags = FORMAT_MESSAGE_FROM_SYSTEM |
                  FORMAT_MESSAGE_IGNORE_INSERTS |
@@ -1018,17 +1018,17 @@ char *ec_win_strerror (int err)
                         lang, buf, sizeof(buf)-1, NULL))
      snprintf (buf, 512, "Unknown error %d (%#x)", err, err);
   }
-            
+
 
   /* strip trailing '\r\n' or '\n'. */
-  p = strrchr (buf, '\n'); 
+  p = strrchr (buf, '\n');
   if (p && (p - buf) >= 2)
      *p = '\0';
-  
-  p = strrchr (buf, '\r'); 
+
+  p = strrchr (buf, '\r');
   if (p && (p - buf) >= 1)
      *p = '\0';
-  
+
   return (buf);
 }
 

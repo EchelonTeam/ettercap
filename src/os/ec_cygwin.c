@@ -63,7 +63,7 @@ void disable_ip_forward(void)
 
    if (value == 0) {
       /* if forward is already 0 */
-      return;  
+      return;
    }
 
    saved_status = value;
@@ -102,9 +102,9 @@ static void restore_ip_forward(void)
 #endif
 
    /* the handle was already opened in disable_ip_forward */
-   
+
    DEBUG_MSG("ATEXIT: restore_ip_forward: retoring to value %d", saved_status);
-   
+
 #ifdef WIN9X
    IpForwardSz[0] = saved_status + '0';
    IpForwardSz[1] = '\0';
@@ -117,8 +117,8 @@ static void restore_ip_forward(void)
 
 }
 
-/* 
- * get the MTU parameter from the interface 
+/*
+ * get the MTU parameter from the interface
  */
 u_int16 get_iface_mtu(const char *iface)
 {

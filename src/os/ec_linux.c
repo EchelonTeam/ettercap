@@ -38,7 +38,7 @@ void safe_free_mem(char **param, int *param_length, char *command);
 void disable_ip_forward(void)
 {
    FILE *fd;
-   
+
    fd = fopen("/proc/sys/net/ipv4/ip_forward", "r");
    ON_ERROR(fd, NULL, "failed to open /proc/sys/net/ipv4/ip_forward");
 
@@ -46,7 +46,7 @@ void disable_ip_forward(void)
    fclose(fd);
 
    DEBUG_MSG("disable_ip_forward: old value = %c", saved_status);
- 
+
    /* sometimes writing just fails... retry up to 5 times */
    int i = 0;
    fd = NULL;
@@ -56,10 +56,10 @@ void disable_ip_forward(void)
       usleep(20000);
    } while(fd == NULL && i <=50);
    ON_ERROR(fd, NULL, "failed to open /proc/sys/net/ipv4/ip_forward");
-   
+
    fprintf(fd, "0");
    fclose(fd);
-   
+
    atexit(restore_ip_forward);
 }
 
@@ -67,18 +67,18 @@ static void restore_ip_forward(void)
 {
    FILE *fd;
    char current_status;
-   
+
    /* no modification needed */
    if (saved_status == '0')
       return;
-   
+
    /* read the current status to know if we need to modify it */
    fd = fopen("/proc/sys/net/ipv4/ip_forward", "r");
    ON_ERROR(fd, NULL, "failed to open /proc/sys/net/ipv4/ip_forward");
 
    fscanf(fd, "%c", &current_status);
    fclose(fd);
-   
+
    DEBUG_MSG("ATEXIT: restore_ip_forward: curr: %c saved: %c", current_status, saved_status);
 
    if (current_status == saved_status) {
@@ -105,8 +105,8 @@ static void restore_ip_forward(void)
    DEBUG_MSG("ATEXIT: restore_ip_forward: restore to %c", saved_status);
 }
 
-/* 
- * get the MTU parameter from the interface 
+/*
+ * get the MTU parameter from the interface
  */
 u_int16 get_iface_mtu(const char *iface)
 {
@@ -115,10 +115,10 @@ u_int16 get_iface_mtu(const char *iface)
 
    /* open the socket to work on */
    sock = socket(PF_INET, SOCK_DGRAM, 0);
-               
+
    memset(&ifr, 0, sizeof(ifr));
    strncpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
-                        
+
    /* get the MTU */
    if ( ioctl(sock, SIOCGIFMTU, &ifr) < 0)  {
       DEBUG_MSG("get_iface_mtu: MTU FAILED... assuming 1500");
@@ -127,9 +127,9 @@ u_int16 get_iface_mtu(const char *iface)
       DEBUG_MSG("get_iface_mtu: %d", ifr.ifr_mtu);
       mtu = ifr.ifr_mtu;
    }
-   
+
    close(sock);
-   
+
    return mtu;
 }
 

@@ -1,8 +1,8 @@
 /*
     sslstrip -- ettercap plugin -- SSL Strip per Moxie (http://www.thoughtcrime.org/software/sslstrip/)
-   
+
     Copyright (C) Ettercap Development Team. 2012.
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -54,7 +54,7 @@
 #endif
 
 /*
- * This plugin will basically replace all https links sent to the user's browser with http 
+ * This plugin will basically replace all https links sent to the user's browser with http
  * but keep track of those https links to send a proper HTTPS request to the links when requested.
  */
 
@@ -123,10 +123,10 @@ struct http_response {
 };
 
 struct http_connection {
-	int fd; 
+	int fd;
 	u_int16 port[2];
 	struct ip_addr ip[2];
-	CURL *handle; 
+	CURL *handle;
 	struct http_request *request;
 	struct http_response *response;
 	char curl_err_buffer[CURL_ERROR_SIZE];
@@ -266,7 +266,7 @@ static int sslstrip_fini(void *dummy)
 
        /* stop accept wrapper */
        pthread_t pid = ec_thread_getpid("http_accept_thread");
-       
+
        if (!pthread_equal(pid, EC_PTHREAD_NULL))
                ec_thread_destroy(pid);
 
@@ -636,7 +636,7 @@ static int http_get_peer(struct http_connection *connection)
 
 	memcpy(&po.L3.src, &connection->ip[HTTP_CLIENT], sizeof(struct ip_addr));
 	po.L4.src = connection->port[HTTP_CLIENT];
-	po.L4.dst = connection->port[HTTP_SERVER]; 
+	po.L4.dst = connection->port[HTTP_SERVER];
 
 	http_create_ident(&ident, &po);
 
@@ -697,7 +697,7 @@ static size_t http_create_ident(void **i, struct packet_object *po)
 }
 #endif
 
-static int http_sync_conn(struct http_connection *connection) 
+static int http_sync_conn(struct http_connection *connection)
 {
 	if (http_get_peer(connection) != ESUCCESS)
 		return -EINVALID;
@@ -856,9 +856,9 @@ static void http_send(struct http_connection *connection, struct packet_object *
 	curl_easy_setopt(connection->handle, CURLOPT_COOKIEFILE, ""); //Initialize cookie engine
 
 	/* Only allow HTTP and HTTPS */
-	curl_easy_setopt(connection->handle, CURLOPT_PROTOCOLS, (long) CURLPROTO_HTTP | 
+	curl_easy_setopt(connection->handle, CURLOPT_PROTOCOLS, (long) CURLPROTO_HTTP |
 						(long)CURLPROTO_HTTPS);
-	curl_easy_setopt(connection->handle, CURLOPT_REDIR_PROTOCOLS, (long) CURLPROTO_HTTP | 
+	curl_easy_setopt(connection->handle, CURLOPT_REDIR_PROTOCOLS, (long) CURLPROTO_HTTP |
 						(long) CURLPROTO_HTTPS);
 
 
@@ -1112,7 +1112,7 @@ static void http_remove_https(struct http_connection *connection)
 		memcpy(new_html+new_size, buf_cpy+offset, ovector[2*i]-offset);
 		new_size += ovector[2*i]-offset;
 
-		char *url = strndup(buf_cpy+ovector[2*i]+https_len, 
+		char *url = strndup(buf_cpy+ovector[2*i]+https_len,
 			(ovector[2*i+1] - ovector[2*i]) - https_len);
 		memcpy(new_html+new_size, "http://", http_len);
 		new_size += http_len;
@@ -1219,8 +1219,8 @@ static void http_parse_packet(struct http_connection *connection, int direction,
 
 static void http_initialize_po(struct packet_object *po, u_char *p_data, size_t len)
 {
-   /* 
-    * Allocate the data buffer and initialize 
+   /*
+    * Allocate the data buffer and initialize
     * fake headers. Headers len is set to 0.
     * XXX - Be sure to not modify these len.
     */

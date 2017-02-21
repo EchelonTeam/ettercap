@@ -120,7 +120,7 @@ void build_hosts_list(void)
    if (GBL_UI->type == UI_TEXT || GBL_UI->type == UI_DAEMONIZE || GBL_UI->type == UI_CURSES)
       /* in text mode and demonized call the function directly */
       scan_thread(NULL);
-   else 
+   else
       /* do the scan in a separate thread */
       ec_thread_new("scan", "scanning thread", &scan_thread, NULL);
 #endif

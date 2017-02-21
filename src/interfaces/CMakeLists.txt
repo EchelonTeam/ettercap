@@ -10,7 +10,7 @@ include_directories(text)
 set(EC_DAEMON_SRC daemon/ec_daemon.c)
 
 if(ENABLE_CURSES)
-    set(EC_CURSES_SRC 
+    set(EC_CURSES_SRC
                 curses/ec_curses.c
                 curses/ec_curses_filters.c
                 curses/ec_curses_help.c

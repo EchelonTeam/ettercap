@@ -18,7 +18,7 @@ EC_API_EXTERN FILE *debug_file;
 
 #endif /* EC_DEBUG_H */
 
-/* 
+/*
  * if DEBUG is not defined we expand the macros to null instructions...
  */
 

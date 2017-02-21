@@ -1,4 +1,4 @@
---- 
+---
 -- Parser and functions for HTTP requests/respnoses
 --
 -- Created by Ryan Linn and Mike Ryan
@@ -25,9 +25,9 @@ local function parse_args(argstr)
       return nil
    end
    local args = {}
-   kv = split(argstr,'&') 
+   kv = split(argstr,'&')
    for i,val in ipairs(kv) do
-      
+
       local start,finish,k,v = string.find(val, '^(.-)=(.*)')
       if k and v then
          args[k] = v
@@ -36,7 +36,7 @@ local function parse_args(argstr)
    return args
 end
 
--- parse_headers 
+-- parse_headers
 -- Use: parses the headers into k:v format
 -- Args: headers raw string
 -- Out: table of k:v headers
@@ -47,8 +47,8 @@ local function parse_headers(headers)
    end
 
    local h = {}
-   
-   for hline in string.gmatch(headers,"(.-)\r?\n") do 
+
+   for hline in string.gmatch(headers,"(.-)\r?\n") do
 
       local spos,epos,k,v = string.find(hline,"^(%S-): (.*)")
 
@@ -82,12 +82,12 @@ local function parse_auth(auth)
       return from_base64(auth_str)
    end
    return nil
-   
+
 end
 
 
 
--- parse_http 
+-- parse_http
 -- Use: parses a http packet into components
 -- Args: raw packet
 -- Out: nil if not a request or response
@@ -103,7 +103,7 @@ end
 --          - status_code
 --          - status_msg
 --          - http_ver
---          
+--
 --       - headers
 --       - body
 
@@ -120,7 +120,7 @@ http.parse_http = function (pkt)
    if (header == nil or body == nil or header == "") then
       return nil
    end
-   
+
    if (starts_with(header,"^GET ") > 0  or starts_with(header,"^HEAD ") > 0  or starts_with(header,"^POST ") > 0  or starts_with(header,"^CONNECT ") > 0 ) then
       local spos,epos, verb, url, httpver = string.find(header,'^(%S+) (.-) HTTP/(%d.%d)')
       p.request= 1
@@ -137,17 +137,17 @@ http.parse_http = function (pkt)
       if p.verb == 'POST' then
          p.post_data = parse_args(body)
       end
-     
+
       local spos,epos,baseurl,args = string.find(p.url,'^(.-)?(.*)')
       if baseurl and args then
          p.baseurl = baseurl
          p.get_data = parse_args(args)
-      end 
+      end
 
       if p.headers['Authorization'] then
          p.creds = parse_auth(p.headers['Authorization'])
       end
-      
+
    elseif (starts_with(header,"^HTTP/%d.%d") > 0 ) then
       p.response = 1
       local spos,epos,httpver, code, msg = string.find(header,'^HTTP/(%d.%d) (%d+) (.-)\r?\n')
@@ -156,7 +156,7 @@ http.parse_http = function (pkt)
       p.status_msg = msg
       p.headers = parse_headers(header)
       p.body = body
-      
+
    else
       return nil
    end

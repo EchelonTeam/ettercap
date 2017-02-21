@@ -24,7 +24,7 @@ local shortpacket = require("shortpacket")
 local shortsession = require("shortsession")
 local packet = require("packet")
 
--- We have to hook at the filtering point so that we are certain that all the 
+-- We have to hook at the filtering point so that we are certain that all the
 -- dissectors hae run.
 hook_point = hook_points.filter
 
@@ -52,7 +52,7 @@ end
 local session_key_func = shortsession.ip_session("inject_http")
 
 -- Here's your action.
-action = function(po) 
+action = function(po)
   local session_id = session_key_func(po)
   if not session_id then
     -- If we don't have session_id, then bail.
@@ -62,7 +62,7 @@ action = function(po)
   --local dst_ip = ""
   local src_ip = packet.src_ip(po)
   local dst_ip = packet.dst_ip(po)
-  
+
   ettercap.log("inject_http: " .. src_ip .. " -> " .. dst_ip .. "\n")
   -- Get the full buffer....
   reg = ettercap.reg.create_namespace(session_id)
@@ -88,7 +88,7 @@ action = function(po)
       ettercap.log("inject_http action : We modified the HTTP response!\n")
       local modified_data = header .. modified_body
 
-      -- This takes care of setting the packet data, as well as flagging it 
+      -- This takes care of setting the packet data, as well as flagging it
       -- as modified.
       packet.set_data(po, modified_data)
     end

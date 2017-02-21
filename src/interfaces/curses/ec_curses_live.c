@@ -38,7 +38,7 @@ void curses_sniff_live(void);
 void curses_sniff_live(void)
 {
    wdg_t *menu;
-   
+
    DEBUG_MSG("curses_sniff_live");
 
    wdg_create_object(&menu, WDG_MENU, WDG_OBJ_WANT_FOCUS | WDG_OBJ_ROOT_OBJECT);
@@ -50,28 +50,28 @@ void curses_sniff_live(void)
    wdg_set_color(menu, WDG_COLOR_TITLE, EC_COLOR_TITLE);
    /* add the menu from external files */
    wdg_menu_add(menu, menu_start);
-   
+
    wdg_menu_add(menu, menu_targets);
-   
+
    if (GBL_SNIFF->type != SM_BRIDGED)
       wdg_menu_add(menu, menu_hosts);
-   
+
    wdg_menu_add(menu, menu_view);
-   
+
    if (GBL_SNIFF->type != SM_BRIDGED)
       wdg_menu_add(menu, menu_mitm);
-   
+
    wdg_menu_add(menu, menu_filters);
    wdg_menu_add(menu, menu_logging);
 
 #ifdef HAVE_PLUGINS
    wdg_menu_add(menu, menu_plugins);
 #endif
-   
+
    wdg_menu_add(menu, menu_help);
 
    wdg_draw_object(menu);
-   
+
    /* repaint the whole screen */
    wdg_redraw_all();
 
@@ -80,7 +80,7 @@ void curses_sniff_live(void)
    /* add the message flush callback */
    wdg_add_idle_callback(curses_flush_msg);
 
-   /* 
+   /*
     * give the control to the event dispatcher
     * with the emergency exit key 'Q'
     */

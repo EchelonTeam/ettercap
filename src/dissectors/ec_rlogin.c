@@ -45,7 +45,7 @@ void __init rlogin_init(void)
 
 /*
  * rlogin sends characters one per packet for the password
- * but the login is sent all together on the second packet 
+ * but the login is sent all together on the second packet
  * sent by the client.
  */
 
@@ -59,11 +59,11 @@ FUNC_DECODER(dissector_rlogin)
    /* skip messages from the server */
    if (FROM_SERVER("rlogin", PACKET))
       return NULL;
-   
+
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    DEBUG_MSG("rlogin --> TCP dissector_rlogin");
 
    /* create an ident to retrieve the session */
@@ -76,15 +76,15 @@ FUNC_DECODER(dissector_rlogin)
          dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_rlogin));
          /* remember the state (used later) */
          s->data = strdup("HANDSHAKE");
-         
+
          /* save the session */
          session_put(s);
 
          SAFE_FREE(ident);
          return NULL;
-      } 
+      }
    }
-   
+
    /* the first packet after handshake */
    if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS && s->data) {
       if (!strcmp(s->data, "HANDSHAKE")) {
@@ -107,14 +107,14 @@ FUNC_DECODER(dissector_rlogin)
 
          /* make room for the string */
          SAFE_CALLOC(s->data, strlen(localuser) + strlen(remoteuser) + 5, sizeof(char));
-         
+
          snprintf(s->data, strlen(localuser)+strlen(remoteuser) + 5, "%s (%s)\r", remoteuser, localuser);
 
          SAFE_FREE(ident);
          return NULL;
       }
    }
-   
+
    /* concat the pass to the collected user */
    if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS && s->data) {
       size_t i;
@@ -122,10 +122,10 @@ FUNC_DECODER(dissector_rlogin)
       char str[strlen(s->data) + PACKET->DATA.disp_len + 2];
 
       memset(str, 0, sizeof(str));
-    
+
       /* concat the char to the previous one */
       snprintf(str, strlen(s->data) + PACKET->DATA.disp_len + 2, "%s%s", (char *)s->data, ptr);
-      
+
       /* parse the string for backspaces and erase as wanted */
       for (p = str, i = 0; i < strlen(str); i++) {
          if (str[i] == '\b' || str[i] == 0x7f) {
@@ -134,16 +134,16 @@ FUNC_DECODER(dissector_rlogin)
                p--;
          } else {
             *p = str[i];
-            p++;  
+            p++;
          }
       }
       *p = '\0';
-            
+
       /* save the new string */
       SAFE_FREE(s->data);
       s->data = strdup(str);
-      
-      /* 
+
+      /*
        * the user input is terminated
        * check if it was the password by checking
        * the presence of \r in the string
@@ -162,21 +162,21 @@ FUNC_DECODER(dissector_rlogin)
                SAFE_FREE(PACKET->DISSECTOR.user);
                return NULL;
             }
-   
+
             PACKET->DISSECTOR.pass = strdup((const char*)ptr + 1);
             if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
                *ptr = '\0';
-           
-            /* 
-             * delete the session to remember that 
+
+            /*
+             * delete the session to remember that
              * user and pass was collected
              */
             session_del(ident, DISSECT_IDENT_LEN);
             SAFE_FREE(ident);
-            
+
             /* display the message */
             DISSECT_MSG("RLOGIN : %s:%d -> USER: %s  PASS: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                 ntohs(PACKET->L4.dst), 
+                                 ntohs(PACKET->L4.dst),
                                  PACKET->DISSECTOR.user,
                                  PACKET->DISSECTOR.pass);
          }
@@ -184,7 +184,7 @@ FUNC_DECODER(dissector_rlogin)
    }
 
    SAFE_FREE(ident);
-   
+
    return NULL;
 }
 

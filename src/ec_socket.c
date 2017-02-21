@@ -44,7 +44,7 @@ int socket_recv(int s, u_char *payload, size_t size);
 
 /*******************************************/
 
-/* 
+/*
  * set or unset blocking flag on a socket
  */
 void set_blocking(int s, int set)
@@ -58,17 +58,17 @@ void set_blocking(int s, int set)
    /* get the current flags */
    if ((ret = fcntl(s, F_GETFL, 0)) == -1)
       return;
-   
-   if (set) 
+
+   if (set)
       ret &= ~O_NONBLOCK;
    else
       ret |= O_NONBLOCK;
-   
+
    /* set the flag */
 //   fcntl (s, F_SETFL, F_SETFD, FD_CLOEXEC, ret); //this solution BREAKS the socket (ssl mitm will not work)
    fcntl(s, F_SETFL, ret);
 
-#endif   
+#endif
 }
 
 
@@ -107,14 +107,14 @@ int open_socket(const char *host, u_int16 port)
    /* open the socket */
    if ( (sh = socket(AF_INET, SOCK_STREAM, 0)) < 0)
       return -EFATAL;
- 
+
    /* set nonblocking socket */
    set_blocking(sh, 0);
-  
+
    do {
       /* connect to the server */
       ret = connect(sh, (struct sockaddr *)&sa_in, sizeof(sa_in));
-      
+
       /* connect is in progress... */
       if (ret < 0) {
          err = GET_SOCK_ERRNO();
@@ -127,18 +127,18 @@ int open_socket(const char *host, u_int16 port)
             usleep(TSLEEP);
 #endif
          }
-      } else { 
+      } else {
          /* there was an error or the connect was successful */
          break;
       }
    } while(loops--);
- 
-   /* 
+
+   /*
     * we cannot recall get_sock_errno because under windows
     * calling it twice would not return the same result
     */
    err = ret < 0 ? err : 0;
-   
+
    /* reached the timeout */
    if (ret < 0 && (err == EINPROGRESS || err == EALREADY || err == EAGAIN)) {
       DEBUG_MSG("open_socket: connect() timeout: %d", err);
@@ -152,20 +152,20 @@ int open_socket(const char *host, u_int16 port)
       close_socket(sh);
       return -EINVALID;
    }
-      
+
    DEBUG_MSG("open_socket: connect() connected.");
-   
+
    /* reset the state to blocking socket */
    set_blocking(sh, 1);
-   
-   
+
+
    DEBUG_MSG("open_socket: %d", sh);
-   
+
    return sh;
 }
 
 /*
- * close the given socket 
+ * close the given socket
  */
 int close_socket(int s)
 {
@@ -174,13 +174,13 @@ int close_socket(int s)
    /* close the socket */
 #ifdef OS_WINDOWS
    return closesocket(s);
-#else   
+#else
    return close(s);
-#endif   
+#endif
 }
 
 
-/* 
+/*
  * send a buffer throught the socket
  */
 int socket_send(int s, const u_char *payload, size_t size)

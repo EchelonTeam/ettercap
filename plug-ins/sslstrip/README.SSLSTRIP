@@ -20,10 +20,10 @@ is seen as HTTP, therefor, unencrypted.
 
 How to get it to work:
 ----------------------
-In order for the plugin to compile, you must install libcurl. This can be done via 
+In order for the plugin to compile, you must install libcurl. This can be done via
 your operating system's package management. It needs versision 7.26.0 at least.
 
-On Mac OS X: 
+On Mac OS X:
    Mac OS X already comes with libcurl installed but it is an older version. Please use/run the MacPorts
 version of it by typing:
 
@@ -37,14 +37,14 @@ How to use?
 -----------
 Enabling the SSLStrip plugin will add an IPTables/IPFW rule that redirects traffic to port 80
 to a different port that the plugin will be listening on. Although not required, it is recommended
-if SSL MiTM (-S) is turned off to avoid any issues with the traffic coming from Ettercap to the 
+if SSL MiTM (-S) is turned off to avoid any issues with the traffic coming from Ettercap to the
 web server via HTTPS. If the targets lists are properly defined, SSL MiTM can also be used in
 conjunction of SSLStrip plugin just in case any HTTPS link slips by.
 
 
 Known Problems
 -------------
-The regex pattern used by the plugin picks up most HTTPS links but there are still some that will slip by. 
+The regex pattern used by the plugin picks up most HTTPS links but there are still some that will slip by.
 For example if a link has href="/aslfksldfkjdflkjasdfj/******RANDOMTEXT<https link>", the plugin will
 fail to match that.
 

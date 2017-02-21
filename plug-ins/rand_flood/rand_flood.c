@@ -2,7 +2,7 @@
     rand_flood -- ettercap plugin -- Flood the LAN with random MAC addresses
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -66,49 +66,49 @@ EC_THREAD_FUNC(flooder);
 
 /* plugin operations */
 
-struct plugin_ops rand_flood_ops = { 
+struct plugin_ops rand_flood_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "rand_flood",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "Flood the LAN with random MAC addresses",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "rand_flood",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "Flood the LAN with random MAC addresses",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &rand_flood_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &rand_flood_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &rand_flood_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int rand_flood_init(void *dummy) 
-{     
+static int rand_flood_init(void *dummy)
+{
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
       INSTANT_USER_MSG("rand_flood: plugin doesn't work in UNOFFENSIVE mode\n");
       return PLUGIN_FINISHED;
    }
-      
+
    INSTANT_USER_MSG("rand_flood: Start flooding the LAN...\n");
 
    /* create the flooding thread */
    ec_thread_new("flooder", "Random flooder thread", &flooder, NULL);
-        
+
    return PLUGIN_RUNNING;
 }
 
 
-static int rand_flood_fini(void *dummy) 
+static int rand_flood_fini(void *dummy)
 {
    pthread_t pid;
 
@@ -138,7 +138,7 @@ EC_THREAD_FUNC(flooder)
    tm.tv_nsec = 0;
 #endif
 
-   /* Get a "random" seed */ 
+   /* Get a "random" seed */
    gettimeofday(&seed, NULL);
    srandom(seed.tv_sec ^ seed.tv_usec);
 
@@ -157,7 +157,7 @@ EC_THREAD_FUNC(flooder)
 
    /* init the thread and wait for start up */
    ec_thread_init();
-   
+
    LOOP {
       CANCELLATION_POINT();
 
@@ -172,13 +172,13 @@ EC_THREAD_FUNC(flooder)
       memcpy(MACD + 4, &rnd, 2);
 
       /* Fill the source and destination MAC address
-       * with random values 
+       * with random values
        */
       memcpy(heth->dha, MACD, ETH_ADDR_LEN);
       memcpy(heth->sha, MACS, ETH_ADDR_LEN);
 
       /* Send on the wire and wait */
-      send_to_L2(&fake_po); 
+      send_to_L2(&fake_po);
 
 #if !defined(OS_WINDOWS)
       nanosleep(&tm, NULL);
@@ -186,11 +186,11 @@ EC_THREAD_FUNC(flooder)
       usleep(GBL_CONF->port_steal_send_delay*1000);
 #endif
    }
-   
-   return NULL; 
+
+   return NULL;
 }
 
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

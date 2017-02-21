@@ -56,7 +56,7 @@ static void discard_servdb(void)
    }
 
    DEBUG_MSG("ATEXIT: discard_servdb");
-   
+
    return;
 }
 
@@ -89,17 +89,17 @@ int services_init(void)
          proto = NL_TYPE_UDP;
       else
          continue;
-      
+
       /* skip comments */
       if (strstr(name, "#"))
          continue;
 
       SAFE_CALLOC(s, 1, sizeof(struct entry));
-      
+
       s->name = strdup(name);
       s->serv = htons(serv);
       s->proto = proto;
-      
+
       SLIST_INSERT_HEAD(&serv_head, s, next);
 
       i++;
@@ -108,7 +108,7 @@ int services_init(void)
 
    DEBUG_MSG("serv_init -- %d services loaded", i);
    USER_MSG("%4d known services\n", i);
-   
+
    fclose(f);
 
    atexit(discard_servdb);
@@ -117,7 +117,7 @@ int services_init(void)
 }
 
 /*
- * search for a service and 
+ * search for a service and
  * return its name
  */
 

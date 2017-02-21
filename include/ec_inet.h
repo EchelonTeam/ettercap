@@ -28,7 +28,7 @@
 #define	TR_ADDR_LEN 6
 #define	FDDI_ADDR_LEN 6
 #define	MEDIA_ADDR_LEN 6
-   
+
 #define	IP_ADDR_LEN 4
 #define	IP6_ADDR_LEN 16
 #define	MAX_IP_ADDR_LEN IP6_ADDR_LEN
@@ -44,9 +44,9 @@
 #define IP6_ALL_NODES "\xff\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01"
 #define IP6_ALL_ROUTERS "\xff\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02"
 
-/* 
- * this structure is used by ettercap to handle 
- * an IP packet disregarding its version 
+/*
+ * this structure is used by ettercap to handle
+ * an IP packet disregarding its version
  */
 struct ip_addr {
    u_int16 addr_type;
@@ -96,7 +96,7 @@ EC_API_EXTERN void disable_interface_offload(void);
 
 /********************/
 
-#ifdef WORDS_BIGENDIAN       
+#ifdef WORDS_BIGENDIAN
    /* BIG ENDIAN */
    #define phtos(x) ( (u_int16)                       \
                       ((u_int16)*((u_int8 *)x+1)<<8|  \
@@ -119,9 +119,9 @@ EC_API_EXTERN void disable_interface_offload(void);
                       (u_int32)*((u_int8 *)x+1)<<16|  \
                       (u_int32)*((u_int8 *)x+0)<<24   \
                     )
-   
+
    /* return little endian */
-   #define htons_inv(x) (u_int16)(x << 8) | (x >> 8) 
+   #define htons_inv(x) (u_int16)(x << 8) | (x >> 8)
 
    #define ORDER_ADD_SHORT(a, b)   a = a + b
    #define ORDER_ADD_LONG(a, b)	  a = a + b
@@ -133,20 +133,20 @@ EC_API_EXTERN void disable_interface_offload(void);
 
    #define pntos(x) ntohs(*(u_int16 *)(x))
    #define pntol(x) ntohl(*(u_int32 *)(x))
-      
+
    /* return little endian */
    #define htons_inv(x) (u_int16)x
-   
+
    #define ORDER_ADD_SHORT(a, b)   a = htons(ntohs(a) + (int16)b)
    #define ORDER_ADD_LONG(a, b)	  a = htonl(ntohl(a) + (int32)b)
 
 #endif
-      
-   
+
+
 #define int_ntoa(x)   inet_ntoa(*((struct in_addr *)&(x)))
 
 #define ip_addr_to_int32(x)  *(u_int32 *)(x)
-  
+
 #endif
 
 

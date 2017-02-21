@@ -51,50 +51,50 @@ FUNC_DECODER(dissector_ftp)
 
    /* the connection is starting... create the session */
    CREATE_SESSION_ON_SYN_ACK("ftp", s, dissector_ftp);
-   
+
    /* check if it is the first packet sent by the server */
    IF_FIRST_PACKET_FROM_SERVER("ftp", s, ident, dissector_ftp) {
-            
+
       DEBUG_MSG("\tdissector_ftp BANNER");
       /*
-       * get the banner 
+       * get the banner
        * ptr + 4 to skip the initial 220 response
        */
       if (!strncmp((const char*)ptr, "220", 3)) {
          PACKET->DISSECTOR.banner = strdup((const char*)ptr + 4);
-         
+
          /* remove the \r\n */
          if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.banner, '\r')) != NULL )
             *ptr = '\0';
       }
-     
+
    } ENDIF_FIRST_PACKET_FROM_SERVER(s, ident)
 
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    /* skip messages coming from the server */
    if (FROM_SERVER("ftp", PACKET))
       return NULL;
-   
+
    DEBUG_MSG("FTP --> TCP dissector_ftp");
- 
+
    /* skip the whitespaces at the beginning */
    while(*ptr == ' ' && ptr != end) ptr++;
- 
+
    /* reached the end */
-   if (ptr == end) 
+   if (ptr == end)
       return NULL;
-   
+
    /* harvest the username */
    if ( !strncasecmp((const char*)ptr, "USER ", 5) ) {
 
       DEBUG_MSG("\tDissector_FTP USER");
-      
+
       /* create the session */
       dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_ftp));
-      
+
       ptr += 5;
 
       /* if not null, free it */
@@ -103,13 +103,13 @@ FUNC_DECODER(dissector_ftp)
       /* fill the session data */
       s->data = strdup((const char*)ptr);
       s->data_len = strlen((const char*)ptr);
-      
+
       if ( (ptr = (u_char*)strchr(s->data,'\r')) != NULL )
          *ptr = '\0';
-      
+
       /* save the session */
       session_put(s);
-      
+
       return NULL;
    }
 
@@ -117,27 +117,27 @@ FUNC_DECODER(dissector_ftp)
    if ( !strncasecmp((const char*)ptr, "PASS ", 5) ) {
 
       DEBUG_MSG("\tDissector_FTP PASS");
-      
+
       ptr += 5;
-      
+
       /* create an ident to retrieve the session */
       dissect_create_ident(&ident, PACKET, DISSECT_CODE(dissector_ftp));
-      
+
       /* retrieve the session and delete it */
       if (session_get_and_del(&s, ident, DISSECT_IDENT_LEN) == -ENOTFOUND) {
          SAFE_FREE(ident);
          return NULL;
       }
-      
+
       /* check that the user was sent before the pass */
       if (s->data == NULL) {
          SAFE_FREE(ident);
          return NULL;
       }
-      
+
       /* fill the structure */
       PACKET->DISSECTOR.user = strdup(s->data);
-      
+
       PACKET->DISSECTOR.pass = strdup((const char*)ptr);
       if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
          *ptr = '\0';
@@ -147,14 +147,14 @@ FUNC_DECODER(dissector_ftp)
       SAFE_FREE(ident);
 
       DISSECT_MSG("FTP : %s:%d -> USER: %s  PASS: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                    ntohs(PACKET->L4.dst), 
+                                    ntohs(PACKET->L4.dst),
                                     PACKET->DISSECTOR.user,
                                     PACKET->DISSECTOR.pass);
 
-      
+
       return NULL;
    }
-   
+
    return NULL;
 }
 

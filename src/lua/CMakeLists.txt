@@ -16,5 +16,5 @@ SET_TARGET_PROPERTIES(ec_lua PROPERTIES COMPILE_FLAGS -fPIC)
 add_dependencies(ec_lua luajit)
 target_link_libraries(ec_lua ${LUAJIT_LIBRARY})
 
-# Add our 'shared' code. 
+# Add our 'shared' code.
 add_subdirectory(share)

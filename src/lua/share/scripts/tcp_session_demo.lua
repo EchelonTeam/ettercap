@@ -24,7 +24,7 @@ local hook_points = require("hook_points")
 local shortsession = require("shortsession")
 local packet = require("packet")
 
--- We have to hook at the filtering point so that we are certain that all the 
+-- We have to hook at the filtering point so that we are certain that all the
 -- dissectors hae run.
 hook_point = hook_points.filter
 
@@ -37,7 +37,7 @@ function split_http(str)
 
   local header = string.sub(str, 0, header_end)
   local body = string.sub(str,header_end+1)
-  
+
   return header, body
 end
 
@@ -78,7 +78,7 @@ http_states.body_seen     = 3
 http_states.injected      = 4
 
 function handle_request(session_data, packet_object)
-  local buf = packet.read_data(packet_object, 4) 
+  local buf = packet.read_data(packet_object, 4)
   if buf == "GET " then
     session_data.http_state = http_states.request_seen
   end
@@ -152,7 +152,7 @@ function handle_response(session_data, packet_object)
   end
 
   if session_data.http_state == http_states.request_seen then
-    local buf = packet.read_data(packet_object, 8) 
+    local buf = packet.read_data(packet_object, 8)
     if not buf == "HTTP/1." then
       return nil
     end
@@ -160,7 +160,7 @@ function handle_response(session_data, packet_object)
     -- Since we're in the header, let's see if we can find the body.
   end
 
-  local buf = packet.read_data(packet_object) 
+  local buf = packet.read_data(packet_object)
   local header = nil
   local body = nil
   if session_data.http_state == http_states.response_seen then
@@ -184,7 +184,7 @@ function handle_response(session_data, packet_object)
 
   if session_data.http_state == http_states.body_seen then
     -- If we didn't already grab the body, then we aren't in the first packet
-    -- for the response. That means that 
+    -- for the response. That means that
     --
     if not body then
       body = buf
@@ -208,7 +208,7 @@ function handle_response(session_data, packet_object)
 end
 
 -- Here's your action.
-action = function(packet_object) 
+action = function(packet_object)
   local session_id = session_key_func(packet_object)
   if not session_id then
     -- If we don't have session_id, then bail.
@@ -221,12 +221,12 @@ action = function(packet_object)
 
   local session_ptr = ffi.new("struct ec_session *")
   local session_ptr_ptr = ffi.new("struct ec_session *[1]", session_ptr)
-  local ret = ffi.C.session_get(session_ptr_ptr, ident_ptr_ptr[0], ident_len) 
+  local ret = ffi.C.session_get(session_ptr_ptr, ident_ptr_ptr[0], ident_len)
   if ret == -ffi.C.ENOTFOUND then
     return nil
   end
 
-  -- Find the direction of our current TCP packet. 
+  -- Find the direction of our current TCP packet.
   -- 0 == client -> server
   -- 1 == server -> client
   local dir = ffi.C.tcp_find_direction(session_ptr_ptr[0].ident, ident_ptr_ptr[0])
@@ -239,11 +239,11 @@ action = function(packet_object)
 
   if dir == 0 then
     handle_request(session_data, packet_object)
-  else 
+  else
     handle_response(session_data, packet_object)
   end
 
-  -- ettercap.log("tcp_session_demo: %d %s:%d -> %s:%d - state: %s\n", dir, src_ip, src_port, 
+  -- ettercap.log("tcp_session_demo: %d %s:%d -> %s:%d - state: %s\n", dir, src_ip, src_port,
   --                  dst_ip, dst_port, tostring(session_data.http_state))
 
 end

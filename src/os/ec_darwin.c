@@ -35,7 +35,7 @@ u_int16 get_iface_mtu(const char *iface);
 
 void disable_ip_forward(void)
 {
-   int mib[4]; 
+   int mib[4];
    int val = 0;
    size_t len;
 
@@ -50,7 +50,7 @@ void disable_ip_forward(void)
       ERROR_MSG("sysctl() | net.inet.ip.forwarding");
 
    DEBUG_MSG("disable_ip_forward | net.inet.ip.forwarding = %d  old_value = %d\n", val, saved_status);
-                                       
+
    atexit(restore_ip_forward);
 }
 
@@ -63,21 +63,21 @@ static void restore_ip_forward(void)
    mib[1] = PF_INET;
    mib[2] = IPPROTO_IP;
    mib[3] = IPCTL_FORWARDING;
-   
+
    /* no need to restore anything */
    if (saved_status == 0)
       return;
-   
+
    /* restore the old value */
    if( (sysctl(mib, 4, NULL, NULL, &saved_status, sizeof(saved_status))) == -1)
       FATAL_ERROR("Please restore manually the value of net.inet.ip.forwarding to %d", saved_status);
 
    DEBUG_MSG("ATEXIT: restore_ip_forward | net.inet.ip.forwarding = %d\n", saved_status);
-                        
+
 }
 
-/* 
- * get the MTU parameter from the interface 
+/*
+ * get the MTU parameter from the interface
  */
 u_int16 get_iface_mtu(const char *iface)
 {
@@ -86,10 +86,10 @@ u_int16 get_iface_mtu(const char *iface)
 
    /* open the socket to work on */
    sock = socket(PF_INET, SOCK_DGRAM, 0);
-               
+
    memset(&ifr, 0, sizeof(ifr));
    strncpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
-                        
+
    /* get the MTU */
    if ( ioctl(sock, SIOCGIFMTU, &ifr) < 0)  {
       DEBUG_MSG("get_iface_mtu: MTU FAILED... assuming 1500");
@@ -98,9 +98,9 @@ u_int16 get_iface_mtu(const char *iface)
       DEBUG_MSG("get_iface_mtu: %d", ifr.ifr_mtu);
       mtu = ifr.ifr_mtu;
    }
-   
+
    close(sock);
-   
+
    return mtu;
 }
 

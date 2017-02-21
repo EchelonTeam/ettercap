@@ -48,7 +48,7 @@ void __init telnet_init(void)
 
 /*
  * telnet sends characters one per packet,
- * so we have to make sessions to collect 
+ * so we have to make sessions to collect
  * the string among the packet stram.
  *
  * the telnet collector collects user and pass only if
@@ -72,10 +72,10 @@ FUNC_DECODER(dissector_telnet)
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    /* skip the telnet commands, we are interested only in readable data */
    skip_telnet_command(&ptr, end);
-   
+
    /* the packet was made only by commands, skip it */
    if (ptr >= end)
       return NULL;
@@ -84,21 +84,21 @@ FUNC_DECODER(dissector_telnet)
 
    /* search if there are 0x00 char and covert them to spaces.
     * some OS (BSDI) send zeroes into the packet, so we cant use
-    * string functions 
+    * string functions
     */
    convert_zeros(ptr, end);
-      
+
    /* create an ident to retrieve the session */
    dissect_create_ident(&ident, PACKET, DISSECT_CODE(dissector_telnet));
-   
+
    /* is the message from the server or the client ? */
    if (FROM_SERVER("telnet", PACKET) || FROM_SERVER("telnets", PACKET)) {
-      
+
       /* start the collecting process when a "reserved" word is seen */
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == -ENOTFOUND) {
          if (match_login_regex((const char*)ptr)) {
             DEBUG_MSG("\tdissector_telnet - BEGIN");
-         
+
             /* create the session to begin the collection */
             dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_telnet));
             /* use this value to remember to not collect the banner again */
@@ -109,28 +109,28 @@ FUNC_DECODER(dissector_telnet)
          }
       }
    } else {
-      
+
       /* retrieve the session */
       if (session_get(&s, ident, DISSECT_IDENT_LEN) == ESUCCESS) {
 
          /* sanity check */
          if (s->data == NULL)
             return NULL;
-         
+
          /* if the collecting process has to be initiated */
          if (!strcmp(s->data, "\xe7\x7e")) {
-         
+
             /* the characters are not printable, skip them */
             if (!isprint((int)*ptr)) {
                SAFE_FREE(ident);
                return NULL;
             }
-            
+
             DEBUG_MSG("\tdissector_telnet - FIRST CHAR");
 
             /* save the first packet */
             s->data = strdup((const char*)ptr);
-         
+
          /* collect the subsequent packets */
          } else {
             size_t i;
@@ -141,14 +141,14 @@ FUNC_DECODER(dissector_telnet)
 
             /* concat the char to the previous one */
             snprintf((char*)str, strlen(s->data) + PACKET->DATA.disp_len + 2, "%s%s", (char *)s->data, ptr);
-            
+
             /* parse the string for backspaces and erase as wanted */
             for (p = str, i = 0; i < strlen((const char*)str); i++) {
                if (str[i] == '\b' || str[i] == 0x7f) {
                   p--;
                } else {
                   *p = str[i];
-                  p++;  
+                  p++;
                }
             }
             *p = '\0';
@@ -156,12 +156,12 @@ FUNC_DECODER(dissector_telnet)
             /* save the new string */
             SAFE_FREE(s->data);
             p = s->data = strdup((const char*)str);
-            
+
             /* terminate the string at \n */
             if ((p = (u_char*)strchr(s->data, '\n')) != NULL)
                *p = '\0';
-            
-            /* 
+
+            /*
              * the user input is terminated
              * check if it was the password by checking
              * the presence of \r in the string
@@ -176,15 +176,15 @@ FUNC_DECODER(dissector_telnet)
                   PACKET->DISSECTOR.user = strdup(s->data);
                   if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.user, '\r')) != NULL )
                      *ptr = '\0';
-         
+
                   PACKET->DISSECTOR.pass = strdup((const char*)ptr + 1);
                   if ( (ptr = (u_char*)strchr(PACKET->DISSECTOR.pass, '\r')) != NULL )
                      *ptr = '\0';
-                  
-                  
+
+
                   /* display the message */
                   DISSECT_MSG("TELNET : %s:%d -> USER: %s  PASS: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                       ntohs(PACKET->L4.dst), 
+                                       ntohs(PACKET->L4.dst),
                                        PACKET->DISSECTOR.user,
                                        PACKET->DISSECTOR.pass);
 
@@ -197,7 +197,7 @@ FUNC_DECODER(dissector_telnet)
          }
       }
    }
-  
+
    /* delete the ident */
    SAFE_FREE(ident);
 
@@ -205,9 +205,9 @@ FUNC_DECODER(dissector_telnet)
    IF_FIRST_PACKET_FROM_SERVER_SSL("telnet", "telnets", s, ident, dissector_telnet) {
       size_t i;
       u_char *q;
-   
+
       DEBUG_MSG("\tdissector_telnet BANNER");
-      
+
       /* get the banner */
       SAFE_CALLOC(PACKET->DISSECTOR.banner, PACKET->DATA.len + 1, sizeof(char));
       if ( end > ptr && (u_int32)(end - ptr) <= PACKET->DATA.len) /* Paranoid check */
@@ -215,7 +215,7 @@ FUNC_DECODER(dissector_telnet)
 
       q = (u_char*)PACKET->DISSECTOR.banner;
       for (i = 0; i < PACKET->DATA.len; i++) {
-         /* replace \r\n with spaces */ 
+         /* replace \r\n with spaces */
          if (q[i] == '\r' || q[i] == '\n')
             q[i] = ' ';
          /* replace command with end of string */
@@ -234,13 +234,13 @@ FUNC_DECODER(dissector_telnet)
          return NULL;
       }
 
-      /* 
+      /*
        * some OS (e.g. windows and ipso) send the "login:" in the
        * same packet as the banner...
        */
       if (match_login_regex((const char*)ptr)) {
          DEBUG_MSG("\tdissector_telnet - BEGIN");
-         
+
          /* create the session to begin the collection */
          dissect_create_session(&s, PACKET, DISSECT_CODE(dissector_telnet));
          /* use this value to remember to not collect the banner again */
@@ -250,8 +250,8 @@ FUNC_DECODER(dissector_telnet)
          return NULL;
       }
 
-   } ENDIF_FIRST_PACKET_FROM_SERVER(s, ident);           
-      
+   } ENDIF_FIRST_PACKET_FROM_SERVER(s, ident);
+
    return NULL;
 }
 
@@ -277,13 +277,13 @@ static void skip_telnet_command(u_char **ptr, u_char *end)
    }
 }
 
-/* 
+/*
  * convert 0x00 char into spaces (0x20) so we can
  * use str*() functions on the buffer...
  */
 static void convert_zeros(u_char *ptr, u_char *end)
 {
-   /* 
+   /*
     * walk the entire buffer, but skip the last
     * char, if it is 0x00 it is actually the string
     * terminator
@@ -298,7 +298,7 @@ static void convert_zeros(u_char *ptr, u_char *end)
    }
 }
 
-/* 
+/*
  * serach the strings which can identify failed login...
  * return 1 on succes, 0 on failure
  */
@@ -306,8 +306,8 @@ static int match_login_regex(const char *ptr)
 {
    char *words[] = {"incorrect", "failed", "failure", NULL };
    int i = 0;
-  
-   /* 
+
+   /*
     * "login:" is a special case, we have to take care
     * of messages from the server, they can contain login:
     * even if it is not the login prompt
@@ -315,13 +315,13 @@ static int match_login_regex(const char *ptr)
    if ((strcasestr(ptr, "login:") || strcasestr(ptr, "username:") )
          && !strcasestr(ptr, "last") && !strcasestr(ptr, "from"))
       return 1;
-   
-   /* search for keywords */ 
+
+   /* search for keywords */
    do {
       if (strcasestr(ptr, words[i]))
          return 1;
    } while (words[++i] != NULL);
-   
+
    return 0;
 }
 

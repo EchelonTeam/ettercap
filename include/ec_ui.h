@@ -48,7 +48,7 @@ EC_API_EXTERN void ui_register(struct ui_ops *ops);
 
 #define FATAL_MSG(x, ...) do { ui_error(x, ## __VA_ARGS__ ); return (-EFATAL); } while(0)
 
-/* 
+/*
  * if we are using the text interface, exit with a fatal error,
  * else display a message and continue with the current GUI (curses or gtk)
  */

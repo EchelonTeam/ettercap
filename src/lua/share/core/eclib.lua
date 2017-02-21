@@ -19,8 +19,8 @@
 
 
 --- Basic Split taken from http://lua-users.org/wiki/SplitJoin
--- @param str 
--- @param pat 
+-- @param str
+-- @param pat
 -- @return table
 split = function(str, pat)
    local t = {}  -- NOTE: use {n = 0} in Lua-5.0

@@ -16,15 +16,15 @@ extern void curses_sniff_offline(void);
 extern void curses_sniff_live(void);
 
 /* menus */
-extern struct wdg_menu menu_filters[]; 
-extern struct wdg_menu menu_logging[]; 
-extern struct wdg_menu menu_help[]; 
-extern struct wdg_menu menu_hosts[]; 
-extern struct wdg_menu menu_mitm[]; 
-extern struct wdg_menu menu_plugins[]; 
-extern struct wdg_menu menu_start[]; 
-extern struct wdg_menu menu_targets[]; 
-extern struct wdg_menu menu_view[]; 
+extern struct wdg_menu menu_filters[];
+extern struct wdg_menu menu_logging[];
+extern struct wdg_menu menu_help[];
+extern struct wdg_menu menu_hosts[];
+extern struct wdg_menu menu_mitm[];
+extern struct wdg_menu menu_plugins[];
+extern struct wdg_menu menu_start[];
+extern struct wdg_menu menu_targets[];
+extern struct wdg_menu menu_view[];
 
 #endif
 

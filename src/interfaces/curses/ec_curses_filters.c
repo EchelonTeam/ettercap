@@ -120,11 +120,11 @@ static void curses_select_filter(void *filter)
 static void curses_load_filter(void)
 {
    wdg_t *fop;
-   
+
    DEBUG_MSG("curses_load_filter");
-   
+
    wdg_create_object(&fop, WDG_FILE, WDG_OBJ_WANT_FOCUS | WDG_OBJ_FOCUS_MODAL);
-   
+
    wdg_set_title(fop, "Select a precompiled filter file...", WDG_ALIGN_LEFT);
    wdg_set_color(fop, WDG_COLOR_SCREEN, EC_COLOR);
    wdg_set_color(fop, WDG_COLOR_WINDOW, EC_COLOR_MENU);
@@ -132,28 +132,28 @@ static void curses_load_filter(void)
    wdg_set_color(fop, WDG_COLOR_TITLE, EC_COLOR_TITLE);
 
    wdg_file_set_callback(fop, load_filter);
-   
+
    wdg_draw_object(fop);
-   
+
    wdg_set_focus(fop);
 }
 
 static void load_filter(char *path, char *file)
 {
    char *tmp;
-   
+
    DEBUG_MSG("load_filter %s/%s", path, file);
-   
+
    SAFE_CALLOC(tmp, strlen(path)+strlen(file)+2, sizeof(char));
 
    snprintf(tmp, strlen(path)+strlen(file)+2, "%s/%s", path, file);
 
-   /* 
+   /*
     * load the filters chain.
     * errors are spawned by the function itself
     */
    filter_load_file(tmp, GBL_FILTERS, 1);
-   
+
    SAFE_FREE(tmp);
 }
 
@@ -166,7 +166,7 @@ static void curses_stop_filter(void)
    DEBUG_MSG("curses_stop_filter");
 
    filter_unload(GBL_FILTERS);
-   
+
    curses_message("Filters were unloaded");
 }
 

@@ -24,9 +24,9 @@
 #include <ec_dissect.h>
 #include <ec_resolv.h>
 
-#define ASN1_INTEGER    2                                                                           
-#define ASN1_STRING     4                                                                           
-#define ASN1_SEQUENCE   16 
+#define ASN1_INTEGER    2
+#define ASN1_STRING     4
+#define ASN1_SEQUENCE   16
 
 #define SNMP_VERSION_1  0
 #define SNMP_VERSION_2c 1
@@ -62,18 +62,18 @@ FUNC_DECODER(dissector_snmp)
    /* skip empty packets (ACK packets) */
    if (PACKET->DATA.len == 0)
       return NULL;
-   
+
    DEBUG_MSG("SNMP --> UDP dissector_snmp");
 
    /* get the version */
    while (*ptr++ != ASN1_INTEGER && ptr < end);
-   
+
    /* reached the end */
    if (ptr >= end) return NULL;
-      
-   // Check len + version    
+
+   // Check len + version
    if ((ptr + (*ptr) + 1) >= end) return NULL;
-   
+
    /* move to the len */
    ptr += *ptr;
 
@@ -85,22 +85,22 @@ FUNC_DECODER(dissector_snmp)
       version = 2;
    else if (version > 3)
       version = 3;
-   
+
    /* move till the community name len */
    while(*ptr++ != ASN1_STRING && ptr < end);
-   
+
    /* reached the end */
    if (ptr >= end) return NULL;
 
    /* get the community name length */
    n = *ptr;
-   
+
    if (n >= 128) {
       n &= ~128;
 
       if ((ptr + n) > end) return NULL;
       ptr += n;
-      
+
       switch(*ptr) {
          case 1:
             clen = *ptr;
@@ -126,7 +126,7 @@ FUNC_DECODER(dissector_snmp)
    /* Avoid bof */
    if (clen > MAX_COMMUNITY_LEN || ((ptr + clen) > end))
       return NULL;
-         
+
    SAFE_CALLOC(PACKET->DISSECTOR.user, clen + 2, sizeof(char));
 
    /* fill the structure */
@@ -135,12 +135,12 @@ FUNC_DECODER(dissector_snmp)
    PACKET->DISSECTOR.info = strdup("SNMP v ");
    /* put the number in the string */
    PACKET->DISSECTOR.info[6] = version + 48;
-   
+
    DISSECT_MSG("SNMP : %s:%d -> COMMUNITY: %s  INFO: %s\n", ip_addr_ntoa(&PACKET->L3.dst, tmp),
-                                 ntohs(PACKET->L4.dst), 
+                                 ntohs(PACKET->L4.dst),
                                  PACKET->DISSECTOR.user,
                                  PACKET->DISSECTOR.info);
-   
+
 
    return NULL;
 }

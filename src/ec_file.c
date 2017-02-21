@@ -41,14 +41,14 @@ char * get_full_path(const char *dir, const char *file)
    int len = 256;
 
    SAFE_CALLOC(filename, len, sizeof(char));
-   
+
    if (!strcmp(dir, "etc"))
       snprintf(filename, len, "%s/%s/%s", INSTALL_SYSCONFDIR, EC_PROGRAM, file);
    else if (!strcmp(dir, "share"))
       snprintf(filename, len, "%s/%s/%s", INSTALL_DATADIR, EC_PROGRAM, file);
 
    DEBUG_MSG("get_full_path -- [%s] %s", dir, filename);
-   
+
    return filename;
 }
 
@@ -68,11 +68,11 @@ char * get_local_path(const char *file)
 #endif
 
    SAFE_CALLOC(filename, strlen(self_root) + strlen("/share/") + strlen(file) + 1, sizeof(char));
-   
+
    snprintf(filename, strlen(self_root)+strlen("/share/") + strlen(file) + 1, "%s/share/%s", self_root, file);
-   
+
    DEBUG_MSG("get_local_path -- %s", filename);
-   
+
    return filename;
 }
 
@@ -88,22 +88,22 @@ FILE * open_data(char *dir, char *file, char *mode)
    char *filename = NULL;
 
    filename = get_full_path(dir, file);
-  
+
    DEBUG_MSG("open_data (%s)", filename);
-   
+
    fd = fopen(filename, mode);
    if (fd == NULL) {
       SAFE_FREE(filename);
       filename = get_local_path(file);
 
       DEBUG_MSG("open_data dropping to %s", filename);
-      
+
       fd = fopen(filename, mode);
       /* don't check the fd, it is done by the caller */
    }
- 
+
    SAFE_FREE(filename);
-   
+
    return fd;
 }
 

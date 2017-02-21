@@ -2,7 +2,7 @@
     ettercap -- dissector ldap -- TCP 389
 
     Copyright (C) ALoR & NaGA
-    
+
     Additional Copyright for this file: LnZ Lorenzo Porro <lporro@libero.it>
 
     This program is free software; you can redistribute it and/or modify
@@ -53,15 +53,15 @@ FUNC_DECODER(dissector_ldap)
    /* We need at least 15 bytes of data to be interested*/
    if (PACKET->DATA.len < 15)
       return NULL;
-    
+
    /* Only packets coming from the server */
    if (FROM_SERVER("ldap", PACKET) || FROM_SERVER("ldaps", PACKET))
       return NULL;
 
    /* Message Type */
    type = (u_int16)ptr[5];
-   
-   if (type != 0x60 && type != 0x00) 
+
+   if (type != 0x60 && type != 0x00)
       return NULL;
 
    /* Quite self-explaining :) */
@@ -94,9 +94,9 @@ FUNC_DECODER(dissector_ldap)
                                                         ntohs(PACKET->L4.dst),
                                                         PACKET->DISSECTOR.user,
                                                         PACKET->DISSECTOR.pass);
-   
+
    return NULL;
-}      
+}
 
 /* EOF */
 

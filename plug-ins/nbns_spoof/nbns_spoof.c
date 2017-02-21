@@ -2,7 +2,7 @@
     nbns_spoof -- ettercap plugin -- spoofs NBNS replies
 
     Copyright (C) Ettercap team
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -55,9 +55,9 @@
 #define OPCODE_RELEASE          0x3000
 #define OPCODE_WACK                     0x3800
 #define OPCODE_REFRESH          0x4000
-                                                 
 
-/* NM_FLAGS subfield bits */ 
+
+/* NM_FLAGS subfield bits */
 #define NM_AA_BIT         0x0400  /* Authoritative Answer */
 #define NM_TR_BIT         0x0200  /* TRuncation flag      */
 #define NM_RD_BIT         0x0100  /* Recursion Desired    */
@@ -67,8 +67,8 @@
 /* Return Codes */
 #define RCODE_POS_RSP     0x0000  /* Positive Response    */
 #define RCODE_FMT_ERR     0x0001  /* Format Error         */
-#define RCODE_SRV_ERR     0x0002  /* Server failure       */ 
-#define RCODE_NAM_ERR     0x0003  /* Name Not Found       */ 
+#define RCODE_SRV_ERR     0x0002  /* Server failure       */
+#define RCODE_NAM_ERR     0x0003  /* Name Not Found       */
 #define RCODE_IMP_ERR     0x0004  /* Unsupported request  */
 #define RCODE_RFS_ERR     0x0005  /* Refused              */
 #define RCODE_ACT_ERR     0x0006  /* Active error         */
@@ -146,7 +146,7 @@ struct nbns_spoof_entry {
 
 static SLIST_HEAD(, nbns_spoof_entry) nbns_spoof_head;
 
-/* 
+/*
  * SMB portion
  */
 
@@ -347,7 +347,7 @@ static void nbns_print_jripper(struct packet_object *po)
 	USER_MSG("%s%s\n", po->DISSECTOR.info, po->DISSECTOR.pass);
 }
 
-/* 
+/*
  * parse the packet and send the fake reply
  */
 static void nbns_spoof(struct packet_object *po)
@@ -401,7 +401,7 @@ static void nbns_spoof(struct packet_object *po)
 	hdr->tc = 0;
 	hdr->aa = 1;
 	hdr->ns_count = ntohs(0);
-	hdr->ar_count = ntohs(0); 
+	hdr->ar_count = ntohs(0);
 	hdr->transactid = header->transactid;
 
 	u_int16 *ttl1 = (u_int16*)(response+NBNS_TTL_POS);

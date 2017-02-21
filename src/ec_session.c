@@ -72,10 +72,10 @@ void session_put(struct ec_session *s)
    u_int32 h;
 
    SESSION_LOCK;
-   
+
    /* calculate the hash */
    h = session_hash(s->ident, s->ident_len);
-   
+
    /* search if it already exist */
    LIST_FOREACH_SAFE(sl, &session_list_head[h], next, tmp) {
       if ( sl->s->match(sl->s->ident, s->ident) ) {
@@ -87,7 +87,7 @@ void session_put(struct ec_session *s)
          sl->s = s;
          /* renew the timestamp */
          sl->ts = ti;
-         
+
          SESSION_UNLOCK;
          return;
       }
@@ -99,29 +99,29 @@ void session_put(struct ec_session *s)
          SAFE_FREE(sl);
       }
    }
-   
+
    /* sanity check */
    BUG_IF(s->match == NULL);
-  
+
    /* create the element in the list */
    SAFE_CALLOC(sl, 1, sizeof(struct session_list));
-   
+
    /* the timestamp */
    sl->ts = ti;
 
    /* link the session */
    sl->s = s;
-   
+
    DEBUG_MSG("session_put: [%p] new session", sl->s->ident);
 
-   /* 
+   /*
     * put it in the head.
     * it is likely to be retrived early
     */
    LIST_INSERT_HEAD(&session_list_head[h], sl, next);
 
    SESSION_UNLOCK;
-  
+
 }
 
 
@@ -136,18 +136,18 @@ int session_get(struct ec_session **s, void *ident, size_t ident_len)
    u_int32 h;
 
    SESSION_LOCK;
-   
+
    /* calculate the hash */
    h = session_hash(ident, ident_len);
 
    /* search if it already exist */
    LIST_FOREACH(sl, &session_list_head[h], next) {
       if ( sl->s->match(sl->s->ident, ident) ) {
-   
+
          //DEBUG_MSG("session_get: [%p]", sl->s->ident);
          /* return the session */
          *s = sl->s;
-         
+
          /* renew the timestamp */
          sl->ts = ti;
 
@@ -155,9 +155,9 @@ int session_get(struct ec_session **s, void *ident, size_t ident_len)
          return ESUCCESS;
       }
    }
-   
+
    SESSION_UNLOCK;
-   
+
    return -ENOTFOUND;
 }
 
@@ -172,14 +172,14 @@ int session_del(void *ident, size_t ident_len)
    u_int32 h;
 
    SESSION_LOCK;
-   
+
    /* calculate the hash */
    h = session_hash(ident, ident_len);
-   
+
    /* search if it already exist */
    LIST_FOREACH(sl, &session_list_head[h], next) {
       if ( sl->s->match(sl->s->ident, ident) ) {
-         
+
          DEBUG_MSG("session_del: [%p]", sl->s->ident);
 
          /* free the session */
@@ -193,9 +193,9 @@ int session_del(void *ident, size_t ident_len)
          return ESUCCESS;
       }
    }
-   
+
    SESSION_UNLOCK;
-   
+
    return -ENOTFOUND;
 }
 
@@ -211,16 +211,16 @@ int session_get_and_del(struct ec_session **s, void *ident, size_t ident_len)
    u_int32 h;
 
    SESSION_LOCK;
-   
+
    /* calculate the hash */
    h = session_hash(ident, ident_len);
-   
+
    /* search if it already exist */
    LIST_FOREACH(sl, &session_list_head[h], next) {
       if ( sl->s->match(sl->s->ident, ident) ) {
-         
+
          DEBUG_MSG("session_get_and_del: [%p]", sl->s->ident);
-         
+
          /* return the session */
          *s = sl->s;
          /* remove the element in the list */
@@ -232,9 +232,9 @@ int session_get_and_del(struct ec_session **s, void *ident, size_t ident_len)
          return ESUCCESS;
       }
    }
-   
+
    SESSION_UNLOCK;
-   
+
    return -ENOTFOUND;
 }
 
@@ -271,7 +271,7 @@ u_int32 session_hash(void *ident, size_t ilen)
       ilen -= sizeof(u_int16);
    }
 
-   if (ilen == 1) 
+   if (ilen == 1)
       hash += htons(*(u_char *)buf << 8);
 
    hash = (hash >> 16) + (hash & 0xffff);

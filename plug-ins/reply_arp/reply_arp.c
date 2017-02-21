@@ -2,7 +2,7 @@
     reply_arp -- ettercap plugin -- Simple arp responder
 
     Copyright (C) ALoR & NaGA
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -34,32 +34,32 @@ static int reply_arp_fini(void *);
 static void parse_arp(struct packet_object *po);
 
 /* plugin operations */
-struct plugin_ops reply_arp_ops = { 
+struct plugin_ops reply_arp_ops = {
    /* ettercap version MUST be the global EC_VERSION */
-   .ettercap_version =  EC_VERSION,                        
+   .ettercap_version =  EC_VERSION,
    /* the name of the plugin */
-   .name =              "reply_arp",  
-    /* a short description of the plugin (max 50 chars) */                    
-   .info =              "Simple arp responder",  
-   /* the plugin version. */ 
-   .version =           "1.0",   
+   .name =              "reply_arp",
+    /* a short description of the plugin (max 50 chars) */
+   .info =              "Simple arp responder",
+   /* the plugin version. */
+   .version =           "1.0",
    /* activation function */
    .init =              &reply_arp_init,
-   /* deactivation function */                     
+   /* deactivation function */
    .fini =              &reply_arp_fini,
 };
 
 /**********************************************************/
 
 /* this function is called on plugin load */
-int plugin_load(void *handle) 
+int plugin_load(void *handle)
 {
    return plugin_register(handle, &reply_arp_ops);
 }
 
 /******************* STANDARD FUNCTIONS *******************/
 
-static int reply_arp_init(void *dummy) 
+static int reply_arp_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
@@ -69,11 +69,11 @@ static int reply_arp_init(void *dummy)
 
    hook_add(HOOK_PACKET_ARP_RQ, &parse_arp);
 
-   return PLUGIN_RUNNING;      
+   return PLUGIN_RUNNING;
 }
 
 
-static int reply_arp_fini(void *dummy) 
+static int reply_arp_fini(void *dummy)
 {
    USER_MSG("reply_arp: plugin terminated...\n");
 
@@ -93,7 +93,7 @@ static void parse_arp(struct packet_object *po)
 
    if (GBL_TARGET1->scan_all || GBL_TARGET2->scan_all)
       in_list = 1;
-      
+
    LIST_FOREACH(i, &GBL_TARGET1->ips, next) {
       if (!ip_addr_cmp(&i->ip, &po->L3.dst)) {
          in_list = 1;
@@ -107,7 +107,7 @@ static void parse_arp(struct packet_object *po)
          break;
       }
    }
-   
+
    if (in_list)
       send_arp(ARPOP_REPLY, &po->L3.dst, GBL_IFACE->mac, &po->L3.src, po->L2.src);
 }
@@ -115,4 +115,4 @@ static void parse_arp(struct packet_object *po)
 /* EOF */
 
 // vim:ts=3:expandtab
- 
+

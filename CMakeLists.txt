@@ -25,12 +25,12 @@ SET(VALID_BUILD_TYPES Debug Release)
 
 if(NOT CMAKE_BUILD_TYPE)
   # Default to using "Release" as our build type.
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING 
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING
     "Choose the type of build, options are: ${VALID_BUILD_TYPES}." FORCE)
 endif()
 LIST(FIND VALID_BUILD_TYPES ${CMAKE_BUILD_TYPE} contains_valid)
 if(contains_valid EQUAL -1)
-  message(FATAL_ERROR "Unknown CMAKE_BUILD_TYPE: '${CMAKE_BUILD_TYPE}'. Valid options are: ${VALID_BUILD_TYPES}") 
+  message(FATAL_ERROR "Unknown CMAKE_BUILD_TYPE: '${CMAKE_BUILD_TYPE}'. Valid options are: ${VALID_BUILD_TYPES}")
 endif()
 UNSET(contains_valid)
 
@@ -49,19 +49,19 @@ option(SYSTEM_LIBS "Search for a system-provided libraries. This is only used fo
 option(BUNDLED_LIBS
   "Use bundled libraries if system provided versions are not found (or disabled)" ON)
 
-CMAKE_DEPENDENT_OPTION(SYSTEM_CURL 
+CMAKE_DEPENDENT_OPTION(SYSTEM_CURL
   "Search for a system-provided version of Curl" ON
   SYSTEM_LIBS OFF)
 
-CMAKE_DEPENDENT_OPTION(BUNDLED_CURL 
+CMAKE_DEPENDENT_OPTION(BUNDLED_CURL
   "Use bundled version of Curl if system-provided version is not found (or disabled)" ON
   BUNDLED_LIBS OFF)
 
-CMAKE_DEPENDENT_OPTION(SYSTEM_LIBNET 
+CMAKE_DEPENDENT_OPTION(SYSTEM_LIBNET
   "Search for a system-provided version of LIBNET" ON
   SYSTEM_LIBS OFF)
 
-CMAKE_DEPENDENT_OPTION(BUNDLED_LIBNET 
+CMAKE_DEPENDENT_OPTION(BUNDLED_LIBNET
   "Use bundled version of LIBNET if system-provided version is not found (or disabled)" ON
   BUNDLED_LIBS OFF)
 
@@ -107,7 +107,7 @@ set(POLKIT_DIR ${INSTALL_PREFIX}/share/polkit-1/actions/ CACHE PATH "Binary file
 set(PKEXEC_INSTALL_WRAPPER org.pkexec.ettercap CACHE PATH "Name of the pkexec action file")
 set(DESKTOP_DIR ${INSTALL_PREFIX}/share/applications/ CACHE PATH "Binary files installation directory")
 set(ICON_DIR ${INSTALL_PREFIX}/share/pixmaps CACHE PATH "Binary files installation directory")
-set(MAN_INSTALLDIR ${INSTALL_PREFIX}/share/man CACHE PATH "Path for manual pages") 
+set(MAN_INSTALLDIR ${INSTALL_PREFIX}/share/man CACHE PATH "Path for manual pages")
 
 set(CMAKE_C_FLAGS_DEBUG "-O0 -ggdb3 -DDEBUG -Wall -Wno-pointer-sign -pg" CACHE STRING "" FORCE)
 set(CMAKE_C_FLAGS_RELEASE "-O2 -w" CACHE STRING "" FORCE)
@@ -161,7 +161,7 @@ add_custom_target(clean-all
   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/Scripts/clean-all.cmake
 )
 
-# If we notice that this isn't the first time they've run 
+# If we notice that this isn't the first time they've run
 if(NOT ("${CMAKE_CACHEFILE_DIR}" STREQUAL ""))
   message("")
   message("HAVING TROUBLE BUILDING ETTERCAP? ")

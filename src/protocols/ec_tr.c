@@ -71,36 +71,36 @@ FUNC_DECODER(decode_tr)
    struct token_ring_header *tr;
 
    DECODED_LEN = sizeof(struct token_ring_header);
-   
+
    tr = (struct token_ring_header *)DECODE_DATA;
 
    /* org_code != encapsulated ethernet not yet supported */
    if (memcmp(tr->llc_org_code, TR_ORG_CODE, 3))
       NOT_IMPLEMENTED();
-   
+
    /* fill the packet object with sensitive data */
    PACKET->L2.header = (u_char *)DECODE_DATA;
    PACKET->L2.proto = IL_TYPE_TR;
    PACKET->L2.len = DECODED_LEN;
-   
+
    memcpy(PACKET->L2.src, tr->sha, TR_ADDR_LEN);
    memcpy(PACKET->L2.dst, tr->dha, TR_ADDR_LEN);
 
    /* HOOK POINT : HOOK_PACKET_tr */
    hook_point(HOOK_PACKET_TR, po);
-   
-   /* leave the control to the next decoder */   
+
+   /* leave the control to the next decoder */
    next_decoder = get_decoder(NET_LAYER, ntohs(tr->proto));
 
    EXECUTE_DECODER(next_decoder);
-      
+
    /* token ring header does not care about modification of upper layer */
-   
+
    return NULL;
 }
 
 /*
- * function to create a token ring header 
+ * function to create a token ring header
  */
 FUNC_BUILDER(build_tr)
 {
@@ -114,7 +114,7 @@ FUNC_BUILDER(build_tr)
             TR_ORG_CODE,                  /* Organization Code */
             proto,                        /* protocol type */
             l);                           /* libnet handle */
-   
+
 }
 
 /*

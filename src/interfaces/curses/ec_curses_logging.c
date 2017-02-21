@@ -69,7 +69,7 @@ static void toggle_compress(void)
 }
 
 /*
- * display the log dialog 
+ * display the log dialog
  */
 static void curses_log_all(void)
 {
@@ -89,13 +89,13 @@ static void log_all(void)
       ui_error("Please specify a filename");
       return;
    }
-   
+
    set_loglevel(LOG_PACKET, logfile);
    SAFE_FREE(logfile);
 }
 
 /*
- * display the log dialog 
+ * display the log dialog
  */
 static void curses_log_info(void)
 {
@@ -127,7 +127,7 @@ static void curses_stop_log(void)
 }
 
 /*
- * display the log dialog 
+ * display the log dialog
  */
 static void curses_log_msg(void)
 {
@@ -147,7 +147,7 @@ static void log_msg(void)
       ui_error("Please specify a filename");
       return;
    }
-   
+
    set_msg_loglevel(LOG_TRUE, logfile);
    SAFE_FREE(logfile);
 }
