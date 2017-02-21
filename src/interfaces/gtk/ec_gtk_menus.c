@@ -117,6 +117,7 @@ GtkItemFactoryEntry tab_menu[] = {
 /* proto */
 
 void gtkui_create_menu(int live);
+static gchar *menu_translate(const gchar *path, gpointer data);
 
 
 /*******************************************/
@@ -138,6 +139,7 @@ void gtkui_create_menu(int live)
    /* Prepare to generate menus from the definitions in ec_gtk.h */
    accel_group = gtk_accel_group_new ();
    root_menu = gtk_item_factory_new (GTK_TYPE_MENU_BAR, "<main>", accel_group);
+   gtk_item_factory_set_translate_func(root_menu, menu_translate, NULL, NULL);
    gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
 
    /* Start Menu */
@@ -227,6 +229,13 @@ void gtkui_create_tab_menu(void)
    g_signal_connect(G_OBJECT(notebook), "button-press-event", G_CALLBACK(gtkui_context_menu), context);
 }
 
+static gchar *menu_translate(const gchar *path, gpointer data)
+{
+   gchar *str;
+   str = (gchar *)_(path);
+
+   return str;
+}
 
 /* EOF */
 

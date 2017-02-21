@@ -69,6 +69,7 @@ static gboolean gtkui_flush_msg(gpointer data);
 static void gtkui_progress(char *title, int value, int max);
 
 static void gtkui_setup(void);
+static gchar *menu_translate(const gchar *path, gpointer data);
 
 static void toggle_unoffensive(void);
 static void toggle_nopromisc(void);
@@ -635,6 +636,7 @@ static void gtkui_setup(void)
 
    accel_group = gtk_accel_group_new ();
    item_factory = gtk_item_factory_new (GTK_TYPE_MENU_BAR, "<main>", accel_group);
+   gtk_item_factory_set_translate_func(item_factory, menu_translate, NULL, NULL);
    gtk_item_factory_create_items (item_factory, nmenu_items, file_menu, NULL);
 
    /* hidden shortcut to start Unified Sniffing with default interface */
@@ -709,6 +711,13 @@ static void gtkui_setup(void)
    gtk_widget_show(window);
 
    DEBUG_MSG("gtk_setup: end");
+}
+
+static gchar *menu_translate(const gchar *path, gpointer data)
+{
+   gchar *str;
+   str = (gchar *)_(path);
+   return str;
 }
 
 /*
