@@ -186,7 +186,7 @@ struct plugin_ops nbns_spoof_ops = {
 	/* ettercap version must be the global EC_VERSION */
 	.ettercap_version =  	EC_VERSION,
 	.name = 			"nbns_spoof",
-	.info = 			"Sends spoof NBNS replies & sends SMB challenges with custom challenge",
+	.info = 			N_("Sends spoof NBNS replies & sends SMB challenges with custom challenge"),
 	.version = 			"1.1",
 	.init = 			&nbns_spoof_init,
 	.fini = 			&nbns_spoof_fini,	
@@ -232,7 +232,7 @@ static int load_db(void)
 	f = open_data("etc", ETTER_NBNS, FOPEN_READ_TEXT);
 
 	if (f == NULL) {
-		USER_MSG("Cannot open %s\n", ETTER_NBNS); return -EINVALID;
+		USER_MSG(_("Cannot open %s\n"), ETTER_NBNS); return -EINVALID;
 	}
 	
 	while (fgets(line, 128, f)) {
@@ -251,7 +251,7 @@ static int load_db(void)
 			continue;
 
 		if (inet_aton(ip, &ipaddr) == 0) {
-			USER_MSG("%s:%d Invalid IP addres\n", ETTER_NBNS, lines);
+			USER_MSG(_("%s:%d Invalid IP addres\n"), ETTER_NBNS, lines);
 			continue;
 		}
 
@@ -278,12 +278,12 @@ static int parse_line(const char *str, int line, char **ip_p, char **name_p)
 	static char ip[20+1];
 	
 	if(sscanf(str, "%100s %20[^\r\n# ]", name, ip) != 2) {
-		USER_MSG("%s:%d Invalid entry %s\n", ETTER_NBNS, line, str);
+		USER_MSG(_("%s:%d Invalid entry %s\n"), ETTER_NBNS, line, str);
 		return(0);
 	}
 
 	if (strchr(ip, ':')) {
-		USER_MSG("%s:%d IP address must be IPv4\n", ETTER_NBNS, line);
+		USER_MSG(_("%s:%d IP address must be IPv4\n"), ETTER_NBNS, line);
 		return(0);
 	}
 	
@@ -324,7 +324,7 @@ static void nbns_set_challenge(struct packet_object *po)
 				//memcpy new challenge (8 bytes) to ptr
 				memset(ptr, (long)SMB_WEAK_CHALLENGE, 8);
 				po->flags |= PO_MODIFIED; /* calculate checksum */
-				USER_MSG("nbns_spoof: Modified SMB challenge\n");
+				USER_MSG(_("nbns_spoof: Modified SMB challenge\n"));
 			}
 		}
 	}
@@ -418,7 +418,7 @@ static void nbns_spoof(struct packet_object *po)
 	
 	/* send fake reply */
 	send_udp(&GBL_IFACE->ip, &po->L3.src, po->L2.src, po->L4.dst, po->L4.src, response, NBNS_MSGLEN_QUERY_RESPONSE);
-	USER_MSG("nbns_spoof: Query [%s] spoofed to [%s]\n", name, ip_addr_ntoa(reply, tmp));
+	USER_MSG(_("nbns_spoof: Query [%s] spoofed to [%s]\n"), name, ip_addr_ntoa(reply, tmp));
 
 	/* Do not forward request */
 	po->flags |= PO_DROPPED;

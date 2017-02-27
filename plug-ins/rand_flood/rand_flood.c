@@ -72,7 +72,7 @@ struct plugin_ops rand_flood_ops = {
    /* the name of the plugin */
    .name =              "rand_flood",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Flood the LAN with random MAC addresses",
+   .info =              N_("Flood the LAN with random MAC addresses"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -95,11 +95,11 @@ static int rand_flood_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("rand_flood: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("rand_flood: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
-   INSTANT_USER_MSG("rand_flood: Start flooding the LAN...\n");
+   INSTANT_USER_MSG(_("rand_flood: Start flooding the LAN...\n"));
 
    /* create the flooding thread */
    ec_thread_new("flooder", "Random flooder thread", &flooder, NULL);
@@ -118,7 +118,7 @@ static int rand_flood_fini(void *dummy)
    if (!pthread_equal(pid, EC_PTHREAD_NULL))
       ec_thread_destroy(pid);
 
-   INSTANT_USER_MSG("rand_flood: plugin stopped...\n");
+   INSTANT_USER_MSG(_("rand_flood: plugin stopped...\n"));
 
    return PLUGIN_FINISHED;
 }

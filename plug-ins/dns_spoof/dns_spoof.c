@@ -166,7 +166,7 @@ static int load_db(void)
    /* open the file */
    f = open_data("etc", ETTER_DNS, FOPEN_READ_TEXT);
    if (f == NULL) {
-      USER_MSG("dns_spoof: Cannot open %s\n", ETTER_DNS);
+      USER_MSG(_("dns_spoof: Cannot open %s\n"), ETTER_DNS);
       return -EINVALID;
    }
 
@@ -195,7 +195,7 @@ static int load_db(void)
           af = AF_INET6;
       }
       else { /* neither IPv4 nor IPv6 - throw a message and skip line */
-          USER_MSG("dns_spoof: %s:%d Invalid IPv4 or IPv6 address\n", ETTER_DNS, lines);
+          USER_MSG(_("dns_spoof: %s:%d Invalid IPv4 or IPv6 address\n"), ETTER_DNS, lines);
           continue;
       }
 
@@ -236,13 +236,13 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
  DEBUG_MSG("%s:%d str '%s'", ETTER_DNS, line, str);
 
    if (sscanf(str,"%100s %10s %40[^\r\n# ]", name, type, ip) != 3) {
-      USER_MSG("dns_spoof: %s:%d Invalid entry %s\n", ETTER_DNS, line, str);
+      USER_MSG(_("dns_spoof: %s:%d Invalid entry %s\n"), ETTER_DNS, line, str);
       return (0);
    }
 
    if (!strcasecmp(type,"PTR")) {
       if (strpbrk(name,"*?[]")) {
-         USER_MSG("dns_spoof: %s:%d Wildcards in PTR records are not allowed; %s\n",
+         USER_MSG(_("dns_spoof: %s:%d Wildcards in PTR records are not allowed; %s\n"),
                   ETTER_DNS, line, str);
          return (0);
       }
@@ -292,13 +292,13 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
          strncpy(ip, ip_tmp, strlen(ip_tmp)+1);
       }
       else {
-         USER_MSG("dns_spoof: %s:%d Unknown syntax for SRV record; %s\n",
+         USER_MSG(_("dns_spoof: %s:%d Unknown syntax for SRV record; %s\n"),
                   ETTER_DNS, line, str);
          return (0);
       }
 
       if (port > 0xffff || port <= 0) {
-         USER_MSG("dns_spoof: %s:%d Invalid value for port: %d\n",
+         USER_MSG(_("dns_spoof: %s:%d Invalid value for port: %d\n"),
                   ETTER_DNS, line, port);
          return (0);
       }
@@ -310,7 +310,7 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
       return (1);
    }
 
-   USER_MSG("dns_spoof: %s:%d Unknown record type %s\n", ETTER_DNS, line, type);
+   USER_MSG(_("dns_spoof: %s:%d Unknown record type %s\n"), ETTER_DNS, line, type);
    return (0);
 }
 
@@ -366,8 +366,8 @@ static void dns_spoof(struct packet_object *po)
 
          /* check if the family matches the record type */
          if (ntohs(reply->addr_type) != AF_INET) {
-            USER_MSG("mdns_spoof: can not spoof A record for %s "
-                     "because the value is not a IPv4 address\n", name);
+            USER_MSG(_("mdns_spoof: can not spoof A record for %s "
+                     "because the value is not a IPv4 address\n"), name);
             return;
          }
 
@@ -404,7 +404,7 @@ static void dns_spoof(struct packet_object *po)
             send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src,
                            ntohs(dns->id), answer, sizeof(answer), 1, 0, 0);
 
-            USER_MSG("dns_spoof: [%s] spoofed to [%s]\n", name, ip_addr_ntoa(reply, tmp));
+            USER_MSG(_("dns_spoof: [%s] spoofed to [%s]\n"), name, ip_addr_ntoa(reply, tmp));
          }
 
       /* also care about AAAA records */
@@ -421,8 +421,8 @@ static void dns_spoof(struct packet_object *po)
 
           /* check if the family matches the record type */
           if (ntohs(reply->addr_type) != AF_INET6) {
-             USER_MSG("mdns_spoof: can not spoof AAAA record for %s "
-                      "because the value is not a IPv6 address\n", name);
+             USER_MSG(_("mdns_spoof: can not spoof AAAA record for %s "
+                      "because the value is not a IPv6 address\n"), name);
              return;
           }
 
@@ -460,7 +460,7 @@ static void dns_spoof(struct packet_object *po)
              send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src,
                             ntohs(dns->id), answer, sizeof(answer), 1, 0, 0);
 
-            USER_MSG("dns_spoof: AAAA [%s] spoofed to [%s]\n",
+            USER_MSG(_("dns_spoof: AAAA [%s] spoofed to [%s]\n"),
                      name, ip_addr_ntoa(reply, tmp));
          }
       /* it is a reverse query (ip to name) */
@@ -498,7 +498,7 @@ static void dns_spoof(struct packet_object *po)
          send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src,
                         ntohs(dns->id), answer, (q - data) + 12 + rlen, 1, 0, 0);
 
-         USER_MSG("dns_spoof: [%s] spoofed to [%s]\n", name, a);
+         USER_MSG(_("dns_spoof: [%s] spoofed to [%s]\n"), name, a);
 
       /* it is an MX query (mail to ip) */
       } else if (type == ns_t_mx) {
@@ -572,7 +572,7 @@ static void dns_spoof(struct packet_object *po)
          send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src,
                         ntohs(dns->id), answer, sizeof(answer), 1, 0, 1);
 
-         USER_MSG("dns_spoof: MX [%s] spoofed to [%s]\n", name, ip_addr_ntoa(reply, tmp));
+         USER_MSG(_("dns_spoof: MX [%s] spoofed to [%s]\n"), name, ip_addr_ntoa(reply, tmp));
 
       /* it is an WINS query (NetBIOS-name to ip) */
       } else if (type == ns_t_wins) {
@@ -607,7 +607,7 @@ static void dns_spoof(struct packet_object *po)
          send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src,
                         ntohs(dns->id), answer, sizeof(answer), 1, 0, 1);
 
-         USER_MSG("dns_spoof: WINS [%s] spoofed to [%s]\n", name, ip_addr_ntoa(reply, tmp));
+         USER_MSG(_("dns_spoof: WINS [%s] spoofed to [%s]\n"), name, ip_addr_ntoa(reply, tmp));
 
       /* it is a SRV query (service discovery) */
       } else if (type == ns_t_srv) {
@@ -706,7 +706,7 @@ static void dns_spoof(struct packet_object *po)
          send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src,
                         ntohs(dns->id), answer, sizeof(answer), 1, 0, 1);
 
-         USER_MSG("dns_spoof: SRV [%s] spoofed to [%s:%d]\n", name, ip_addr_ntoa(reply, tmp), port);
+         USER_MSG(_("dns_spoof: SRV [%s] spoofed to [%s:%d]\n"), name, ip_addr_ntoa(reply, tmp), port);
       }
       if (is_negative) {
          u_int8 answer[(q - data) + 46];
@@ -738,7 +738,7 @@ static void dns_spoof(struct packet_object *po)
          send_dns_reply(po->L4.src, &po->L3.dst, &po->L3.src, po->L2.src,
                         ntohs(dns->id), answer, sizeof(answer), 0, 1, 0);
 
-         USER_MSG("dns_spoof: negative cache spoofed for [%s] type %s \n", name, type_str(type));
+         USER_MSG(_("dns_spoof: negative cache spoofed for [%s] type %s \n"), name, type_str(type));
       }
 
    }

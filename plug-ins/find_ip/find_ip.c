@@ -40,7 +40,7 @@ struct plugin_ops find_ip_ops = {
    /* the name of the plugin */
    .name =              "find_ip",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Search an unused IP address in the subnet",
+   .info =              N_("Search an unused IP address in the subnet"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -69,11 +69,11 @@ static int find_ip_init(void *dummy)
    GBL_OPTIONS->quiet = 1;
 
    if (LIST_EMPTY(&GBL_HOSTLIST)) {
-      INSTANT_USER_MSG("find_ip: You have to build host-list to run this plugin.\n\n");
+      INSTANT_USER_MSG(_("find_ip: You have to build host-list to run this plugin.\n\n"));
       return PLUGIN_FINISHED;
    }
 
-   INSTANT_USER_MSG("find_ip: Searching an unused IP address...\n");
+   INSTANT_USER_MSG(_("find_ip: Searching an unused IP address...\n"));
 
    /* If one of the targets is // search in the whole subnet */
    if (GBL_TARGET1->scan_all || GBL_TARGET2->scan_all)
@@ -82,9 +82,9 @@ static int find_ip_init(void *dummy)
       e = search_targets();
 
    if (e == NULL)
-      INSTANT_USER_MSG("find_ip: No free IP address in this range :(\n");
+      INSTANT_USER_MSG(_("find_ip: No free IP address in this range :(\n"));
    else
-      INSTANT_USER_MSG("find_ip: %s seems to be unused\n", ip_addr_ntoa(e, tmp));
+      INSTANT_USER_MSG(_("find_ip: %s seems to be unused\n"), ip_addr_ntoa(e, tmp));
 
    return PLUGIN_FINISHED;
 }

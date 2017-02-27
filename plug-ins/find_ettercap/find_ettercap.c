@@ -47,7 +47,7 @@ struct plugin_ops find_ettercap_ops = {
    /* the name of the plugin */
    .name =              "find_ettercap",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Try to find ettercap activity",
+   .info =              N_("Try to find ettercap activity"),
    /* the plugin version. */
    .version =           "2.0",
    /* activation function */
@@ -99,10 +99,10 @@ static void parse_ip(struct packet_object *po)
    ip = (struct libnet_ipv4_hdr *)po->L3.header;
 
    if (ntohs(ip->ip_id) == EC_MAGIC_16)
-      USER_MSG("ettercap traces (ip) from %s...\n", ip_addr_ntoa(&po->L3.src, tmp));
+      USER_MSG(_("ettercap traces (ip) from %s...\n"), ip_addr_ntoa(&po->L3.src, tmp));
 
    if (ntohs(ip->ip_id) == 0xbadc)
-      USER_MSG("ettercap plugin (banshee) is killing from %s to %s...\n", ip_addr_ntoa(&po->L3.src, tmp), ip_addr_ntoa(&po->L3.dst, tmp2));
+      USER_MSG(_("ettercap plugin (banshee) is killing from %s to %s...\n"), ip_addr_ntoa(&po->L3.src, tmp), ip_addr_ntoa(&po->L3.dst, tmp2));
 
 }
 
@@ -117,7 +117,7 @@ static void parse_icmp(struct packet_object *po)
    icmp = (struct libnet_icmpv4_hdr *)po->L4.header;
 
    if (ntohs(icmp->hun.echo.id) == EC_MAGIC_16 && ntohs(icmp->hun.echo.seq) == EC_MAGIC_16)
-      USER_MSG("ettercap traces (icmp) from %s...\n", ip_addr_ntoa(&po->L3.src, tmp));
+      USER_MSG(_("ettercap traces (icmp) from %s...\n"), ip_addr_ntoa(&po->L3.src, tmp));
 
 }
 
@@ -134,21 +134,21 @@ static void parse_tcp(struct packet_object *po)
 
    switch (ntohl(tcp->th_seq)) {
       case EC_MAGIC_16:
-         USER_MSG("ettercap traces (tcp) from %s...\n", ip_addr_ntoa(&po->L3.src, tmp));
+         USER_MSG(_("ettercap traces (tcp) from %s...\n"), ip_addr_ntoa(&po->L3.src, tmp));
          break;
       case 6969:
-         USER_MSG("ettercap plugin (shadow) is scanning from %s to %s:%d...\n", ip_addr_ntoa(&po->L3.src, tmp), ip_addr_ntoa(&po->L3.dst, tmp2), ntohs(po->L4.dst));
+         USER_MSG(_("ettercap plugin (shadow) is scanning from %s to %s:%d...\n"), ip_addr_ntoa(&po->L3.src, tmp), ip_addr_ntoa(&po->L3.dst, tmp2), ntohs(po->L4.dst));
          break;
       case 0xabadc0de:
          if (ntohl(tcp->th_ack) == 0xabadc0de)
-            USER_MSG("ettercap plugin (spectre) is flooding the lan.\n");
+            USER_MSG(_("ettercap plugin (spectre) is flooding the lan.\n"));
          else
-            USER_MSG("ettercap plugin (golem) is DOSing from %s to %s...\n", ip_addr_ntoa(&po->L3.src, tmp), ip_addr_ntoa(&po->L3.dst, tmp2));
+            USER_MSG(_("ettercap plugin (golem) is DOSing from %s to %s...\n"), ip_addr_ntoa(&po->L3.src, tmp), ip_addr_ntoa(&po->L3.dst, tmp2));
          break;
    }
 
    if (ntohs(tcp->th_sport) == EC_MAGIC_16 && (tcp->th_flags & TH_SYN) )
-      USER_MSG("ettercap NG plugin (gw_discover) is trying to discover the gateway from %s...\n", ip_addr_ntoa(&po->L3.src, tmp));
+      USER_MSG(_("ettercap NG plugin (gw_discover) is trying to discover the gateway from %s...\n"), ip_addr_ntoa(&po->L3.src, tmp));
 
 }
 

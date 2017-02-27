@@ -62,7 +62,7 @@ struct plugin_ops pptp_reneg_ops = {
    /* the name of the plugin */
    .name =              "pptp_reneg",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "PPTP: Forces tunnel re-negotiation",
+   .info =              N_("PPTP: Forces tunnel re-negotiation"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -85,11 +85,11 @@ static int pptp_reneg_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("pptp_reneg: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("pptp_reneg: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
-   USER_MSG("pptp_reneg: plugin running...\n");
+   USER_MSG(_("pptp_reneg: plugin running...\n"));
 
    hook_add(HOOK_PACKET_PPP, &parse_ppp);
    return PLUGIN_RUNNING;
@@ -100,7 +100,7 @@ static int pptp_reneg_fini(void *dummy)
 {
    struct call_list *p;
 
-   USER_MSG("pptp_reneg: plugin terminated...\n");
+   USER_MSG(_("pptp_reneg: plugin terminated...\n"));
 
    hook_del(HOOK_PACKET_PPP, &parse_ppp);
 
@@ -152,7 +152,7 @@ static void parse_ppp(struct packet_object *po)
    /* Use DATA.delta to notify ppp packet len modification */
    po->DATA.delta = sizeof(struct ppp_lcp_header) + sizeof(struct ppp_header) - po->L4.len;
 
-   USER_MSG("pptp_reneg: Forced tunnel re-negotiation  %s -> ", ip_addr_ntoa(&po->L3.src, tmp));
+   USER_MSG(_("pptp_reneg: Forced tunnel re-negotiation  %s -> "), ip_addr_ntoa(&po->L3.src, tmp));
    USER_MSG("%s\n", ip_addr_ntoa(&po->L3.dst, tmp));
 }
 

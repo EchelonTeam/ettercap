@@ -67,7 +67,7 @@ struct plugin_ops gre_relay_ops = {
    /* the name of the plugin */
    .name =              "gre_relay",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Tunnel broker for redirected GRE tunnels",
+   .info =              N_("Tunnel broker for redirected GRE tunnels"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -92,7 +92,7 @@ static int gre_relay_init(void *dummy)
 
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("gre_relay: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("gre_relay: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
@@ -103,11 +103,11 @@ static int gre_relay_init(void *dummy)
 
    ui_input("Unused IP address: ", tmp, sizeof(tmp), NULL);
    if (!inet_aton(tmp, &fake_ip)) {
-      INSTANT_USER_MSG("gre_relay: Bad IP address\n");
+      INSTANT_USER_MSG(_("gre_relay: Bad IP address\n"));
       return PLUGIN_FINISHED;
    }
 
-   USER_MSG("gre_relay: plugin running...\n");
+   USER_MSG(_("gre_relay: plugin running...\n"));
 
    hook_add(HOOK_PACKET_GRE, &parse_gre);
    hook_add(HOOK_PACKET_ARP_RQ, &parse_arp);
@@ -118,7 +118,7 @@ static int gre_relay_init(void *dummy)
 
 static int gre_relay_fini(void *dummy)
 {
-   USER_MSG("gre_relay: plugin terminated...\n");
+   USER_MSG(_("gre_relay: plugin terminated...\n"));
 
    hook_del(HOOK_PACKET_GRE, &parse_gre);
    hook_del(HOOK_PACKET_ARP_RQ, &parse_arp);

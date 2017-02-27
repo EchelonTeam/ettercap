@@ -55,7 +55,7 @@ struct plugin_ops pptp_pap_ops = {
    /* the name of the plugin */
    .name =              "pptp_pap",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "PPTP: Forces PAP authentication",
+   .info =              N_("PPTP: Forces PAP authentication"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -78,11 +78,11 @@ static int pptp_pap_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("pptp_pap: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("pptp_pap: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
-   USER_MSG("pptp_pap: plugin running...\n");
+   USER_MSG(_("pptp_pap: plugin running...\n"));
 
    hook_add(HOOK_PACKET_LCP, &parse_ppp);
    return PLUGIN_RUNNING;
@@ -91,7 +91,7 @@ static int pptp_pap_init(void *dummy)
 
 static int pptp_pap_fini(void *dummy)
 {
-   USER_MSG("pptp_pap: plugin terminated...\n");
+   USER_MSG(_("pptp_pap: plugin terminated...\n"));
 
    hook_del(HOOK_PACKET_LCP, &parse_ppp);
    return PLUGIN_FINISHED;
@@ -136,7 +136,7 @@ static void parse_ppp(struct packet_object *po)
       option[1] = htons(PPP_REQUEST_PAP);
 
       if (!ip_addr_null(&po->L3.dst) && !ip_addr_null(&po->L3.src)) {
-         USER_MSG("pptp_pap: Forced PPP clear text auth  %s -> ", ip_addr_ntoa(&po->L3.src, tmp));
+         USER_MSG(_("pptp_pap: Forced PPP clear text auth  %s -> "), ip_addr_ntoa(&po->L3.src, tmp));
          USER_MSG("%s\n", ip_addr_ntoa(&po->L3.dst, tmp));
       }
    }

@@ -44,7 +44,7 @@ struct plugin_ops repoison_arp_ops = {
    /* the name of the plugin */
    .name =              "repoison_arp",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Repoison after broadcast ARP",
+   .info =              N_("Repoison after broadcast ARP"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -67,7 +67,7 @@ static int repoison_arp_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("repoison_arp: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("repoison_arp: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
@@ -81,7 +81,7 @@ static int repoison_arp_init(void *dummy)
 
 static int repoison_arp_fini(void *dummy)
 {
-   USER_MSG("repoison_arp: plugin terminated...\n");
+   USER_MSG(_("repoison_arp: plugin terminated...\n"));
 
    hook_del(HOOK_PACKET_ARP_RQ, &repoison_func);
    hook_del(HOOK_PACKET_ARP_RP, &repoison_func);

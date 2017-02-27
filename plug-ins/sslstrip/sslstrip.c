@@ -220,20 +220,20 @@ static int sslstrip_init(void *dummy)
 	 * Add IPTables redirect for port 80
          */
 	if (http_bind_wrapper() != ESUCCESS) {
-		USER_MSG("SSLStrip: plugin load failed: Could not set up HTTP redirect\n");
+		USER_MSG(_("SSLStrip: plugin load failed: Could not set up HTTP redirect\n"));
 		return PLUGIN_FINISHED;
 	}
 
 	https_url_pcre = pcre_compile(URL_PATTERN, PCRE_MULTILINE|PCRE_CASELESS, &error, &erroroffset, NULL);
 
 	if (!https_url_pcre) {
-		USER_MSG("SSLStrip: plugin load failed: pcre_compile failed (offset: %d), %s\n", erroroffset, error);
+		USER_MSG(_("SSLStrip: plugin load failed: pcre_compile failed (offset: %d), %s\n"), erroroffset, error);
 		http_remove_redirect(bind_port);
 		return PLUGIN_FINISHED;
 	}	
 
 	if(regcomp(&find_cookie_re, COOKIE_PATTERN, REG_EXTENDED | REG_NEWLINE | REG_ICASE)) {
-		USER_MSG("SSLStrip: plugin load failed: Could not compile find_cookie regex\n");
+		USER_MSG(_("SSLStrip: plugin load failed: Could not compile find_cookie regex\n"));
                 pcre_free(https_url_pcre);
 		http_remove_redirect(bind_port);
 		return PLUGIN_FINISHED;
@@ -246,7 +246,7 @@ static int sslstrip_init(void *dummy)
 
 	ec_thread_new_detached("http_accept_thread", "HTTP Accept thread", &http_accept_thread, NULL, 1);
 
-	USER_MSG("SSLStrip Plugin version 1.1 is still under experimental mode. Please reports any issues to the development team.\n");
+	USER_MSG(_("SSLStrip Plugin version 1.1 is still under experimental mode. Please reports any issues to the development team.\n"));
 	return PLUGIN_RUNNING;
 }
 
@@ -255,7 +255,7 @@ static int sslstrip_fini(void *dummy)
 
 	DEBUG_MSG("SSLStrip: Removing redirect\n");
 	if (http_remove_redirect(bind_port) != ESUCCESS) {
-		USER_MSG("SSLStrip: Unable to remove HTTP redirect, please do so manually.\n");
+		USER_MSG(_("SSLStrip: Unable to remove HTTP redirect, please do so manually.\n"));
 	}
 
         // Free regexes.
@@ -459,7 +459,7 @@ static int http_insert_redirect(u_int16 dport)
 
 	if (GBL_CONF->redir_command_on == NULL)
 	{
-		USER_MSG("SSLStrip: cannot setup the redirect, did you uncomment the redir_command_on command on your etter.conf file?");
+		USER_MSG(_("SSLStrip: cannot setup the redirect, did you uncomment the redir_command_on command on your etter.conf file?"));
 		return -EFATAL;
 	}
 	snprintf(asc_dport, 16, "%u", dport);
@@ -497,7 +497,7 @@ static int http_insert_redirect(u_int16 dport)
 		default:
 			wait(&ret_val);
 			if (WEXITSTATUS(ret_val)) {
-			    USER_MSG("SSLStrip: redir_command_on had non-zero exit status (%d): [%s]\n", WEXITSTATUS(ret_val), orig_command);
+			    USER_MSG(_("SSLStrip: redir_command_on had non-zero exit status (%d): [%s]\n"), WEXITSTATUS(ret_val), orig_command);
 			    safe_free_http_redirect(param, &param_length, command, orig_command);
 			    return -EINVALID;
 			}
@@ -519,7 +519,7 @@ static int http_remove_redirect(u_int16 dport)
 
         if (GBL_CONF->redir_command_off == NULL)
 	{
-		USER_MSG("SSLStrip: cannot remove the redirect, did you uncomment the redir_command_off command on your etter.conf file?");
+		USER_MSG(_("SSLStrip: cannot remove the redirect, did you uncomment the redir_command_off command on your etter.conf file?"));
 		return -EFATAL;
 	}
 
@@ -558,7 +558,7 @@ static int http_remove_redirect(u_int16 dport)
                 default:
                         wait(&ret_val);
                         if (WEXITSTATUS(ret_val)) {
-                            USER_MSG("SSLStrip: redir_command_off had non-zero exit status (%d): [%s]\n", WEXITSTATUS(ret_val), orig_command);
+                            USER_MSG(_("SSLStrip: redir_command_off had non-zero exit status (%d): [%s]\n"), WEXITSTATUS(ret_val), orig_command);
                             safe_free_http_redirect(param, &param_length, command, orig_command);
                             return -EINVALID;
                         }
@@ -1275,7 +1275,7 @@ static int http_bind_wrapper(void)
 	} while (bind(main_fd, (struct sockaddr *)&sa_in, sizeof(sa_in)) != 0);
 
 	listen(main_fd, 100);
-	USER_MSG("SSLStrip plugin: bind 80 on %d\n", bind_port);
+	USER_MSG(_("SSLStrip plugin: bind 80 on %d\n"), bind_port);
 	
 	if (http_insert_redirect(bind_port) != ESUCCESS)
 		return -EFATAL;

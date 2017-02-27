@@ -46,7 +46,7 @@ struct plugin_ops arp_cop_ops = {
    /* the name of the plugin */
    .name =              "arp_cop",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Report suspicious ARP activity",
+   .info =              N_("Report suspicious ARP activity"),
    /* the plugin version. */
    .version =           "1.1",
    /* activation function */
@@ -67,7 +67,7 @@ int plugin_load(void *handle)
 
 static int arp_cop_init(void *dummy)
 {
-   USER_MSG("arp_cop: plugin running...\n");
+   USER_MSG(_("arp_cop: plugin running...\n"));
 
    arp_init_list();
 
@@ -79,7 +79,7 @@ static int arp_cop_init(void *dummy)
 
 static int arp_cop_fini(void *dummy)
 {
-   USER_MSG("arp_cop: plugin terminated...\n");
+   USER_MSG(_("arp_cop: plugin terminated...\n"));
 
    /* We don't free the global list for further reuse */
 
@@ -113,16 +113,16 @@ static void parse_arp(struct packet_object *po)
             if (!memcmp(po->L2.src, h2->mac, MEDIA_ADDR_LEN)) {
                /* don't report my own poisoning */
                if (ip_addr_cmp(&h2->ip, &GBL_IFACE->ip))
-                  USER_MSG("arp_cop: (WARNING) %s[%s] pretends to be %s[%s]\n", ip_addr_ntoa(&h2->ip, tmp1),
+                  USER_MSG(_("arp_cop: (WARNING) %s[%s] pretends to be %s[%s]\n"), ip_addr_ntoa(&h2->ip, tmp1),
                                                                              mac_addr_ntoa(h2->mac, str1),
                                                                              ip_addr_ntoa(&h1->ip, tmp2),
                                                                              mac_addr_ntoa(h1->mac, str2));
                return;
             }
          }
-	
+
          /* A new NIC claims an existing IP address */
-         USER_MSG("arp_cop: (IP-conflict) [%s] wants to be %s[%s]\n", mac_addr_ntoa(po->L2.src, str1),
+         USER_MSG(_("arp_cop: (IP-conflict) [%s] wants to be %s[%s]\n"), mac_addr_ntoa(po->L2.src, str1),
                                                                       ip_addr_ntoa(&h1->ip, tmp1),
                                                                       mac_addr_ntoa(h1->mac, str2));
          return;
@@ -132,7 +132,7 @@ static void parse_arp(struct packet_object *po)
    /* The IP address is not yet in the list */
    LIST_FOREACH(h1, &arp_cop_table, next) {
       if (!memcmp(po->L2.src, h1->mac, MEDIA_ADDR_LEN)) {
-         USER_MSG("arp_cop: (IP-change) [%s]  %s -> %s\n", mac_addr_ntoa(h1->mac, str1),
+         USER_MSG(_("arp_cop: (IP-change) [%s]  %s -> %s\n"), mac_addr_ntoa(h1->mac, str1),
                                                            ip_addr_ntoa(&h1->ip, tmp1),
                                                            ip_addr_ntoa(&po->L3.src, tmp2));
          found = 1;
@@ -140,7 +140,7 @@ static void parse_arp(struct packet_object *po)
    }
 
    if (!found)
-      USER_MSG("arp_cop: (new host) %s[%s]\n", ip_addr_ntoa(&po->L3.src, tmp1), mac_addr_ntoa(po->L2.src, str1));
+      USER_MSG(_("arp_cop: (new host) %s[%s]\n"), ip_addr_ntoa(&po->L3.src, tmp1), mac_addr_ntoa(po->L2.src, str1));
 
    /* Insert the host in th list */
    SAFE_CALLOC(h1, 1, sizeof(struct hosts_list));

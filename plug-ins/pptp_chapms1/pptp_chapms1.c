@@ -58,7 +58,7 @@ struct plugin_ops pptp_chapms1_ops = {
    /* the name of the plugin */
    .name =              "pptp_chapms1",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "PPTP: Forces chapms-v1 from chapms-v2",
+   .info =              N_("PPTP: Forces chapms-v1 from chapms-v2"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -81,11 +81,11 @@ static int pptp_chapms1_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("pptp_chapms1: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("pptp_chapms1: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
-   USER_MSG("pptp_chapms1: plugin running...\n");
+   USER_MSG(_("pptp_chapms1: plugin running...\n"));
 
    hook_add(HOOK_PACKET_LCP, &parse_ppp);
    return PLUGIN_RUNNING;
@@ -94,7 +94,7 @@ static int pptp_chapms1_init(void *dummy)
 
 static int pptp_chapms1_fini(void *dummy)
 {
-   USER_MSG("pptp_chapms1: plugin terminated...\n");
+   USER_MSG(_("pptp_chapms1: plugin terminated...\n"));
 
    hook_del(HOOK_PACKET_LCP, &parse_ppp);
    return PLUGIN_FINISHED;
@@ -137,7 +137,7 @@ static void parse_ppp(struct packet_object *po)
       chcode[4] = PPP_REQUEST_DUMMY;
 
       if (!ip_addr_null(&po->L3.dst) && !ip_addr_null(&po->L3.src)) {
-         USER_MSG("pptp_chapms1: Forced PPP MS-CHAPv1 auth  %s -> ", ip_addr_ntoa(&po->L3.src, tmp));
+         USER_MSG(_("pptp_chapms1: Forced PPP MS-CHAPv1 auth  %s -> "), ip_addr_ntoa(&po->L3.src, tmp));
          USER_MSG("%s\n", ip_addr_ntoa(&po->L3.dst, tmp));
       }
    }

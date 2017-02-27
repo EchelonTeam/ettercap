@@ -22,7 +22,7 @@ static EC_THREAD_FUNC(smurfer);
 struct plugin_ops smurf_attack_ops = {
    .ettercap_version =     EC_VERSION,
    .name =                 "smurf_attack",
-   .info =                 "Run a smurf attack against specified hosts",
+   .info =                 N_("Run a smurf attack against specified hosts"),
    .version =              "1.0",
    .init =                 &smurf_attack_init,
    .fini =                 &smurf_attack_fini,
@@ -42,22 +42,22 @@ static int smurf_attack_init(void *dummy)
    DEBUG_MSG("smurf_attack_init");
 
    if(GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("smurf_attack: plugin doesnt work in unoffensive mode\n");
+      INSTANT_USER_MSG(_("smurf_attack: plugin doesnt work in unoffensive mode\n"));
       return PLUGIN_FINISHED;
    }
 
    if(GBL_TARGET1->all_ip && GBL_TARGET1->all_ip6) {
-      USER_MSG("Add at least one host to target one list.\n");
+      USER_MSG(_("Add at least one host to target one list.\n"));
       return PLUGIN_FINISHED;
    }
 
    if(GBL_TARGET2->all_ip && GBL_TARGET2->all_ip6 && LIST_EMPTY(&GBL_HOSTLIST)) {
-      USER_MSG("Target two and global hostlist are empty.\n");
+      USER_MSG(_("Target two and global hostlist are empty.\n"));
       return PLUGIN_FINISHED;
    }
 
    GBL_OPTIONS->quiet = 1;
-   INSTANT_USER_MSG("smurf_attack: starting smurf attack against the target one hosts\n");
+   INSTANT_USER_MSG(_("smurf_attack: starting smurf attack against the target one hosts\n"));
 
    /* creating a thread per target */
    LIST_FOREACH(i, &GBL_TARGET1->ips, next) {

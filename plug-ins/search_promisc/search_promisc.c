@@ -54,7 +54,7 @@ struct plugin_ops search_promisc_ops = {
    /* the name of the plugin */
    .name =              "search_promisc",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Search promisc NICs in the LAN",
+   .info =              N_("Search promisc NICs in the LAN"),
    /* the plugin version. */
    .version =           "1.2",
    /* activation function */
@@ -92,16 +92,16 @@ static int search_promisc_init(void *dummy)
 
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("search_promisc: plugin doesn't work in UNOFFENSIVE mode.\n\n");
+      INSTANT_USER_MSG(_("search_promisc: plugin doesn't work in UNOFFENSIVE mode.\n\n"));
       return PLUGIN_FINISHED;
    }
 
    if (LIST_EMPTY(&GBL_HOSTLIST)) {
-      INSTANT_USER_MSG("search_promisc: You have to build host-list to run this plugin.\n\n");
+      INSTANT_USER_MSG(_("search_promisc: You have to build host-list to run this plugin.\n\n"));
       return PLUGIN_FINISHED;
    }
 
-   INSTANT_USER_MSG("search_promisc: Searching promisc NICs...\n");
+   INSTANT_USER_MSG(_("search_promisc: Searching promisc NICs...\n"));
 
    /* We have to perform same operations twice :) */
    for (i=0; i<=1; i++) {

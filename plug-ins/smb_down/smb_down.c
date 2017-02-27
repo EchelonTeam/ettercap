@@ -59,7 +59,7 @@ struct plugin_ops smb_down_ops = {
    /* the name of the plugin */
    .name =              "smb_down",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Tries to force SMB to not use NTLM2 key auth",
+   .info =              N_("Tries to force SMB to not use NTLM2 key auth"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -82,11 +82,11 @@ static int smb_down_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("smb_down: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("smb_down: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
-   USER_MSG("smb_down: plugin running...\n");
+   USER_MSG(_("smb_down: plugin running...\n"));
 
    hook_add(HOOK_PROTO_SMB_CHL, &parse_smb);
    return PLUGIN_RUNNING;
@@ -95,7 +95,7 @@ static int smb_down_init(void *dummy)
 
 static int smb_down_fini(void *dummy)
 {
-   USER_MSG("smb_down: plugin terminated...\n");
+   USER_MSG(_("smb_down: plugin terminated...\n"));
 
    hook_del(HOOK_PROTO_SMB_CHL, &parse_smb);
    return PLUGIN_FINISHED;
@@ -142,7 +142,7 @@ static void parse_smb(struct packet_object *po)
 
     if (*Flags & ntohl(NTLM2_KEY)) {
        *Flags ^= ntohl(NTLM2_KEY);
-       USER_MSG("smb_down: Forced no NTLM2 key  %s -> ", ip_addr_ntoa(&po->L3.src, tmp));
+       USER_MSG(_("smb_down: Forced no NTLM2 key  %s -> "), ip_addr_ntoa(&po->L3.src, tmp));
        USER_MSG("%s\n", ip_addr_ntoa(&po->L3.dst, tmp));
        po->flags |= PO_MODIFIED;
     }

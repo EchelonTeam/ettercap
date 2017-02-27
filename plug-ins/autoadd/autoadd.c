@@ -42,7 +42,7 @@ struct plugin_ops autoadd_ops = {
    /* the name of the plugin */
    .name =              "autoadd",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Automatically add new victims in the target range",
+   .info =              N_("Automatically add new victims in the target range"),
    /* the plugin version. */
    .version =           "1.2",
    /* activation function */
@@ -101,23 +101,23 @@ static void parse_arp(struct packet_object *po)
    /* search in target 1 */
    if (GBL_TARGET1->all_ip) {
       if (add_to_victims(&arp_group_one, po) == ESUCCESS)
-         USER_MSG("autoadd: %s %s added to GROUP1\n", ip_addr_ntoa(&po->L3.src, tmp), mac_addr_ntoa(po->L2.src, tmp2));
+         USER_MSG(_("autoadd: %s %s added to GROUP1\n"), ip_addr_ntoa(&po->L3.src, tmp), mac_addr_ntoa(po->L2.src, tmp2));
    } else {
       LIST_FOREACH(t, &GBL_TARGET1->ips, next)
          if (!ip_addr_cmp(&t->ip, &po->L3.src))
             if (add_to_victims(&arp_group_one, po) == ESUCCESS)
-               USER_MSG("autoadd: %s %s added to GROUP1\n", ip_addr_ntoa(&po->L3.src, tmp), mac_addr_ntoa(po->L2.src, tmp2));
+               USER_MSG(_("autoadd: %s %s added to GROUP1\n"), ip_addr_ntoa(&po->L3.src, tmp), mac_addr_ntoa(po->L2.src, tmp2));
    }
 
    /* search in target 2 */
    if (GBL_TARGET2->all_ip) {
       if (add_to_victims(&arp_group_two, po) == ESUCCESS)
-         USER_MSG("autoadd: %s %s added to GROUP2\n", ip_addr_ntoa(&po->L3.src, tmp), mac_addr_ntoa(po->L2.src, tmp2));
+         USER_MSG(_("autoadd: %s %s added to GROUP2\n"), ip_addr_ntoa(&po->L3.src, tmp), mac_addr_ntoa(po->L2.src, tmp2));
    } else {
       LIST_FOREACH(t, &GBL_TARGET2->ips, next)
          if (!ip_addr_cmp(&t->ip, &po->L3.src))
             if (add_to_victims(&arp_group_two, po) == ESUCCESS)
-               USER_MSG("autoadd: %s %s added to GROUP2\n", ip_addr_ntoa(&po->L3.src, tmp), mac_addr_ntoa(po->L2.src, tmp2));
+               USER_MSG(_("autoadd: %s %s added to GROUP2\n"), ip_addr_ntoa(&po->L3.src, tmp), mac_addr_ntoa(po->L2.src, tmp2));
    }
 }
 

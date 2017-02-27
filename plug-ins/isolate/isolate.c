@@ -49,7 +49,7 @@ struct plugin_ops isolate_ops = {
    /* the name of the plugin */
    .name =              "isolate",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Isolate an host from the lan",
+   .info =              N_("Isolate an host from the lan"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -73,7 +73,7 @@ static int isolate_init(void *dummy)
    struct ip_list *t;
    /* sanity check */
    if (LIST_EMPTY(&GBL_TARGET1->ips) && LIST_EMPTY(&GBL_TARGET1->ip6)) {
-      INSTANT_USER_MSG("isolate: please specify the TARGET host\n");
+      INSTANT_USER_MSG(_("isolate: please specify the TARGET host\n"));
       return PLUGIN_FINISHED;
    }
 
@@ -144,7 +144,7 @@ static void parse_arp(struct packet_object *po)
 
          /* add to the list if good */
          if (good && add_to_victims(po) == ESUCCESS) {
-            USER_MSG("isolate: %s added to the list\n", ip_addr_ntoa(&po->L3.dst, tmp));
+            USER_MSG(_("isolate: %s added to the list\n"), ip_addr_ntoa(&po->L3.dst, tmp));
             /* send the fake reply */
             send_arp(ARPOP_REPLY, &po->L3.dst, isolate_mac, &po->L3.src, po->L2.src);
          }

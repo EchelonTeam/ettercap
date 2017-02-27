@@ -52,7 +52,7 @@ struct plugin_ops gw_discover_ops = {
    /* the name of the plugin */
    .name =              "gw_discover",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Try to find the LAN gateway",
+   .info =              N_("Try to find the LAN gateway"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -150,11 +150,11 @@ static void do_discover(void)
    /* add the hook to collect tcp SYN+ACK packets */
    hook_add(HOOK_PACKET_TCP, &get_replies);
 
-   INSTANT_USER_MSG("\nRemote target is %s:%d...\n\n", tmp, port);
+   INSTANT_USER_MSG(_("\nRemote target is %s:%d...\n\n"), tmp, port);
 
    LIST_FOREACH(h, &GBL_HOSTLIST, next) {
 
-      INSTANT_USER_MSG("Sending the SYN packet to %-15s [%s]\n", ip_addr_ntoa(&h->ip, tmp), mac_addr_ntoa(h->mac, tmp2));
+      INSTANT_USER_MSG(_("Sending the SYN packet to %-15s [%s]\n"), ip_addr_ntoa(&h->ip, tmp), mac_addr_ntoa(h->mac, tmp2));
 
       /* send the syn packet */
       send_tcp_ether(h->mac, &GBL_IFACE->ip, &ip, htons(EC_MAGIC_16), htons(port), 0xabadc0de, 0xabadc0de, TH_SYN);
@@ -194,7 +194,7 @@ static void get_replies(struct packet_object *po)
    /* search the source mac address in the host list */
    LIST_FOREACH(h, &GBL_HOSTLIST, next) {
       if (!memcmp(po->L2.src, h->mac, MEDIA_ADDR_LEN)) {
-         INSTANT_USER_MSG("[%s] %s is probably a gateway for the LAN\n", mac_addr_ntoa(po->L2.src, tmp2), ip_addr_ntoa(&h->ip, tmp));
+         INSTANT_USER_MSG(_("[%s] %s is probably a gateway for the LAN\n"), mac_addr_ntoa(po->L2.src, tmp2), ip_addr_ntoa(&h->ip, tmp));
       }
    }
 

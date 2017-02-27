@@ -58,7 +58,7 @@ struct plugin_ops smb_clear_ops = {
    /* the name of the plugin */
    .name =              "smb_clear",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Tries to force SMB cleartext auth",
+   .info =              N_("Tries to force SMB cleartext auth"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -81,11 +81,11 @@ static int smb_clear_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("smb_clear: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("smb_clear: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
-   USER_MSG("smb_clear: plugin running...\n");
+   USER_MSG(_("smb_clear: plugin running...\n"));
 
    hook_add(HOOK_PROTO_SMB, &parse_smb);
    return PLUGIN_RUNNING;
@@ -94,7 +94,7 @@ static int smb_clear_init(void *dummy)
 
 static int smb_clear_fini(void *dummy)
 {
-   USER_MSG("smb_clear: plugin terminated...\n");
+   USER_MSG(_("smb_clear: plugin terminated...\n"));
 
    hook_del(HOOK_PROTO_SMB, &parse_smb);
    return PLUGIN_FINISHED;
@@ -127,7 +127,7 @@ static void parse_smb(struct packet_object *po)
     */
     if (ptr[3] & 2) {
        ptr[3] ^= 2;
-       USER_MSG("smb_clear: Forced SMB clear text auth  %s -> ", ip_addr_ntoa(&po->L3.src, tmp));
+       USER_MSG(_("smb_clear: Forced SMB clear text auth  %s -> "), ip_addr_ntoa(&po->L3.src, tmp));
        USER_MSG("%s\n", ip_addr_ntoa(&po->L3.dst, tmp));
        po->flags |= PO_MODIFIED;
     }

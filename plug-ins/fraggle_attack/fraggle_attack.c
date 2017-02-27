@@ -26,7 +26,7 @@ static EC_THREAD_FUNC(fraggler);
 struct plugin_ops fraggle_attack_ops = {
    .ettercap_version =     EC_VERSION,
    .name =                 "fraggle_attack",
-   .info =                 "Run a fraggle attack against hosts of target one",
+   .info =                 N_("Run a fraggle attack against hosts of target one"),
    .version =              "1.0",
    .init =                 &fraggle_attack_init,
    .fini =                 &fraggle_attack_fini,
@@ -45,22 +45,22 @@ static int fraggle_attack_init(void *dummy)
    DEBUG_MSG("fraggle_attack_init");
 
    if(GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("fraggle_attack: plugin doesn't work in unoffensive mode.\n");
+      INSTANT_USER_MSG(_("fraggle_attack: plugin doesn't work in unoffensive mode.\n"));
       return PLUGIN_FINISHED;
    }
 
    if(GBL_TARGET1->all_ip && GBL_TARGET1->all_ip6) {
-      USER_MSG("Add at least one host to target one list.\n");
+      USER_MSG(_("Add at least one host to target one list.\n"));
       return PLUGIN_FINISHED;
    }
 
    if(LIST_EMPTY(&GBL_HOSTLIST)) {
-      USER_MSG("Global host list is empty.\n");
+      USER_MSG(_("Global host list is empty.\n"));
       return PLUGIN_FINISHED;
    }
 
    GBL_OPTIONS->quiet = 1;
-   INSTANT_USER_MSG("fraggle_attack: starting fraggle attack against hosts of target one.\n");
+   INSTANT_USER_MSG(_("fraggle_attack: starting fraggle attack against hosts of target one.\n"));
 
    /* (IPv4) creating a thread per target 1 */
    LIST_FOREACH(i, &GBL_TARGET1->ips, next) {

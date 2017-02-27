@@ -56,7 +56,7 @@ struct plugin_ops finger_ops = {
    /* the name of the plugin */
    .name =              "finger",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Fingerprint a remote host",
+   .info =              N_("Fingerprint a remote host"),
    /* the plugin version. */
    .version =           "1.6",
    /* activation function */
@@ -228,7 +228,7 @@ static void do_fingerprint(void)
     */
    hook_add(HOOK_PACKET_TCP, &get_finger);
 
-   INSTANT_USER_MSG("Fingerprinting %s:%d...\n", tmp, port);
+   INSTANT_USER_MSG(_("Fingerprinting %s:%d...\n"), tmp, port);
 
    /*
     * open the connection and close it immediately.
@@ -250,14 +250,14 @@ static void do_fingerprint(void)
    if (!strcmp(fingerprint, ""))
       return;
 
-   INSTANT_USER_MSG("\n FINGERPRINT      : %s\n", fingerprint);
+   INSTANT_USER_MSG(_("\n FINGERPRINT      : %s\n"), fingerprint);
 
    /* decode the finterprint */
    if (fingerprint_search(fingerprint, os) == ESUCCESS)
-      INSTANT_USER_MSG(" OPERATING SYSTEM : %s \n\n", os);
+      INSTANT_USER_MSG(_(" OPERATING SYSTEM : %s \n\n"), os);
    else {
-      INSTANT_USER_MSG(" OPERATING SYSTEM : unknown fingerprint (please submit it) \n");
-      INSTANT_USER_MSG(" NEAREST ONE IS   : %s \n\n", os);
+      INSTANT_USER_MSG(_(" OPERATING SYSTEM : unknown fingerprint (please submit it) \n"));
+      INSTANT_USER_MSG(_(" NEAREST ONE IS   : %s \n\n"), os);
    }
 }
 

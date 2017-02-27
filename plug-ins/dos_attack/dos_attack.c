@@ -58,7 +58,7 @@ struct plugin_ops dos_attack_ops = {
    /* the name of the plugin */
    .name =              "dos_attack",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Run a d.o.s. attack against an IP address",
+   .info =              N_("Run a d.o.s. attack against an IP address"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -85,7 +85,7 @@ static int dos_attack_init(void *dummy)
 
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("dos_attack: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("dos_attack: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
@@ -97,22 +97,22 @@ static int dos_attack_init(void *dummy)
 
    ui_input("Insert victim IP: ", dos_addr, sizeof(dos_addr), NULL);
    if (ip_addr_pton(dos_addr, &victim_host) == -EINVALID) {
-      INSTANT_USER_MSG("dos_attack: Invalid IP address.\n");
+      INSTANT_USER_MSG(_("dos_attack: Invalid IP address.\n"));
       return PLUGIN_FINISHED;
    }
 
    ui_input("Insert unused IP: ", unused_addr, sizeof(unused_addr), NULL);
    if (ip_addr_pton(unused_addr, &fake_host) == -EINVALID) {
-      INSTANT_USER_MSG("dos_attack: Invalid IP address.\n");
+      INSTANT_USER_MSG(_("dos_attack: Invalid IP address.\n"));
       return PLUGIN_FINISHED;
    }
 
    if(victim_host.addr_type != fake_host.addr_type) {
-      INSTANT_USER_MSG("dos_attack: Address' families don't match.\n");
+      INSTANT_USER_MSG(_("dos_attack: Address' families don't match.\n"));
       return PLUGIN_FINISHED;
    }
 
-   INSTANT_USER_MSG("dos_attack: Starting scan against %s [Fake Host: %s]\n", dos_addr, unused_addr);
+   INSTANT_USER_MSG(_("dos_attack: Starting scan against %s [Fake Host: %s]\n"), dos_addr, unused_addr);
 
    /* Delete the "open" port list just in case of previous executions */
    while (!SLIST_EMPTY(&port_table)) {
@@ -153,7 +153,7 @@ static int dos_attack_fini(void *dummy)
    if (!pthread_equal(pid, EC_PTHREAD_NULL))
       ec_thread_destroy(pid);
 
-   INSTANT_USER_MSG("dos_attack: plugin terminated...\n");
+   INSTANT_USER_MSG(_("dos_attack: plugin terminated...\n"));
 
    return PLUGIN_FINISHED;
 }
@@ -188,7 +188,7 @@ EC_THREAD_FUNC(syn_flooder)
 #endif
    }
 
-   INSTANT_USER_MSG("dos_attack: Starting attack...\n");
+   INSTANT_USER_MSG(_("dos_attack: Starting attack...\n"));
 
    /* Continue flooding open ports */
    LOOP {
@@ -251,7 +251,7 @@ static void parse_tcp(struct packet_object *po)
    p->port = po->L4.src;
    SLIST_INSERT_HEAD(&port_table, p, next);
 
-   INSTANT_USER_MSG("dos_attack: Port %d added\n", ntohs(p->port));
+   INSTANT_USER_MSG(_("dos_attack: Port %d added\n"), ntohs(p->port));
 }
 
 /* EOF */

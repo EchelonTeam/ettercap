@@ -45,7 +45,7 @@ struct plugin_ops remote_browser_ops = {
    /* the name of the plugin */
    .name =              "remote_browser",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Sends visited URLs to the browser",
+   .info =              N_("Sends visited URLs to the browser"),
    /* the plugin version. */
    .version =           "1.2",
    /* activation function */
@@ -131,7 +131,7 @@ static void remote_browser(struct packet_object *po)
       str_replace(&command, "%host", host);
       str_replace(&command, "%url", url);
 
-      USER_MSG("REMOTE COMMAND: %s\n", command);
+      USER_MSG(_("REMOTE COMMAND: %s\n"), command);
 
       /* split the string in the parameter array */
       for (p = ec_strtok(command, " ", &q); p != NULL; p = ec_strtok(NULL, " ", &q)) {

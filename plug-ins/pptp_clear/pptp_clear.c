@@ -63,7 +63,7 @@ struct plugin_ops pptp_clear_ops = {
    /* the name of the plugin */
    .name =              "pptp_clear",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "PPTP: Tries to force cleartext tunnel",
+   .info =              N_("PPTP: Tries to force cleartext tunnel"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -86,11 +86,11 @@ static int pptp_clear_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("pptp_clear: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("pptp_clear: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
-   USER_MSG("pptp_clear: plugin running...\n");
+   USER_MSG(_("pptp_clear: plugin running...\n"));
 
    hook_add(HOOK_PACKET_LCP, &parse_lcp);
    hook_add(HOOK_PACKET_ECP, &parse_ecp);
@@ -101,7 +101,7 @@ static int pptp_clear_init(void *dummy)
 
 static int pptp_clear_fini(void *dummy)
 {
-   USER_MSG("pptp_clear: plugin terminated...\n");
+   USER_MSG(_("pptp_clear: plugin terminated...\n"));
 
    hook_del(HOOK_PACKET_LCP, &parse_lcp);
    hook_del(HOOK_PACKET_ECP, &parse_ecp);

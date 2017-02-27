@@ -78,7 +78,7 @@ struct plugin_ops mdns_spoof_ops = {
    /* the name of the plugin */
    .name =              "mdns_spoof",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Sends spoofed mDNS replies",
+   .info =              N_("Sends spoofed mDNS replies"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -137,7 +137,7 @@ static int load_db(void)
    /* open the file */
    f = open_data("etc", ETTER_MDNS, FOPEN_READ_TEXT);
    if (f == NULL) {
-      USER_MSG("mdns_spoof: Cannot open %s\n", ETTER_MDNS);
+      USER_MSG(_("mdns_spoof: Cannot open %s\n"), ETTER_MDNS);
       return -EINVALID;
    }
 
@@ -166,7 +166,7 @@ static int load_db(void)
          af = AF_INET6;
       }
       else {
-         USER_MSG("mdns_spoof: %s:%d Invalid IPv4 or IPv6 address\n", ETTER_MDNS, lines);
+         USER_MSG(_("mdns_spoof: %s:%d Invalid IPv4 or IPv6 address\n"), ETTER_MDNS, lines);
          continue;
       }
 
@@ -207,13 +207,13 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
  DEBUG_MSG("mdns_spoof: %s:%d str '%s'", ETTER_MDNS, line, str);
 
    if (sscanf(str,"%100s %10s %40[^\r\n# ]", name, type, ip) != 3) {
-      USER_MSG("mdns_spoof: %s:%d Invalid entry %s\n", ETTER_MDNS, line, str);
+      USER_MSG(_("mdns_spoof: %s:%d Invalid entry %s\n"), ETTER_MDNS, line, str);
       return (0);
    }
 
    if (!strcasecmp(type,"PTR")) {
       if (strpbrk(name,"*?[]")) {
-         USER_MSG("mdns_spoof: %s:%d Wildcards in PTR records are not allowed; %s\n",
+         USER_MSG(_("mdns_spoof: %s:%d Wildcards in PTR records are not allowed; %s\n"),
                   ETTER_MDNS, line, str);
          return (0);
       }
@@ -249,13 +249,13 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
          strncpy(ip, ip_tmp, strlen(ip_tmp)+1);
       }
       else {
-         USER_MSG("mdns_spoof: %s:%d Unknown syntax for SRV record; %s\n",
+         USER_MSG(_("mdns_spoof: %s:%d Unknown syntax for SRV record; %s\n"),
                   ETTER_MDNS, line, str);
          return 0;
       }
 
       if (port > 0xffff || port <= 0) {
-         USER_MSG("mdns_spoof: %s:%d Invalid value for port: %d\n",
+         USER_MSG(_("mdns_spoof: %s:%d Invalid value for port: %d\n"),
                   ETTER_MDNS, line, port);
          return 0;
       }
@@ -268,7 +268,7 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
       return 1;
    }
 
-   USER_MSG("mdns_spoof: %s:%d Unknown record type %s\n", ETTER_MDNS, line, type);
+   USER_MSG(_("mdns_spoof: %s:%d Unknown record type %s\n"), ETTER_MDNS, line, type);
    return (0);
 }
 
@@ -331,8 +331,8 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
 
          /* check if the family matches the record type */
          if (ntohs(reply->addr_type) != AF_INET) {
-            USER_MSG("mdns_spoof: can not spoof A record for %s "
-                     "because the value is not a IPv4 address\n", name);
+            USER_MSG(_("mdns_spoof: can not spoof A record for %s "
+                     "because the value is not a IPv4 address\n"), name);
             return;
          }
 
@@ -363,7 +363,7 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
          send_mdns_reply(po->L4.src, sender, target, tmac,
                          ntohs(mdns->id), answer, sizeof(answer), 1, 0, 0);
 
-         USER_MSG("mdns_spoof: [%s %s] spoofed to [%s]\n", name, type_str(type), ip_addr_ntoa(reply, tmp));
+         USER_MSG(_("mdns_spoof: [%s %s] spoofed to [%s]\n"), name, type_str(type), ip_addr_ntoa(reply, tmp));
       }
       if(type == ns_t_aaaa) {
          struct ip_addr *reply;
@@ -380,8 +380,8 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
 
          /* check if the family matches the record type */
          if (ntohs(reply->addr_type) != AF_INET6) {
-            USER_MSG("mdns_spoof: can not spoof AAAA record for %s "
-                     "because the value is not a IPv6 address\n", name);
+            USER_MSG(_("mdns_spoof: can not spoof AAAA record for %s "
+                     "because the value is not a IPv6 address\n"), name);
             return;
          }
 
@@ -412,7 +412,7 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
          send_mdns_reply(po->L4.src, sender, target, tmac,
                          ntohs(mdns->id), answer, sizeof(answer), 1, 0, 0);
 
-         USER_MSG("mdns_spoof: [%s %s] spoofed to [%s]\n", name, type_str(type), ip_addr_ntoa(reply, tmp));
+         USER_MSG(_("mdns_spoof: [%s %s] spoofed to [%s]\n"), name, type_str(type), ip_addr_ntoa(reply, tmp));
        }
        else if (type == ns_t_ptr) {
          struct ip_addr *reply;
@@ -455,7 +455,7 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
          send_mdns_reply(po->L4.src, sender, target, tmac,
                          ntohs(mdns->id), answer, name_len + 10 + rlen, 1, 0, 0);
 
-         USER_MSG("mdns_spoof: [%s %s] spoofed to [%s]\n", name, type_str(type), a);
+         USER_MSG(_("mdns_spoof: [%s %s] spoofed to [%s]\n"), name, type_str(type), a);
       }
       else if (type == ns_t_srv) {
          struct ip_addr *reply;
@@ -561,7 +561,7 @@ static int parse_line (const char *str, int line, int *type_p, char **ip_p, u_in
          send_mdns_reply(po->L4.src, sender, target, tmac,
                          ntohs(mdns->id), answer, sizeof(answer), 2, 0, 0);
 
-         USER_MSG("dns_spoof: SRV [%s] spoofed to [%s:%d]\n", name, ip_addr_ntoa(reply, tmp), port);
+         USER_MSG(_("dns_spoof: SRV [%s] spoofed to [%s:%d]\n"), name, ip_addr_ntoa(reply, tmp), port);
       }
     }
 

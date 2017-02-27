@@ -80,7 +80,7 @@ struct plugin_ops stp_mangler_ops = {
    /* the name of the plugin */
    .name =              "stp_mangler",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Become root of a switches spanning tree",
+   .info =              N_("Become root of a switches spanning tree"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -103,11 +103,11 @@ static int stp_mangler_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("stp_mangler: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("stp_mangler: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
-   INSTANT_USER_MSG("stp_mangler: Start sending fake STP packets...\n");
+   INSTANT_USER_MSG(_("stp_mangler: Start sending fake STP packets...\n"));
 
    /* create the flooding thread */
    ec_thread_new("mangler", "STP mangler thread", &mangler, NULL);
@@ -126,7 +126,7 @@ static int stp_mangler_fini(void *dummy)
    if (!pthread_equal(pid, EC_PTHREAD_NULL))
       ec_thread_destroy(pid);
 
-   INSTANT_USER_MSG("stp_mangler: plugin stopped...\n");
+   INSTANT_USER_MSG(_("stp_mangler: plugin stopped...\n"));
 
    return PLUGIN_FINISHED;
 }

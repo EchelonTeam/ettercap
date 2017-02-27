@@ -61,7 +61,7 @@ struct plugin_ops chk_poison_ops = {
    /* the name of the plugin */
    .name =              "chk_poison",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Check if the poisoning had success",
+   .info =              N_("Check if the poisoning had success"),
    /* the plugin version. */
    .version =           "1.1",
    /* activation function */
@@ -100,7 +100,7 @@ static int chk_poison_init(void *dummy)
    GBL_OPTIONS->quiet = 1;
 
    if (LIST_EMPTY(&arp_group_one) || LIST_EMPTY(&arp_group_two)) {
-      INSTANT_USER_MSG("chk_poison: You have to run this plugin during a poisoning session.\n\n");
+      INSTANT_USER_MSG(_("chk_poison: You have to run this plugin during a poisoning session.\n\n"));
       return PLUGIN_FINISHED;
    }
 
@@ -124,7 +124,7 @@ static int chk_poison_init(void *dummy)
    /* Add the hook to collect ICMP replies from the victim */
    hook_add(HOOK_PACKET_ICMP, &parse_icmp);
 
-   INSTANT_USER_MSG("chk_poison: Checking poisoning status...\n");
+   INSTANT_USER_MSG(_("chk_poison: Checking poisoning status...\n"));
 
    /* Send spoofed ICMP echo request to each victim */
    SLIST_FOREACH(p, &poison_table, next) {
@@ -159,14 +159,14 @@ static int chk_poison_init(void *dummy)
 
    /* Order does matter :) */
    if (!poison_any)
-      INSTANT_USER_MSG("chk_poison: No poisoning at all :(\n");
+      INSTANT_USER_MSG(_("chk_poison: No poisoning at all :(\n"));
    else if (poison_full)
-      INSTANT_USER_MSG("chk_poison: Poisoning process successful!\n");
+      INSTANT_USER_MSG(_("chk_poison: Poisoning process successful!\n"));
    else
       SLIST_FOREACH(p, &poison_table, next) {
          for (i=0; i<=1; i++)
             if (!p->poison_success[i])
-               INSTANT_USER_MSG("chk_poison: No poisoning between %s -> %s\n", ip_addr_ntoa(&(p->ip[i]), tmp1), ip_addr_ntoa(&(p->ip[!i]), tmp2) );
+               INSTANT_USER_MSG(_("chk_poison: No poisoning between %s -> %s\n"), ip_addr_ntoa(&(p->ip[i]), tmp1), ip_addr_ntoa(&(p->ip[!i]), tmp2) );
       }
 
    POISON_LOCK;

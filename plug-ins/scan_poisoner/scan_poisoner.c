@@ -48,7 +48,7 @@ struct plugin_ops scan_poisoner_ops = {
    /* the name of the plugin */
    .name =              "scan_poisoner",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Actively search other poisoners",
+   .info =              N_("Actively search other poisoners"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -84,11 +84,11 @@ static int scan_poisoner_init(void *dummy)
    GBL_OPTIONS->quiet = 1;
 
    if (LIST_EMPTY(&GBL_HOSTLIST)) {
-      INSTANT_USER_MSG("scan_poisoner: You have to build host-list to run this plugin.\n\n");
+      INSTANT_USER_MSG(_("scan_poisoner: You have to build host-list to run this plugin.\n\n"));
       return PLUGIN_FINISHED;
    }
 
-   INSTANT_USER_MSG("scan_poisoner: Checking hosts list...\n");
+   INSTANT_USER_MSG(_("scan_poisoner: Checking hosts list...\n"));
    flag_strange = 0;
 
    /* Compares mac address of each host with any other */
@@ -96,20 +96,20 @@ static int scan_poisoner_init(void *dummy)
       for(h2=LIST_NEXT(h1,next); h2!=LIST_END(&GBL_HOSTLIST); h2=LIST_NEXT(h2,next))
          if (!memcmp(h1->mac, h2->mac, MEDIA_ADDR_LEN)) {
             flag_strange = 1;
-            INSTANT_USER_MSG("scan_poisoner: - %s and %s have same MAC address\n", ip_addr_ntoa(&h1->ip, tmp1), ip_addr_ntoa(&h2->ip, tmp2));
+            INSTANT_USER_MSG(_("scan_poisoner: - %s and %s have same MAC address\n"), ip_addr_ntoa(&h1->ip, tmp1), ip_addr_ntoa(&h2->ip, tmp2));
          }
 
    if (!flag_strange)
-      INSTANT_USER_MSG("scan_poisoner: - Nothing strange\n");
+      INSTANT_USER_MSG(_("scan_poisoner: - Nothing strange\n"));
    flag_strange=0;
 
    /* Can't continue in unoffensive */
    if (GBL_OPTIONS->unoffensive || GBL_OPTIONS->read) {
-      INSTANT_USER_MSG("\nscan_poisoner: Can't make active test in UNOFFENSIVE mode.\n\n");
+      INSTANT_USER_MSG(_("\nscan_poisoner: Can't make active test in UNOFFENSIVE mode.\n\n"));
       return PLUGIN_FINISHED;
    }
 
-   INSTANT_USER_MSG("\nscan_poisoner: Actively searching poisoners...\n");
+   INSTANT_USER_MSG(_("\nscan_poisoner: Actively searching poisoners...\n"));
 
    /* Add the hook to collect ICMP replies from the victim */
    hook_add(HOOK_PACKET_ICMP, &parse_icmp);
@@ -137,7 +137,7 @@ static int scan_poisoner_init(void *dummy)
 
    /* We don't need mutex on it :) */
    if (!flag_strange)
-      INSTANT_USER_MSG("scan_poisoner: - Nothing strange\n");
+      INSTANT_USER_MSG(_("scan_poisoner: - Nothing strange\n"));
 
    return PLUGIN_FINISHED;
 }
@@ -169,7 +169,7 @@ static void parse_icmp(struct packet_object *po)
             if (!memcmp(po->L2.src, h2->mac, MEDIA_ADDR_LEN))
                ip_addr_ntoa(&h2->ip, poisoner);
 		
-         INSTANT_USER_MSG("scan_poisoner: - %s is replying for %s\n", poisoner, ip_addr_ntoa(&h1->ip, tmp));
+         INSTANT_USER_MSG(_("scan_poisoner: - %s is replying for %s\n"), poisoner, ip_addr_ntoa(&h1->ip, tmp));
       }
    }	
 }

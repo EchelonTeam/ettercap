@@ -44,7 +44,7 @@ struct plugin_ops finger_submit_ops = {
    /* the name of the plugin */
    .name =              "finger_submit",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Submit a fingerprint to ettercap's website",
+   .info =              N_("Submit a fingerprint to ettercap's website"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */

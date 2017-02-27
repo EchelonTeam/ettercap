@@ -40,7 +40,7 @@ struct plugin_ops reply_arp_ops = {
    /* the name of the plugin */
    .name =              "reply_arp",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Simple arp responder",
+   .info =              N_("Simple arp responder"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -63,7 +63,7 @@ static int reply_arp_init(void *dummy)
 {
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("reply_arp: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("reply_arp: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
@@ -75,7 +75,7 @@ static int reply_arp_init(void *dummy)
 
 static int reply_arp_fini(void *dummy)
 {
-   USER_MSG("reply_arp: plugin terminated...\n");
+   USER_MSG(_("reply_arp: plugin terminated...\n"));
 
    hook_del(HOOK_PACKET_ARP_RQ, &parse_arp);
 

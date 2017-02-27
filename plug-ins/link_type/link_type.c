@@ -49,7 +49,7 @@ struct plugin_ops link_type_ops = {
    /* the name of the plugin */
    .name =              "link_type",
     /* a short description of the plugin (max 50 chars) */
-   .info =              "Check the link type (hub/switch)",
+   .info =              N_("Check the link type (hub/switch)"),
    /* the plugin version. */
    .version =           "1.0",
    /* activation function */
@@ -78,18 +78,18 @@ static int link_type_init(void *dummy)
 
    /* It doesn't work if unoffensive */
    if (GBL_OPTIONS->unoffensive) {
-      INSTANT_USER_MSG("link_type: plugin doesn't work in UNOFFENSIVE mode\n");
+      INSTANT_USER_MSG(_("link_type: plugin doesn't work in UNOFFENSIVE mode\n"));
       return PLUGIN_FINISHED;
    }
 
   /* Performs some checks */
    if (GBL_PCAP->dlt != IL_TYPE_ETH) {
-      INSTANT_USER_MSG("link_type: This plugin works only on ethernet networks\n\n");
+      INSTANT_USER_MSG(_("link_type: This plugin works only on ethernet networks\n\n"));
       return PLUGIN_FINISHED;
    }
 
    if (!GBL_PCAP->promisc) {
-      INSTANT_USER_MSG("link_type: You have to enable promisc mode to run this plugin\n\n");
+      INSTANT_USER_MSG(_("link_type: You have to enable promisc mode to run this plugin\n\n"));
       return PLUGIN_FINISHED;
    }
 
@@ -103,7 +103,7 @@ static int link_type_init(void *dummy)
    }
 
    if (counter == 0) {
-      INSTANT_USER_MSG("link_type: You have to build host list to run this plugin\n\n");
+      INSTANT_USER_MSG(_("link_type: You have to build host list to run this plugin\n\n"));
       return PLUGIN_FINISHED;
    }
 
@@ -112,7 +112,7 @@ static int link_type_init(void *dummy)
     * use target mac address and our ip as source
     */
    if (counter == 1) {
-      INSTANT_USER_MSG("link_type: Only one host in the list. Check will be less reliable\n\n");
+      INSTANT_USER_MSG(_("link_type: Only one host in the list. Check will be less reliable\n\n"));
       memcpy(&(targets[1].ip), &GBL_IFACE->ip, sizeof(struct ip_addr));
       memcpy(targets[1].mac, targets[0].mac, MEDIA_ADDR_LEN);
    }
@@ -120,7 +120,7 @@ static int link_type_init(void *dummy)
    /* We assume switch by default */
    linktype = LINK_SWITCH;
 
-   INSTANT_USER_MSG("link_type: Checking link type...\n");
+   INSTANT_USER_MSG(_("link_type: Checking link type...\n"));
 
    /* Add the hook to collect ARP replies from the victim */
    hook_add(HOOK_PACKET_ARP, &parse_arp);
@@ -134,11 +134,11 @@ static int link_type_init(void *dummy)
    /* remove the hook */
    hook_del(HOOK_PACKET_ARP, &parse_arp);
 
-   INSTANT_USER_MSG("link_type: You are plugged into a ");
+   INSTANT_USER_MSG(_("link_type: You are plugged into a "));
    if (linktype == LINK_SWITCH)
-      INSTANT_USER_MSG("SWITCH\n\n");
+      INSTANT_USER_MSG(_("SWITCH\n\n"));
    else
-      INSTANT_USER_MSG("HUB\n\n");
+      INSTANT_USER_MSG(_("HUB\n\n"));
 
    return PLUGIN_FINISHED;
 }
