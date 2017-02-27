@@ -6,6 +6,7 @@
 #include <ec_stdint.h>
 #include <ec_version.h>
 #include <ec_ui.h>
+#include <ec_i18n.h>
 
 struct plugin_ops
 {
