@@ -19,7 +19,7 @@
 
 */
 
-#ifndef OS_WINDOWS
+#if 0
 
 #include <ec.h>
 

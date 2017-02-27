@@ -99,13 +99,6 @@ GtkItemFactoryEntry gmenu_plugins[] = {
    {N_("/Plugins/Load a plugin..."),   NULL,         gtkui_plugin_load, 0, "<StockItem>", GTK_STOCK_OPEN }
 };
 
-#ifndef OS_WINDOWS
-GtkItemFactoryEntry gmenu_help[] = {
-   {N_("/_?"),                   NULL,         NULL,              0, "<Branch>" },
-   {N_("/?/Contents"), " ", gtkui_help, 0, "<StockItem>", GTK_STOCK_HELP }
-};
-#endif
-
 GtkItemFactoryEntry tab_menu[] = {
   { N_("/Detach page"),    "<control>D", gtkui_page_detach_current, 0, "<StockItem>", GTK_STOCK_GO_UP },
   { N_("/Close page"),     "<control>Q", gtkui_page_close_current,  0, "<StockItem>", GTK_STOCK_CLOSE },
@@ -180,12 +173,6 @@ void gtkui_create_menu(int live)
       num_items = sizeof (gmenu_plugins) / sizeof (gmenu_plugins[0]);
       gtk_item_factory_create_items (root_menu, num_items, gmenu_plugins, NULL);
    }
-#endif
-
-#ifndef OS_WINDOWS
-   /* Help Menu */
-   num_items = sizeof (gmenu_help) / sizeof (gmenu_help[0]);
-   gtk_item_factory_create_items (root_menu, num_items, gmenu_help, NULL);
 #endif
 
    if(GBL_OPTIONS->reversed) {

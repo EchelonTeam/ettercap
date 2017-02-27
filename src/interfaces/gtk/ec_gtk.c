@@ -610,10 +610,6 @@ static void gtkui_setup(void)
       { N_("/Options/Unoffensive"), NULL, toggle_unoffensive, 0, "<ToggleItem>" },
       { N_("/Options/Promisc mode"), NULL, toggle_nopromisc,  0, "<ToggleItem>" },
       { N_("/Options/Set netmask"), "n", gtkui_set_netmask,   0, "<Item>"}
-#ifndef OS_WINDOWS
-     ,{N_("/_?"),          NULL,         NULL,             0, "<Branch>" },
-      {N_("/?/Contents"), " ",           gtkui_help,       0, "<StockItem>", GTK_STOCK_HELP }
-#endif
    };
    gint nmenu_items = sizeof (file_menu) / sizeof (file_menu[0]);
 
