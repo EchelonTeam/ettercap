@@ -463,7 +463,7 @@ static void gtkui_progress(char *title, int value, int max)
    /* the first time, create the object */
    if (progress_bar == NULL) {
       progress_dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-      gtk_window_set_title(GTK_WINDOW (progress_dialog), EC_PROGRAM);
+      gtk_window_set_title(GTK_WINDOW (progress_dialog), _("ettercap"));
       gtk_window_set_modal(GTK_WINDOW (progress_dialog), TRUE);
       gtk_window_set_position(GTK_WINDOW (progress_dialog), GTK_WIN_POS_CENTER);
       gtk_container_set_border_width(GTK_CONTAINER (progress_dialog), 5);
@@ -622,7 +622,7 @@ static void gtkui_setup(void)
 
    /* create menu window */
    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title(GTK_WINDOW (window), EC_PROGRAM" "EC_VERSION);
+   gtk_window_set_title(GTK_WINDOW (window), _("ettercap"));
    GdkPixbuf *icon = gdk_pixbuf_new_from_file(
       INSTALL_ICONDIR G_DIR_SEPARATOR_S PACKAGE ".svg", NULL);
     gtk_window_set_icon(GTK_WINDOW(window), icon);
