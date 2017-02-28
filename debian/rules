@@ -32,12 +32,15 @@ override_dh_auto_build:
 	mv debian/tmp/usr/bin/ettercap ettercap-text-only
 	dh_auto_configure -- $(ETTERCAP_OPTIONS) -DENABLE_GTK=ON
 	dh_auto_build
+	cd po && make
 
 override_dh_auto_install:
 	dh_auto_install
 	mkdir -p debian/tmp/usr/sbin
 	sed 's/bin/sbin/g' -i debian/tmp/usr/share/polkit-1/actions/org.pkexec.ettercap.policy
 	install --mode=0755 ettercap-text-only debian/tmp/usr/sbin/
+	install -o root -g root -m 644 -D po/ru.gmo \
+	debian/tmp/usr/share/locale/ru/LC_MESSAGES/ettercap.mo
 
 override_dh_install:
 	dh_install --list-missing

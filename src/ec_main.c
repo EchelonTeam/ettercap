@@ -62,7 +62,9 @@ int main(int argc, char *argv[])
     */
 
    globals_alloc();
-
+   bindtextdomain(PACKAGE, LOCALEDIR);
+   bind_textdomain_codeset(PACKAGE, "UTF-8");
+   textdomain(PACKAGE);
    GBL_PROGRAM = strdup(EC_PROGRAM);
    GBL_VERSION = strdup(EC_VERSION);
    SAFE_CALLOC(GBL_DEBUG_FILE, strlen(EC_PROGRAM) + strlen("-") + strlen(EC_VERSION) + strlen("_debug.log") + 1, sizeof(char));
