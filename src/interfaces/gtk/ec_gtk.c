@@ -623,6 +623,12 @@ static void gtkui_setup(void)
    /* create menu window */
    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_window_set_title(GTK_WINDOW (window), EC_PROGRAM" "EC_VERSION);
+   GdkPixbuf *icon = gdk_pixbuf_new_from_file(
+      INSTALL_ICONDIR G_DIR_SEPARATOR_S PACKAGE ".svg", NULL);
+    gtk_window_set_icon(GTK_WINDOW(window), icon);
+    if (icon)
+        g_object_unref(icon);
+
    gtk_window_set_default_size(GTK_WINDOW (window), width, height);
 
    if(left > 0 || top > 0)
