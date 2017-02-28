@@ -2,6 +2,7 @@
 #define EC_GTK_H
 #define G_DISABLE_CONST_RETURNS
 #include <gtk/gtk.h>
+#include <ec_i18n.h>
 
 #define LOGO_FILE "ettercap.png"
 

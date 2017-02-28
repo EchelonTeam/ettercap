@@ -4,6 +4,7 @@
 #define EC_CURSES_H
 
 #include <wdg.h>
+#include <ec_i18n.h>
 
 #define SYSMSG_WIN_SIZE -8
 

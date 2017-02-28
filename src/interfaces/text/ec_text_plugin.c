@@ -23,6 +23,7 @@
 #include <ec_ui.h>
 #include <ec_threads.h>
 #include <ec_plugins.h>
+#include <ec_i18n.h>
 
 /* proto */
 

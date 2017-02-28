@@ -30,6 +30,7 @@
 #include <ec_text.h>
 #include <ec_scan.h>
 #include <ec_mitm.h>
+#include <ec_i18n.h>
 
 #ifdef OS_WINDOWS
    #include <missing/termios_mingw.h>

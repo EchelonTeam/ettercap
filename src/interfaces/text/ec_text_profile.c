@@ -25,6 +25,7 @@
 #include <ec_interfaces.h>
 #include <ec_profiles.h>
 #include <ec_passive.h>
+#include <ec_i18n.h>
 
 #ifdef OS_WINDOWS
    #include <missing/termios_mingw.h>
