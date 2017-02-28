@@ -266,7 +266,7 @@ static void gtkui_add_plugin(char active, struct plugin_ops *ops)
                        0, active_str,
                        1, ops->name,
                        2, ops->version,
-                       3, ops->info, -1);
+                       3, _(ops->info), -1);
 }
 
 /*

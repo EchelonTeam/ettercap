@@ -407,7 +407,7 @@ void plugin_list(void)
  */
 static void plugin_print(char active, struct plugin_ops *ops)
 {
-   fprintf(stdout, " %15s %4s  %s\n", ops->name, ops->version, ops->info);
+   fprintf(stdout, " %15s %4s  %s\n", ops->name, ops->version, _(ops->info));
 }
 
 /* EOF */
