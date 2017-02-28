@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-27 14:33+0300\n"
-"PO-Revision-Date: 2017-02-27 18:15+0300\n"
+"POT-Creation-Date: 2017-02-28 17:18+0300\n"
+"PO-Revision-Date: 2017-04-27 12:31+0300\n"
 "Last-Translator: v.laur@npo-echelon.ru\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -57,6 +57,8 @@ msgid ""
 "\n"
 "Text only Interface activated...\n"
 msgstr ""
+"\n"
+" Активирован только текстовый интерфейс...\n"
 
 #: ../src/interfaces/text/ec_text.c:291
 msgid ""
@@ -159,7 +161,7 @@ msgid "Deactivating %s plugin...\n"
 msgstr "Выключаю плагин %s...\n"
 
 #: ../src/interfaces/curses/ec_curses_hosts.c:159
-#: ../src/interfaces/curses/ec_curses.c:541 ../src/interfaces/gtk/ec_gtk.c:801
+#: ../src/interfaces/curses/ec_curses.c:541 ../src/interfaces/gtk/ec_gtk.c:803
 #: ../src/interfaces/gtk/ec_gtk_hosts.c:150
 #, c-format
 msgid "Cannot write %s"
@@ -177,7 +179,7 @@ msgstr "Хост %s добавлен к цели 1\n"
 msgid "Host %s added to TARGET2\n"
 msgstr "Хост %s добавлен к цели 2\n"
 
-#: ../src/interfaces/curses/ec_curses.c:665 ../src/interfaces/gtk/ec_gtk.c:1094
+#: ../src/interfaces/curses/ec_curses.c:665 ../src/interfaces/gtk/ec_gtk.c:1096
 #, c-format
 msgid "Invalid netmask %s"
 msgstr "Неверная маска подсети: %s"
@@ -387,7 +389,7 @@ msgstr "/_Журналирование"
 
 #: ../src/interfaces/gtk/ec_gtk_menus.c:86
 msgid "/Logging/Log all packets and infos..."
-msgstr "/Журналирование/Запись всех пакетов и иноформации..."
+msgstr "/Журналирование/Запись всех пакетов и информации..."
 
 #: ../src/interfaces/gtk/ec_gtk_menus.c:87
 msgid "/Logging/Log only infos..."
@@ -421,33 +423,29 @@ msgstr "/Плагины/Менеджер плагинов"
 msgid "/Plugins/Load a plugin..."
 msgstr "/Плагины/Загрузить плагин..."
 
-#: ../src/interfaces/gtk/ec_gtk_menus.c:104 ../src/interfaces/gtk/ec_gtk.c:614
-msgid "/_?"
-msgstr ""
-
-#: ../src/interfaces/gtk/ec_gtk_menus.c:105 ../src/interfaces/gtk/ec_gtk.c:615
-msgid "/?/Contents"
-msgstr "/?/Содержание"
-
-#: ../src/interfaces/gtk/ec_gtk_menus.c:110
+#: ../src/interfaces/gtk/ec_gtk_menus.c:103
 msgid "/Detach page"
-msgstr "/"
+msgstr "/Открепить страницу"
 
-#: ../src/interfaces/gtk/ec_gtk_menus.c:111
+#: ../src/interfaces/gtk/ec_gtk_menus.c:104
 msgid "/Close page"
 msgstr "/Закрыть страницу"
 
-#: ../src/interfaces/gtk/ec_gtk_menus.c:113
+#: ../src/interfaces/gtk/ec_gtk_menus.c:106
 msgid "/Next page"
 msgstr "/Следующая страница"
 
-#: ../src/interfaces/gtk/ec_gtk_menus.c:114
+#: ../src/interfaces/gtk/ec_gtk_menus.c:107
 msgid "/Previous page"
 msgstr "/Предыдущая страница"
 
-#: ../src/interfaces/gtk/ec_gtk.c:412 ../src/interfaces/gtk/ec_gtk.c:829
+#: ../src/interfaces/gtk/ec_gtk.c:412 ../src/interfaces/gtk/ec_gtk.c:831
 msgid " Input"
 msgstr "Ввод"
+
+#: ../src/interfaces/gtk/ec_gtk.c:466 ../src/interfaces/gtk/ec_gtk.c:625
+msgid "ettercap"
+msgstr "Сетевой анализатор"
 
 #: ../src/interfaces/gtk/ec_gtk.c:599
 msgid "/_File"
@@ -497,39 +495,39 @@ msgstr "/Настройки/Захват всех пакетов"
 msgid "/Options/Set netmask"
 msgstr "/Настройки/Маска подсети"
 
-#: ../src/interfaces/gtk/ec_gtk.c:734
+#: ../src/interfaces/gtk/ec_gtk.c:736
 msgid "Select a pcap file..."
 msgstr "Выберите файл pcap..."
 
-#: ../src/interfaces/gtk/ec_gtk.c:789 ../src/interfaces/gtk/ec_gtk_hosts.c:140
+#: ../src/interfaces/gtk/ec_gtk.c:791 ../src/interfaces/gtk/ec_gtk_hosts.c:140
 msgid "Output file :"
 msgstr "Выходной файл:"
 
-#: ../src/interfaces/gtk/ec_gtk.c:842
+#: ../src/interfaces/gtk/ec_gtk.c:844
 msgid "Network interface : "
 msgstr "Сетевой интерфейс:"
 
-#: ../src/interfaces/gtk/ec_gtk.c:936
+#: ../src/interfaces/gtk/ec_gtk.c:938
 msgid "Bridged Sniffing"
 msgstr "Коммутируемая сеть..."
 
-#: ../src/interfaces/gtk/ec_gtk.c:960
+#: ../src/interfaces/gtk/ec_gtk.c:962
 msgid "First network interface  : "
 msgstr "Первый сетевой интерфейс:"
 
-#: ../src/interfaces/gtk/ec_gtk.c:981
+#: ../src/interfaces/gtk/ec_gtk.c:983
 msgid "Second network interface : "
 msgstr "Второй сетевой интерфейс:"
 
-#: ../src/interfaces/gtk/ec_gtk.c:1071
+#: ../src/interfaces/gtk/ec_gtk.c:1073
 msgid "Pcap filter :"
 msgstr "Фильтр pcap:"
 
-#: ../src/interfaces/gtk/ec_gtk.c:1090
+#: ../src/interfaces/gtk/ec_gtk.c:1092
 msgid "Netmask :"
 msgstr "Маска подсети:"
 
-#: ../src/interfaces/gtk/ec_gtk.c:1360
+#: ../src/interfaces/gtk/ec_gtk.c:1362
 msgid "Select a file..."
 msgstr "Выберите файл..."
 
@@ -651,19 +649,19 @@ msgstr "Данные о соединении"
 
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:682
 msgid "_Join Views"
-msgstr ""
+msgstr "_Совмещенный просмотр"
 
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:687
 msgid "_Inject Data"
-msgstr ""
+msgstr "_Ввод данных"
 
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:733
 msgid "Inject _File"
-msgstr ""
+msgstr "_Файл инъекции"
 
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:987
 msgid "_Split View"
-msgstr ""
+msgstr "_Раздельный просмотр"
 
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:1124
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:1145
@@ -678,7 +676,7 @@ msgstr "Нельзя разрывать UDP соединения!"
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:1170
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:1267
 msgid "Character Injection"
-msgstr ""
+msgstr "Инъекция символов"
 
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:1178
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:1275
@@ -687,7 +685,7 @@ msgstr "Назначение пакета:"
 
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:1196
 msgid "Characters to be injected:"
-msgstr ""
+msgstr "Символы для инъекции:"
 
 #: ../src/interfaces/gtk/ec_gtk_view_connections.c:1293
 msgid "File to inject:"
@@ -738,7 +736,7 @@ msgstr "Дополнительные параметры"
 #: ../src/interfaces/gtk/ec_gtk_mitm.c:80
 #: ../src/interfaces/gtk/ec_gtk_mitm.c:227
 msgid "Sniff remote connections."
-msgstr "Мониториyu удалённых соединений."
+msgstr "Мониторинг удалённых соединений."
 
 #: ../src/interfaces/gtk/ec_gtk_mitm.c:84
 msgid "Only poison one-way."
@@ -906,47 +904,44 @@ msgid "ISO-8859-15 (Western Europe)"
 msgstr "ISO-8859-15 (Западная Европа)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:377
-#, fuzzy
 msgid "ISO-8859-2 (Central Europe)"
-msgstr "ISO-8859-15 (Западная Европа)"
+msgstr "ISO-8859-2 (Центральная Европа)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:378
-#, fuzzy
 msgid "ISO-8859-7 (Greek)"
-msgstr "ISO-8859-15 (Западная Европа)"
+msgstr "ISO-8859-7 (Греческая)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:379
-#, fuzzy
 msgid "ISO-8859-8 (Hebrew)"
-msgstr "ISO-8859-15 (Западная Европа)"
+msgstr "ISO-8859-8 (Иврит)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:380
 msgid "ISO-8859-9 (Turkish)"
-msgstr ""
+msgstr "ISO-8859-9 (Турецкая)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:381
 msgid "ISO-2022-JP (Japanese)"
-msgstr ""
+msgstr "ISO-2022-JP (Японская)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:382
 msgid "SJIS (Japanese)"
-msgstr ""
+msgstr "SJIS (Японский)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:383
 msgid "CP949 (Korean)"
-msgstr ""
+msgstr "CP949 (Корейская)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:384
 msgid "CP1251 (Cyrillic)"
-msgstr ""
+msgstr "CP1251 (Кириллица)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:385
 msgid "CP1256 (Arabic)"
-msgstr ""
+msgstr "CP1256 (Арабская)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:386
 msgid "GB18030 (Chinese)"
-msgstr ""
+msgstr "GB18030 (Китайская)"
 
 #: ../src/interfaces/gtk/ec_gtk_view.c:445
 msgid "Visualization regex :"
@@ -973,13 +968,12 @@ msgid "Purge _Remote"
 msgstr "Очистить удалённые"
 
 #: ../src/interfaces/gtk/ec_gtk_view_profiles.c:128
-#, fuzzy
 msgid "_Convert to Host List"
-msgstr "Список хостов"
+msgstr "_Преобразовать в список хостов"
 
 #: ../src/interfaces/gtk/ec_gtk_view_profiles.c:132
 msgid "_Dump to File"
-msgstr ""
+msgstr "_Дамп в файл"
 
 #: ../src/interfaces/gtk/ec_gtk_view_profiles.c:147
 msgid "Collected passive profiles"
@@ -1009,121 +1003,129 @@ msgid ""
 "Capture file read completely, please exit at your convenience.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Файл захвата полностью прочитан, вы можете закрыть окно.\n"
+"\n"
 
 #: ../src/ec_conf.c:455
 #, c-format
 msgid "%4d protocol dissectors\n"
-msgstr ""
+msgstr "%4d протоколов подгружено\n"
 
 #: ../src/ec_conf.c:456
 #, c-format
 msgid "%4d ports monitored\n"
-msgstr ""
+msgstr "%4d портов осмотрено\n"
 
 #: ../src/ec_decode.c:125
 msgid "Bad packet detected, skipping...\n"
-msgstr ""
+msgstr "Обнаружен плохой пакет, пропуск...\n"
 
 #: ../src/ec_decode.c:148
 msgid "Truncated packet detected, skipping...\n"
-msgstr ""
+msgstr "Обнаружен усеченный пакет, пропуск...\n"
 
 #: ../src/ec_dispatcher.c:132
 msgid ""
 "\n"
 "End of dump file...\n"
 msgstr ""
+"\n"
+"Конец  дамп-файла...\n"
 
 #: ../src/ec_encryption.c:246
 #, c-format
 msgid "Using WEP key: %s\n"
-msgstr ""
+msgstr "Используется WEP ключ: %s\n"
 
 #: ../src/ec_encryption.c:354
 #, c-format
 msgid "Using WPA key: %s\n"
-msgstr ""
+msgstr "Используется WPA ключ: %s\n"
 
 #: ../src/ec_encryption.c:394
 #, c-format
 msgid "WPA session updated for [%s]\n"
-msgstr ""
+msgstr "WPA сессия обновлена для [%s]\n"
 
 #: ../src/ec_encryption.c:404
 #, c-format
 msgid "New WPA session for [%s]\n"
-msgstr ""
+msgstr "Новая WPA сессия для [%s]\n"
 
 #: ../src/ec_encryption.c:417
 #, c-format
 msgid "WPA session deleted for [%s]\n"
-msgstr ""
+msgstr "WPA сессия удалена для [%s]\n"
 
 #: ../src/ec_exit.c:41
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Terminating %s...\n"
-msgstr "Выключаю плагин %s...\n"
+msgstr ""
+"\n"
+"Остановка %s...\n"
 
 #: ../src/ec_filter.c:772
 #, c-format
 msgid "filter engine: inject(): File not found (%s)\n"
-msgstr ""
+msgstr "модуль фильтрации: inject(): Файл не найден (%s)\n"
 
 #: ../src/ec_filter.c:829
 #, c-format
 msgid "filter engine: Cannot open file %s\n"
-msgstr ""
+msgstr "модуль фильтрации: Невозможно открыть файл %s\n"
 
 #: ../src/ec_filter.c:837
 #, c-format
 msgid "filter engine: Cannot write to file...%d\n"
-msgstr ""
+msgstr "модуль фильтрации: Невозможно записать в файл...%d\n"
 
 #: ../src/ec_filter.c:841
 msgid "filter engine: Cannot write to file...\n"
-msgstr ""
+msgstr "модуль фильтрации: Невозможно записать в файл...\n"
 
 #: ../src/ec_filter.c:1070
 #, c-format
 msgid "Content filters loaded from %s...\n"
-msgstr ""
+msgstr "Фильтры контента загружены из %s...\n"
 
 #: ../src/ec_fingerprint.c:125
 #, c-format
 msgid "%4d tcp OS fingerprint\n"
-msgstr ""
+msgstr "%4d TCP отпечатков ОС\n"
 
 #: ../src/ec_fingerprint.c:318
 #, c-format
 msgid "Connecting to http://%s...\n"
-msgstr ""
+msgstr "Подключение к http://%s...\n"
 
 #: ../src/ec_fingerprint.c:353
 #, c-format
 msgid "Submitting the fingerprint to %s...\n"
-msgstr ""
+msgstr "Отправка отпечатка %s...\n"
 
 #: ../src/ec_fingerprint.c:363
 msgid "New fingerprint submitted to the ettercap website...\n"
-msgstr ""
+msgstr "Новый отпечаток отправлен разработчикам...\n"
 
 #: ../src/ec_format.c:419
 msgid "UTF-8 support not compiled in.\n"
-msgstr ""
+msgstr "Программа скомпилирована без поддержки UTF-8.\n"
 
 #: ../src/ec_log.c:94
 msgid "WARNING: while reading form file we cannot determine    \n"
-msgstr ""
+msgstr "ВНИМАНИЕ: при чтении файла невозможно определить    \n"
 
 #: ../src/ec_log.c:95
 msgid "if an host is local or not because the ip address of     \n"
-msgstr ""
+msgstr "является ли хост локальным или нет, так как IP-адрес     \n"
 
 #: ../src/ec_log.c:96
 msgid "the NIC may have been changed from the time of the dump. \n"
-msgstr ""
+msgstr "сетевой карты мог измениться с момента последнего дампа. \n"
 
 #: ../src/ec_main.c:245
 #, c-format
@@ -1131,98 +1133,107 @@ msgid ""
 "Privileges dropped to UID %d GID %d...\n"
 "\n"
 msgstr ""
+"Привилегии снижены до UID %d GID %d...\n"
+"\n"
 
 #: ../src/ec_manuf.c:147
 #, c-format
 msgid "%4d mac vendor fingerprint\n"
-msgstr ""
+msgstr "%4d MAC-адресов производителей\n"
 
 #: ../src/ec_mitm.c:138
 msgid "Reverse target matching can't be used with MITM attacks"
-msgstr ""
+msgstr "Обратная цель не может быть использована для MITM атаки"
 
 #: ../src/ec_mitm.c:141
 msgid "MITM attacks can't be used on unconfigured interfaces"
-msgstr ""
+msgstr "Невозможно провести MITM атаку на нескорнфигурированном интерфейсе"
 
 #: ../src/ec_mitm.c:195
 msgid "Activated the mitm attack only... (press 'q' to exit)\n"
-msgstr ""
+msgstr "Активирована только MITM атака... (нажмите 'q' для выхода)\n"
 
 #: ../src/ec_mitm.c:214
 msgid ""
 "Exiting...\n"
 "\n"
 msgstr ""
+"Выход...\n"
+"\n"
 
 #: ../src/ec_network.c:133
 msgid "Listening on:\n"
-msgstr ""
+msgstr "Прослушивается:\n"
 
 #: ../src/ec_network.c:148
 #, c-format
 msgid "Reading from %s\n"
-msgstr ""
+msgstr "Чтение из %s\n"
 
 #: ../src/ec_network.c:388
 msgid "Libnet failed IPv4 initialization. Don't send IPv4 packets.\n"
 msgstr ""
+"Сбой в Libnet, проблема с инициализацией IPv4. IPv4 пакет не отправлен.\n"
 
 #: ../src/ec_network.c:398
 msgid "Libnet failed IPv6 initialization. Don't send IPv6 packets.\n"
 msgstr ""
+"Сбой в Libnet, проблема с инициализацией IPv6. IPv6 пакет не отправлен.\n"
 
 #: ../src/ec_plugins.c:185
-#, fuzzy, c-format
+#, c-format
 msgid "plugin %s already loaded...\n"
-msgstr "плагин %s уже загружен..."
+msgstr "плагин %s уже загружен...\n"
 
 #: ../src/ec_plugins.c:189
-#, fuzzy, c-format
+#, c-format
 msgid "plugin %s was compiled for a different ettercap version...\n"
-msgstr "плагин %s был скомпилирован для другой версии сетевого анализатора..."
+msgstr ""
+"плагин %s был скомпилирован для другой версии сетевого анализатора...\n"
 
 #: ../src/ec_plugins.c:194
-#, fuzzy, c-format
+#, c-format
 msgid "plugin %s cannot be loaded...\n"
-msgstr "плагин %s уже загружен..."
+msgstr "плагин %s не может быть загружен...\n"
 
 #: ../src/ec_plugins.c:201
-#, fuzzy, c-format
+#, c-format
 msgid "%4d plugins\n"
-msgstr "Плагины"
+msgstr "%4d плагинов\n"
 
 #: ../src/ec_plugins.c:207
 msgid "   0 plugins (disabled by configure...)\n"
-msgstr ""
+msgstr "0 плагинов (отключены на этапе конфигурации...)\n"
 
 #: ../src/ec_scan.c:92 ../src/ec_scan.c:214
 #, c-format
 msgid "%d hosts added to the hosts list...\n"
-msgstr ""
+msgstr "%d хостов добавлены в список хостов...\n"
 
 #: ../src/ec_scan.c:242
 msgid "Interrupted by user. Partial results may have been recorded...\n"
-msgstr ""
+msgstr "Прервано пользователем. Частичные результаты могут быть записаны...\n"
 
 #: ../src/ec_scan.c:393
 #, c-format
 msgid "Randomizing %d hosts for scanning...\n"
-msgstr ""
+msgstr "Рандомизация %d хостов для сканирования...\n"
 
 #: ../src/ec_scan.c:425 ../src/ec_scan.c:578
 msgid "Scan interrupted by user. Partial results may have been recorded...\n"
 msgstr ""
+"Сканирование прервано пользователем. Частичные результаты могут быть "
+"записаны...\n"
 
 #: ../src/ec_scan.c:630
 #, c-format
 msgid "Loading hosts list from file %s\n"
-msgstr ""
+msgstr "Загрузка списка хостов из файла %s\n"
 
 #: ../src/ec_scan.c:699
-#, fuzzy, c-format
+#, c-format
 msgid "%d hosts saved to file %s\n"
-msgstr "/Хосты/Сохранить в файл..."
+msgstr "%d хостов сохранено в файл %s\n"
 
 #: ../src/ec_send.c:126
 #, c-format
@@ -1230,11 +1241,13 @@ msgid ""
 "SEND L3 ERROR: %d byte packet (%04x:%02x) destined to %s was not forwarded "
 "(%s)\n"
 msgstr ""
+"Ошибка отправки L3: пакет на %d байт (%04x:%02x) предназначеный для %s не "
+"переслался (%s)\n"
 
 #: ../src/ec_services.c:111
 #, c-format
 msgid "%4d known services\n"
-msgstr ""
+msgstr "%4d сервисов известно\n"
 
 #: ../src/ec_sniff_bridge.c:51
 msgid "Bridged sniffing already started...\n"
@@ -1253,153 +1266,162 @@ msgid "Bridged sniffing is not running...\n"
 msgstr "Мониторинг коммутируемой сети не запущен...\n"
 
 #: ../src/ec_sniff_bridge.c:91
-#, fuzzy
 msgid "Bridged sniffing was stopped.\n"
-msgstr "Логирование было остановлено."
+msgstr "Мониторинг коммутируемой сети был остановлен.\n"
 
 #: ../src/ec_sniff_unified.c:47
-#, fuzzy
 msgid "Unified sniffing already started...\n"
-msgstr "/Мониторинг/Обычная сеть..."
+msgstr "Мониторинг обычной сети уже запущен...\n"
 
 #: ../src/ec_sniff_unified.c:51
-#, fuzzy
 msgid ""
 "Starting Unified sniffing...\n"
 "\n"
-msgstr "/Мониторинг/Обычная сеть..."
+msgstr ""
+"Запуск мониторинга обычной сети...\n"
+"\n"
 
 #: ../src/ec_sniff_unified.c:86
-#, fuzzy
 msgid "Unified sniffing is not running...\n"
-msgstr "/Мониторинг/Обычная сеть..."
+msgstr "Мониторинг обычной сети не запущен...\n"
 
 #: ../src/ec_sniff_unified.c:100
-#, fuzzy
 msgid "Unified sniffing was stopped.\n"
-msgstr "Логирование было остановлено."
+msgstr "Мониторинг обычной сети был оcтановлен.\n"
 
 #: ../src/ec_sslwrap.c:228
 msgid ""
 "SSL dissection needs a valid 'redir_command_on' script in the etter.conf "
 "file\n"
 msgstr ""
+"SSL dissection требует правильный 'redir_command_on' скрипт в файле etter."
+"conf\n"
 
 #: ../src/ec_sslwrap.c:397 ../plug-ins/sslstrip/sslstrip.c:462
 msgid ""
 "SSLStrip: cannot setup the redirect, did you uncomment the redir_command_on "
 "command on your etter.conf file?"
 msgstr ""
+"SSLStrip: ошибка настройки редиректа, возможно вы раскомментировали команду "
+"redir_command_on в файле etter.conf?"
 
 #: ../src/ec_sslwrap.c:464 ../plug-ins/sslstrip/sslstrip.c:522
 msgid ""
 "SSLStrip: cannot remove the redirect, did you uncomment the "
 "redir_command_off command on your etter.conf file?"
 msgstr ""
+"SSLStrip: ошибка удаления редиректа, возможно вы раскомментировали команду "
+"redir_command_off в файле etter.conf?"
 
 #: ../plug-ins/arp_cop/arp_cop.c:49
 msgid "Report suspicious ARP activity"
-msgstr "Проверка перевода"
+msgstr "Сообщать о подозрительных ARP активностях"
 
 #: ../plug-ins/arp_cop/arp_cop.c:70
 msgid "arp_cop: plugin running...\n"
-msgstr ""
+msgstr "arp_cop: плагин запущен...\n"
 
 #: ../plug-ins/arp_cop/arp_cop.c:82
 msgid "arp_cop: plugin terminated...\n"
-msgstr ""
+msgstr "arp_cop: плагин остановлен...\n"
 
 #: ../plug-ins/arp_cop/arp_cop.c:116
 #, c-format
 msgid "arp_cop: (WARNING) %s[%s] pretends to be %s[%s]\n"
-msgstr ""
+msgstr "arp_cop: (ВНИМАНИЕ) %s[%s] притворяется %s[%s]\n"
 
 #: ../plug-ins/arp_cop/arp_cop.c:125
 #, c-format
 msgid "arp_cop: (IP-conflict) [%s] wants to be %s[%s]\n"
-msgstr ""
+msgstr "arp_cop: (IP-конфликт) [%s] хочет быть %s[%s]\n"
 
 #: ../plug-ins/arp_cop/arp_cop.c:135
 #, c-format
 msgid "arp_cop: (IP-change) [%s]  %s -> %s\n"
-msgstr ""
+msgstr "arp_cop: (IP-замена) [%s]  %s -> %s\n"
 
 #: ../plug-ins/arp_cop/arp_cop.c:143
 #, c-format
 msgid "arp_cop: (new host) %s[%s]\n"
-msgstr ""
+msgstr "arp_cop: (новый хост) %s[%s]\n"
 
 #: ../plug-ins/autoadd/autoadd.c:45
 msgid "Automatically add new victims in the target range"
-msgstr ""
+msgstr "Автоматически добавлять новые жертвы в целевом диапазоне"
 
 #: ../plug-ins/autoadd/autoadd.c:104 ../plug-ins/autoadd/autoadd.c:109
-#, fuzzy, c-format
+#, c-format
 msgid "autoadd: %s %s added to GROUP1\n"
-msgstr "Хост %s добавлен к цели 1\n"
+msgstr "autoadd: %s %s добавлен в GROUP1\n"
 
 #: ../plug-ins/autoadd/autoadd.c:115 ../plug-ins/autoadd/autoadd.c:120
-#, fuzzy, c-format
+#, c-format
 msgid "autoadd: %s %s added to GROUP2\n"
-msgstr "Хост %s добавлен к цели 2\n"
+msgstr "autoload: %s %s добавлен в GROUP2\n"
+
+#: ../plug-ins/chk_poison/chk_poison.c:64
+msgid "Check if the poisoning had success"
+msgstr "Проверяет было ли заражение успешным"
 
 #: ../plug-ins/chk_poison/chk_poison.c:103
 msgid ""
 "chk_poison: You have to run this plugin during a poisoning session.\n"
 "\n"
 msgstr ""
+"chk_poison: Данный плагин необходимо запустить во время poisoning сеанса.\n"
+"\n"
 
 #: ../plug-ins/chk_poison/chk_poison.c:127
 msgid "chk_poison: Checking poisoning status...\n"
-msgstr ""
+msgstr "chk_poison: Проверка состояния poisoning...\n"
 
 #: ../plug-ins/chk_poison/chk_poison.c:162
 msgid "chk_poison: No poisoning at all :(\n"
-msgstr ""
+msgstr "chk_poison: Poisoning отсутствует :(\n"
 
 #: ../plug-ins/chk_poison/chk_poison.c:164
 msgid "chk_poison: Poisoning process successful!\n"
-msgstr ""
+msgstr "chk_poison: Poisoning успешно внедрен!\n"
 
 #: ../plug-ins/chk_poison/chk_poison.c:169
 #, c-format
 msgid "chk_poison: No poisoning between %s -> %s\n"
-msgstr ""
+msgstr "chk_poison: Poisoning отсутствует между %s -> %s\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:169
 #, c-format
 msgid "dns_spoof: Cannot open %s\n"
-msgstr ""
+msgstr "dns_spoof: Не удалось открыть %s\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:198
 #, c-format
 msgid "dns_spoof: %s:%d Invalid IPv4 or IPv6 address\n"
-msgstr ""
+msgstr "dns_spoof: %s:%d Некорректный IPv4 или IPv6 адрес\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:239
 #, c-format
 msgid "dns_spoof: %s:%d Invalid entry %s\n"
-msgstr ""
+msgstr "dns_spoof: %s:%d Некорректная запись %s\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:245
 #, c-format
 msgid "dns_spoof: %s:%d Wildcards in PTR records are not allowed; %s\n"
-msgstr ""
+msgstr "dns_spoof: %s:%d Wildcards в PTR записях не допускаются; %s\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:295
 #, c-format
 msgid "dns_spoof: %s:%d Unknown syntax for SRV record; %s\n"
-msgstr ""
+msgstr "dns_spoof: %s:%d Неизвесный синтаксис для SRV записи; %s\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:301
 #, c-format
 msgid "dns_spoof: %s:%d Invalid value for port: %d\n"
-msgstr ""
+msgstr "dns_spoof: %s:%d Некорректное значение для порта: %d\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:313
 #, c-format
 msgid "dns_spoof: %s:%d Unknown record type %s\n"
-msgstr ""
+msgstr "dns_spoof: %s:%d Неизвестный тип записи %s\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:369
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:334
@@ -1408,11 +1430,13 @@ msgid ""
 "mdns_spoof: can not spoof A record for %s because the value is not a IPv4 "
 "address\n"
 msgstr ""
+"mdns_spoof: невозможно подменить запись для %s, так как значение не является "
+"IPv4 адрессом\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:407 ../plug-ins/dns_spoof/dns_spoof.c:501
 #, c-format
 msgid "dns_spoof: [%s] spoofed to [%s]\n"
-msgstr ""
+msgstr "dns_spoof: [%s] подменён на [%s]\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:424
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:383
@@ -1421,142 +1445,165 @@ msgid ""
 "mdns_spoof: can not spoof AAAA record for %s because the value is not a IPv6 "
 "address\n"
 msgstr ""
+"mdns_spoof: невозможно подменить запись AAAA для %s, так как значение не "
+"является IPv6 адрессом\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:463
 #, c-format
 msgid "dns_spoof: AAAA [%s] spoofed to [%s]\n"
-msgstr ""
+msgstr "dns_spoof: AAAA [%s] подменён на [%s]\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:575
 #, c-format
 msgid "dns_spoof: MX [%s] spoofed to [%s]\n"
-msgstr ""
+msgstr "dns_spoof: MX [%s] подменён на [%s]\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:610
 #, c-format
 msgid "dns_spoof: WINS [%s] spoofed to [%s]\n"
-msgstr ""
+msgstr "dns_spoof: WINS [%s] подменён на [%s]\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:709
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:564
 #, c-format
 msgid "dns_spoof: SRV [%s] spoofed to [%s:%d]\n"
-msgstr ""
+msgstr "dns_spoof: SRV [%s] подменён на [%s:%d]\n"
 
 #: ../plug-ins/dns_spoof/dns_spoof.c:741
 #, c-format
 msgid "dns_spoof: negative cache spoofed for [%s] type %s \n"
-msgstr ""
+msgstr "dns_spoof: негативный кэш подменён для [%s] типа %s \n"
+
+#: ../plug-ins/dos_attack/dos_attack.c:61
+msgid "Run a d.o.s. attack against an IP address"
+msgstr "Запускает d.o.s атаку против указанного IP-адреса"
 
 #: ../plug-ins/dos_attack/dos_attack.c:88
 msgid "dos_attack: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "dos_attack: плагин не работает в режиме UNOFFENSIVE\n"
 
 #: ../plug-ins/dos_attack/dos_attack.c:100
 #: ../plug-ins/dos_attack/dos_attack.c:106
-#, fuzzy
 msgid "dos_attack: Invalid IP address.\n"
-msgstr "Неверный IP-адрес"
+msgstr "dos_attack: некорректный IP-адрес.\n"
 
 #: ../plug-ins/dos_attack/dos_attack.c:111
 msgid "dos_attack: Address' families don't match.\n"
-msgstr ""
+msgstr "dos_attack: Адрес семейства не совпадает.\n"
 
 #: ../plug-ins/dos_attack/dos_attack.c:115
 #, c-format
 msgid "dos_attack: Starting scan against %s [Fake Host: %s]\n"
-msgstr ""
+msgstr "dos_attack: Запуск сканирования против %s [Фивктивный хост: %s]\n"
 
 #: ../plug-ins/dos_attack/dos_attack.c:156
 msgid "dos_attack: plugin terminated...\n"
-msgstr ""
+msgstr "dos_attack: плагин остановлен...\n"
 
 #: ../plug-ins/dos_attack/dos_attack.c:191
 msgid "dos_attack: Starting attack...\n"
-msgstr ""
+msgstr "dos_attack: Атака началась...\n"
 
 #: ../plug-ins/dos_attack/dos_attack.c:254
 #, c-format
 msgid "dos_attack: Port %d added\n"
-msgstr ""
+msgstr "dos_attack: Порт %d добавлен\n"
+
+#: ../plug-ins/find_conn/find_conn.c:43
+msgid "Search connections on a switched LAN"
+msgstr "Ищет соединения в локальной сети с коммутатором (свичом)"
 
 #: ../plug-ins/find_conn/find_conn.c:64
 msgid "find_conn: plugin running...\n"
-msgstr ""
+msgstr "find_conn: плагин запущен...\n"
 
 #: ../plug-ins/find_conn/find_conn.c:73
 msgid "find_conn: plugin terminated...\n"
-msgstr ""
+msgstr "find_conn: плагин остановлен...\n"
 
 #: ../plug-ins/find_conn/find_conn.c:87
 #, c-format
 msgid "find_conn: Probable connection attempt %s -> %s\n"
-msgstr ""
+msgstr "find_conn: Возможная попытка соединения %s -> %s\n"
+
+#: ../plug-ins/find_ettercap/find_ettercap.c:50
+msgid "Try to find ettercap activity"
+msgstr "Пытается обнаружить активность другого сетевого анализатора"
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:102
 #, c-format
 msgid "ettercap traces (ip) from %s...\n"
-msgstr ""
+msgstr "отпечаток сетевого анализатора (ip) от %s...\n"
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:105
 #, c-format
 msgid "ettercap plugin (banshee) is killing from %s to %s...\n"
-msgstr ""
+msgstr "плагин banshee убивает от %s до %s...\n"
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:120
 #, c-format
 msgid "ettercap traces (icmp) from %s...\n"
-msgstr ""
+msgstr "трассировка (icmp) от %s...\n"
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:137
 #, c-format
 msgid "ettercap traces (tcp) from %s...\n"
-msgstr ""
+msgstr "трассировка (icmp) от %s...\n"
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:140
 #, c-format
 msgid "ettercap plugin (shadow) is scanning from %s to %s:%d...\n"
-msgstr ""
+msgstr "плагин shadow сканирует от %s до %s:%d...\n"
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:144
 msgid "ettercap plugin (spectre) is flooding the lan.\n"
-msgstr ""
+msgstr "плагин spectre осуществляет флуд атаку на сеть.\n"
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:146
 #, c-format
 msgid "ettercap plugin (golem) is DOSing from %s to %s...\n"
-msgstr ""
+msgstr "плагин golem осуществляет DOS-атаку от %s до %s...\n"
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:151
 #, c-format
 msgid ""
 "ettercap NG plugin (gw_discover) is trying to discover the gateway from "
 "%s...\n"
-msgstr ""
+msgstr "плагин gw_discover пытается обнаружить шлюз от %s...\n"
+
+#: ../plug-ins/find_ip/find_ip.c:43
+msgid "Search an unused IP address in the subnet"
+msgstr "Ищет неиспользуемые IP-адреса в подсети"
 
 #: ../plug-ins/find_ip/find_ip.c:72
 msgid ""
 "find_ip: You have to build host-list to run this plugin.\n"
 "\n"
 msgstr ""
+"find_ip: Вы должны заполнить список хостов для запуска данного плагина.\n"
+"\n"
 
 #: ../plug-ins/find_ip/find_ip.c:76
 msgid "find_ip: Searching an unused IP address...\n"
-msgstr ""
+msgstr "find_ip: Поиск свободного IP-адреса...\n"
 
 #: ../plug-ins/find_ip/find_ip.c:85
 msgid "find_ip: No free IP address in this range :(\n"
-msgstr ""
+msgstr "find_ip: Нет свободного IP-адреса в данном диапазоне :(\n"
 
 #: ../plug-ins/find_ip/find_ip.c:87
 #, c-format
 msgid "find_ip: %s seems to be unused\n"
-msgstr ""
+msgstr "find_ip: %s похоже свободен\n"
+
+#: ../plug-ins/finger/finger.c:59
+msgid "Fingerprint a remote host"
+msgstr "Получает отпечаток удалённого хоста"
 
 #: ../plug-ins/finger/finger.c:231
 #, c-format
 msgid "Fingerprinting %s:%d...\n"
-msgstr ""
+msgstr "Получаю отпечаток %s:%d...\n"
 
 #: ../plug-ins/finger/finger.c:253
 #, c-format
@@ -1564,6 +1611,8 @@ msgid ""
 "\n"
 " FINGERPRINT      : %s\n"
 msgstr ""
+"\n"
+" Отпечаток      : %s\n"
 
 #: ../plug-ins/finger/finger.c:257
 #, c-format
@@ -1571,10 +1620,12 @@ msgid ""
 " OPERATING SYSTEM : %s \n"
 "\n"
 msgstr ""
+" Операционная система: %s \n"
+"\n"
 
 #: ../plug-ins/finger/finger.c:259
 msgid " OPERATING SYSTEM : unknown fingerprint (please submit it) \n"
-msgstr ""
+msgstr " Операционная система: неизвестный отпечаток \n"
 
 #: ../plug-ins/finger/finger.c:260
 #, c-format
@@ -1582,39 +1633,53 @@ msgid ""
 " NEAREST ONE IS   : %s \n"
 "\n"
 msgstr ""
+" Ближайший   : %s \n"
+"\n"
+
+#: ../plug-ins/fraggle_attack/fraggle_attack.c:29
+msgid "Run a fraggle attack against hosts of target one"
+msgstr "Запускает fraggle атаку против хостов Цели 1"
 
 #: ../plug-ins/fraggle_attack/fraggle_attack.c:48
 msgid "fraggle_attack: plugin doesn't work in unoffensive mode.\n"
-msgstr ""
+msgstr "fraggle_attack: плагин не работает в режиме unoffensive.\n"
 
 #: ../plug-ins/fraggle_attack/fraggle_attack.c:53
 #: ../plug-ins/smurf_attack/smurf_attack.c:50
 msgid "Add at least one host to target one list.\n"
-msgstr ""
+msgstr "Добавьте хотя бы один хост в список целей.\n"
 
 #: ../plug-ins/fraggle_attack/fraggle_attack.c:58
 msgid "Global host list is empty.\n"
-msgstr ""
+msgstr "Глобальный список хостов пуст.\n"
 
 #: ../plug-ins/fraggle_attack/fraggle_attack.c:63
 msgid "fraggle_attack: starting fraggle attack against hosts of target one.\n"
-msgstr ""
+msgstr "fraggle_attack: запуск fraggle-атаки против хостов.\n"
+
+#: ../plug-ins/gre_relay/gre_relay.c:70
+msgid "Tunnel broker for redirected GRE tunnels"
+msgstr "Посредник для перенаправленных GRE тунелей"
 
 #: ../plug-ins/gre_relay/gre_relay.c:95
 msgid "gre_relay: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "gre_relay: плагин не работает в режиме unoffensive\n"
 
 #: ../plug-ins/gre_relay/gre_relay.c:106
 msgid "gre_relay: Bad IP address\n"
-msgstr ""
+msgstr "gre_relay: Некорректный IP-адрес\n"
 
 #: ../plug-ins/gre_relay/gre_relay.c:110
 msgid "gre_relay: plugin running...\n"
-msgstr ""
+msgstr "gre_relay: плагин запущен...\n"
 
 #: ../plug-ins/gre_relay/gre_relay.c:121
 msgid "gre_relay: plugin terminated...\n"
-msgstr ""
+msgstr "gre_relay: плагин остановлен...\n"
+
+#: ../plug-ins/gw_discover/gw_discover.c:55
+msgid "Try to find the LAN gateway"
+msgstr "Пытается обнаружить шлюз в локальной сети"
 
 #: ../plug-ins/gw_discover/gw_discover.c:153
 #, c-format
@@ -1623,260 +1688,330 @@ msgid ""
 "Remote target is %s:%d...\n"
 "\n"
 msgstr ""
+"\n"
+"Удаленная цель %s:%d...\n"
+"\n"
 
 #: ../plug-ins/gw_discover/gw_discover.c:157
 #, c-format
 msgid "Sending the SYN packet to %-15s [%s]\n"
-msgstr ""
+msgstr "Отправка SYN пакета для %-15s [%s]\n"
 
 #: ../plug-ins/gw_discover/gw_discover.c:197
 #, c-format
 msgid "[%s] %s is probably a gateway for the LAN\n"
-msgstr ""
+msgstr "[%s] %s вероятно является шлюзом для локальной сети\n"
+
+#: ../plug-ins/isolate/isolate.c:52
+msgid "Isolate an host from the lan"
+msgstr "Изолирует хост в локальной сети"
 
 #: ../plug-ins/isolate/isolate.c:76
 msgid "isolate: please specify the TARGET host\n"
-msgstr ""
+msgstr "isolate: поажлуйста укажите целевой хост\n"
 
 #: ../plug-ins/isolate/isolate.c:147
 #, c-format
 msgid "isolate: %s added to the list\n"
-msgstr ""
+msgstr "isolate: %s добавлен в лист\n"
+
+#: ../plug-ins/link_type/link_type.c:52
+msgid "Check the link type (hub/switch)"
+msgstr "Проверяет тип подключения (хаб/свич)"
 
 #: ../plug-ins/link_type/link_type.c:81
 msgid "link_type: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "link_type: плагин не работает в режиме unoffensive\n"
 
 #: ../plug-ins/link_type/link_type.c:87
 msgid ""
 "link_type: This plugin works only on ethernet networks\n"
 "\n"
 msgstr ""
+"link_type: Данный плагин работает только в ethernet сети\n"
+"\n"
 
 #: ../plug-ins/link_type/link_type.c:92
 msgid ""
 "link_type: You have to enable promisc mode to run this plugin\n"
 "\n"
 msgstr ""
+"link_type: Включите режим \"захват всех пакетов\" для работы плагина\n"
+"\n"
 
 #: ../plug-ins/link_type/link_type.c:106
 msgid ""
 "link_type: You have to build host list to run this plugin\n"
 "\n"
 msgstr ""
+"link_type: Заполните список хостов для запуска этого плагина\n"
+"\n"
 
 #: ../plug-ins/link_type/link_type.c:115
 msgid ""
 "link_type: Only one host in the list. Check will be less reliable\n"
 "\n"
 msgstr ""
+"link_type: Только один хост в списке. Проверка будет менее надежна\n"
+"\n"
 
 #: ../plug-ins/link_type/link_type.c:123
 msgid "link_type: Checking link type...\n"
-msgstr ""
+msgstr "link_type: Проверка типа соединения...\n"
 
 #: ../plug-ins/link_type/link_type.c:137
 msgid "link_type: You are plugged into a "
-msgstr ""
+msgstr "link_type: Вы подключены к "
 
 #: ../plug-ins/link_type/link_type.c:139
 msgid ""
 "SWITCH\n"
 "\n"
 msgstr ""
+"свичу\n"
+"\n"
 
 #: ../plug-ins/link_type/link_type.c:141
 msgid ""
 "HUB\n"
 "\n"
 msgstr ""
+"хабу\n"
+"\n"
+
+#: ../plug-ins/mdns_spoof/mdns_spoof.c:81
+msgid "Sends spoofed mDNS replies"
+msgstr "Отправляет поддельные ответы mDNS"
 
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:140
 #, c-format
 msgid "mdns_spoof: Cannot open %s\n"
-msgstr ""
+msgstr "mdns_spoof: Невозможно открыть %s\n"
 
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:169
 #, c-format
 msgid "mdns_spoof: %s:%d Invalid IPv4 or IPv6 address\n"
-msgstr ""
+msgstr "mdns_spoof: %s:%d Некорректный IPv4 или IPv6 адрес\n"
 
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:210
 #, c-format
 msgid "mdns_spoof: %s:%d Invalid entry %s\n"
-msgstr ""
+msgstr "mdns_spoof: %s:%d Некорректная запись %s\n"
 
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:216
 #, c-format
 msgid "mdns_spoof: %s:%d Wildcards in PTR records are not allowed; %s\n"
-msgstr ""
+msgstr "mdns_spoof: %s:%d Wildcards в PTR записях не допускаются; %s\n"
 
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:252
 #, c-format
 msgid "mdns_spoof: %s:%d Unknown syntax for SRV record; %s\n"
-msgstr ""
+msgstr "mdns_spoof: %s:%d Некорректный синтаксис для SRV записи; %s\n"
 
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:258
 #, c-format
 msgid "mdns_spoof: %s:%d Invalid value for port: %d\n"
-msgstr ""
+msgstr "mdns_spoof: %s:%d Некорректное значение порта: %d\n"
 
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:271
 #, c-format
 msgid "mdns_spoof: %s:%d Unknown record type %s\n"
-msgstr ""
+msgstr "mdns_spoof: %s:%d Некорректный тип записи %s\n"
 
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:366
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:415
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:458
 #, c-format
 msgid "mdns_spoof: [%s %s] spoofed to [%s]\n"
-msgstr ""
+msgstr "mdns_spoof: [%s %s] подменён на [%s]\n"
+
+#: ../plug-ins/nbns_spoof/nbns_spoof.c:189
+msgid "Sends spoof NBNS replies & sends SMB challenges with custom challenge"
+msgstr "Отправляет поддельные ответы NBNS и SMB challenge"
 
 #: ../plug-ins/nbns_spoof/nbns_spoof.c:235
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot open %s\n"
-msgstr "Не могу записать %s"
+msgstr "Невозможно открыть %s\n"
 
 #: ../plug-ins/nbns_spoof/nbns_spoof.c:254
-#, fuzzy, c-format
+#, c-format
 msgid "%s:%d Invalid IP addres\n"
-msgstr "Неверный IP-адрес"
+msgstr "%s:%d некорректный IP-адрес\n"
 
 #: ../plug-ins/nbns_spoof/nbns_spoof.c:281
-#, fuzzy, c-format
+#, c-format
 msgid "%s:%d Invalid entry %s\n"
-msgstr "Неверная маска подсети: %s"
+msgstr "%s:%d Некорректная запись %s\n"
 
 #: ../plug-ins/nbns_spoof/nbns_spoof.c:286
 #, c-format
 msgid "%s:%d IP address must be IPv4\n"
-msgstr ""
+msgstr "%s:%d IP адрес должен быть IPv4\n"
 
 #: ../plug-ins/nbns_spoof/nbns_spoof.c:327
 msgid "nbns_spoof: Modified SMB challenge\n"
-msgstr ""
+msgstr "nbns_spoof: Изменённый SMB вызов\n"
 
 #: ../plug-ins/nbns_spoof/nbns_spoof.c:421
 #, c-format
 msgid "nbns_spoof: Query [%s] spoofed to [%s]\n"
-msgstr ""
+msgstr "nbns_spoof: Запрос [%s] подменён на [%s]\n"
+
+#: ../plug-ins/pptp_chapms1/pptp_chapms1.c:61
+msgid "PPTP: Forces chapms-v1 from chapms-v2"
+msgstr "PPTP: Принудительно меняет chapms-v2 на chapms-v1"
 
 #: ../plug-ins/pptp_chapms1/pptp_chapms1.c:84
 msgid "pptp_chapms1: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "pptp_chapms1: плагин не работает в режиме unoffensive\n"
 
 #: ../plug-ins/pptp_chapms1/pptp_chapms1.c:88
 msgid "pptp_chapms1: plugin running...\n"
-msgstr ""
+msgstr "pptp_chapms1: плагин запущен...\n"
 
 #: ../plug-ins/pptp_chapms1/pptp_chapms1.c:97
 msgid "pptp_chapms1: plugin terminated...\n"
-msgstr ""
+msgstr "pptp_chapms1: плагин остановлен...\n"
 
 #: ../plug-ins/pptp_chapms1/pptp_chapms1.c:140
 #, c-format
 msgid "pptp_chapms1: Forced PPP MS-CHAPv1 auth  %s -> "
-msgstr ""
+msgstr "pptp_chapms1: Принудительная PPP MS-CHAPv1 аутентификация  %s -> "
+
+#: ../plug-ins/pptp_clear/pptp_clear.c:66
+msgid "PPTP: Tries to force cleartext tunnel"
+msgstr "PPTP: Пытается принудительно установить cleartext тунель"
 
 #: ../plug-ins/pptp_clear/pptp_clear.c:89
 msgid "pptp_clear: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "pptp_clear: плагин не работает в пассивном режиме\n"
 
 #: ../plug-ins/pptp_clear/pptp_clear.c:93
 msgid "pptp_clear: plugin running...\n"
-msgstr ""
+msgstr "pptp_clear: плагин запущен...\n"
 
 #: ../plug-ins/pptp_clear/pptp_clear.c:104
 msgid "pptp_clear: plugin terminated...\n"
-msgstr ""
+msgstr "pptp_clear: плагин остановлен...\n"
+
+#: ../plug-ins/pptp_pap/pptp_pap.c:58
+msgid "PPTP: Forces PAP authentication"
+msgstr "PPTP: Принудительно использует PAP-аутентификацию"
 
 #: ../plug-ins/pptp_pap/pptp_pap.c:81
 msgid "pptp_pap: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "pptp_pap: плагин не работает в пассивном режиме\n"
 
 #: ../plug-ins/pptp_pap/pptp_pap.c:85
 msgid "pptp_pap: plugin running...\n"
-msgstr ""
+msgstr "pptp_pap: плагин запущен...\n"
 
 #: ../plug-ins/pptp_pap/pptp_pap.c:94
 msgid "pptp_pap: plugin terminated...\n"
-msgstr ""
+msgstr "pptp_pap: плагин остановлен...\n"
 
 #: ../plug-ins/pptp_pap/pptp_pap.c:139
 #, c-format
 msgid "pptp_pap: Forced PPP clear text auth  %s -> "
-msgstr ""
+msgstr "pptp_pap: Принудительная PPP clear text аутентификация  %s -> "
+
+#: ../plug-ins/pptp_reneg/pptp_reneg.c:65
+msgid "PPTP: Forces tunnel re-negotiation"
+msgstr "PPTP:  повторную установку тунеля"
 
 #: ../plug-ins/pptp_reneg/pptp_reneg.c:88
 msgid "pptp_reneg: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "pptp_reneg: плагин не работает в пассивном режиме\n"
 
 #: ../plug-ins/pptp_reneg/pptp_reneg.c:92
 msgid "pptp_reneg: plugin running...\n"
-msgstr ""
+msgstr "pptp_reneg: плагин запущен...\n"
 
 #: ../plug-ins/pptp_reneg/pptp_reneg.c:103
 msgid "pptp_reneg: plugin terminated...\n"
-msgstr ""
+msgstr "pptp_reneg: плагин остановлен...\n"
 
 #: ../plug-ins/pptp_reneg/pptp_reneg.c:155
 #, c-format
 msgid "pptp_reneg: Forced tunnel re-negotiation  %s -> "
-msgstr ""
+msgstr "pptp_reneg: Принудительная установка тунельного соединения  %s -> "
+
+#: ../plug-ins/rand_flood/rand_flood.c:75
+msgid "Flood the LAN with random MAC addresses"
+msgstr "Флуд-атака локальной сети случайными MAC адресами"
 
 #: ../plug-ins/rand_flood/rand_flood.c:98
 msgid "rand_flood: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "rand_flood: плагин не работает в пассивном режиме\n"
 
 #: ../plug-ins/rand_flood/rand_flood.c:102
 msgid "rand_flood: Start flooding the LAN...\n"
-msgstr ""
+msgstr "rand_flood: Запуск флуд-атаки локальной сети...\n"
 
 #: ../plug-ins/rand_flood/rand_flood.c:121
 msgid "rand_flood: plugin stopped...\n"
-msgstr ""
+msgstr "rand_flood: плагин остановлен...\n"
+
+#: ../plug-ins/remote_browser/remote_browser.c:48
+msgid "Sends visited URLs to the browser"
+msgstr "Отправляет посещённые URL браузеру"
 
 #: ../plug-ins/remote_browser/remote_browser.c:134
 #, c-format
 msgid "REMOTE COMMAND: %s\n"
-msgstr ""
+msgstr "Удаленная команда: %s\n"
+
+#: ../plug-ins/reply_arp/reply_arp.c:43
+msgid "Simple arp responder"
+msgstr "Простой ARP ответчик"
 
 #: ../plug-ins/reply_arp/reply_arp.c:66
 msgid "reply_arp: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "reply_arp: плагин не работает в безопасном режиме\n"
 
 #: ../plug-ins/reply_arp/reply_arp.c:78
 msgid "reply_arp: plugin terminated...\n"
-msgstr ""
+msgstr "reply_arp: плагин остановлен...\n"
+
+#: ../plug-ins/repoison_arp/repoison_arp.c:47
+msgid "Repoison after broadcast ARP"
+msgstr "Повторно провести poison-атаку после широковещательного ARP"
 
 #: ../plug-ins/repoison_arp/repoison_arp.c:70
 msgid "repoison_arp: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "repoison_arp: плагин не работает в пассивном режиме\n"
 
 #: ../plug-ins/repoison_arp/repoison_arp.c:84
 msgid "repoison_arp: plugin terminated...\n"
-msgstr ""
+msgstr "repoison_arp: плагин остановлен...\n"
+
+#: ../plug-ins/scan_poisoner/scan_poisoner.c:51
+msgid "Actively search other poisoners"
+msgstr "Активно ищет другие источники poison-атаки"
 
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:87
 msgid ""
 "scan_poisoner: You have to build host-list to run this plugin.\n"
 "\n"
 msgstr ""
+"scan_poisoner: Сначала необходимо построить список хостов, чтобы запустить "
+"данный плагин.\n"
+"\n"
 
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:91
 msgid "scan_poisoner: Checking hosts list...\n"
-msgstr ""
+msgstr "scan_poisoner: Проверка списка хостов...\n"
 
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:99
 #, c-format
 msgid "scan_poisoner: - %s and %s have same MAC address\n"
-msgstr ""
+msgstr "scan_poisoner: - %s и %s имеют одинаковые MAC адреса\n"
 
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:103
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:140
 msgid "scan_poisoner: - Nothing strange\n"
-msgstr ""
+msgstr "scan_poisoner: - Ничего подозрительного не обнаружено\n"
 
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:108
 msgid ""
@@ -1884,130 +2019,170 @@ msgid ""
 "scan_poisoner: Can't make active test in UNOFFENSIVE mode.\n"
 "\n"
 msgstr ""
+"\n"
+"scan_poisoner: Не удается активировать тест в пассивном режиме.\n"
+"\n"
 
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:112
 msgid ""
 "\n"
 "scan_poisoner: Actively searching poisoners...\n"
 msgstr ""
+"\n"
+"scan_poisoner: Поиск заражателей...\n"
 
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:172
 #, c-format
 msgid "scan_poisoner: - %s is replying for %s\n"
-msgstr ""
+msgstr "scan_poisoner: - %s отвечает для %s\n"
+
+#: ../plug-ins/search_promisc/search_promisc.c:57
+msgid "Search promisc NICs in the LAN"
+msgstr "Поиск в локальной сети адаптеров, находящихся в мониторном режиме"
 
 #: ../plug-ins/search_promisc/search_promisc.c:95
 msgid ""
 "search_promisc: plugin doesn't work in UNOFFENSIVE mode.\n"
 "\n"
 msgstr ""
+"search_promisc: плагин не работает в пассивном режиме.\n"
+"\n"
 
 #: ../plug-ins/search_promisc/search_promisc.c:100
 msgid ""
 "search_promisc: You have to build host-list to run this plugin.\n"
 "\n"
 msgstr ""
+"search_promisc: Сначала необходимо построить список хостов, чтобы запустить "
+"данный плагин.\n"
+"\n"
 
 #: ../plug-ins/search_promisc/search_promisc.c:104
 msgid "search_promisc: Searching promisc NICs...\n"
-msgstr ""
+msgstr "search_promisc: Поиск promisc NICs...\n"
+
+#: ../plug-ins/smb_clear/smb_clear.c:61
+msgid "Tries to force SMB cleartext auth"
+msgstr "Пытается принудительно использовать SMB аутентификацию cleartext"
 
 #: ../plug-ins/smb_clear/smb_clear.c:84
 msgid "smb_clear: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "smb_clear: плагин не работает в пассивном режиме.\n"
 
 #: ../plug-ins/smb_clear/smb_clear.c:88
 msgid "smb_clear: plugin running...\n"
-msgstr ""
+msgstr "smb_clear: плагин запущен...\n"
 
 #: ../plug-ins/smb_clear/smb_clear.c:97
 msgid "smb_clear: plugin terminated...\n"
-msgstr ""
+msgstr "smb_clear: плагин остановлен...\n"
 
 #: ../plug-ins/smb_clear/smb_clear.c:130
 #, c-format
 msgid "smb_clear: Forced SMB clear text auth  %s -> "
-msgstr ""
+msgstr "smb_clear: Принудительная SMB clear text аутентификация  %s -> "
+
+#: ../plug-ins/smb_down/smb_down.c:62
+msgid "Tries to force SMB to not use NTLM2 key auth"
+msgstr "Пытается принудительно использовать SMB без NTLM2 аутентификации"
 
 #: ../plug-ins/smb_down/smb_down.c:85
 msgid "smb_down: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "smb_down: плагин не работает в безопасном режиме\n"
 
 #: ../plug-ins/smb_down/smb_down.c:89
 msgid "smb_down: plugin running...\n"
-msgstr ""
+msgstr "smb_down: плагин запущен...\n"
 
 #: ../plug-ins/smb_down/smb_down.c:98
 msgid "smb_down: plugin terminated...\n"
-msgstr ""
+msgstr "smb_down: плагин остановлен...\n"
 
 #: ../plug-ins/smb_down/smb_down.c:145
 #, c-format
 msgid "smb_down: Forced no NTLM2 key  %s -> "
-msgstr ""
+msgstr "smb_down: Принудительно без ключа NTLM2  %s -> "
+
+#: ../plug-ins/smurf_attack/smurf_attack.c:25
+msgid "Run a smurf attack against specified hosts"
+msgstr "Запускает smurf атаку на указанные хосты"
 
 #: ../plug-ins/smurf_attack/smurf_attack.c:45
 msgid "smurf_attack: plugin doesnt work in unoffensive mode\n"
-msgstr ""
+msgstr "smurf_attack: плагин не работает в безопасном режиме\n"
 
 #: ../plug-ins/smurf_attack/smurf_attack.c:55
 msgid "Target two and global hostlist are empty.\n"
-msgstr ""
+msgstr "Вторая цель и глобальный список хостов пусты.\n"
 
 #: ../plug-ins/smurf_attack/smurf_attack.c:60
 msgid "smurf_attack: starting smurf attack against the target one hosts\n"
-msgstr ""
+msgstr "smurf_attack: запуск smurf-атаки против хостов цели 1\n"
 
 #: ../plug-ins/sslstrip/sslstrip.c:223
 msgid "SSLStrip: plugin load failed: Could not set up HTTP redirect\n"
 msgstr ""
+"SSLStrip: загрузка плагина не удалась: не удалось установить HTTP редирект\n"
 
 #: ../plug-ins/sslstrip/sslstrip.c:230
 #, c-format
 msgid "SSLStrip: plugin load failed: pcre_compile failed (offset: %d), %s\n"
 msgstr ""
+"SSLStrip: загрузка плагина не удалась: ошибка компиляции регулярного "
+"выражения (смещение: %d), %s\n"
 
 #: ../plug-ins/sslstrip/sslstrip.c:236
 msgid "SSLStrip: plugin load failed: Could not compile find_cookie regex\n"
 msgstr ""
+"SSLStrip: загрузка плагина не удалась: не удалось скомпилировать регулярное "
+"выражениеfind_cookie\n"
 
 #: ../plug-ins/sslstrip/sslstrip.c:249
 msgid ""
 "SSLStrip Plugin version 1.1 is still under experimental mode. Please reports "
 "any issues to the development team.\n"
 msgstr ""
+"SSLStrip плагин версия 1.1. О любых проблемах сообщайте разработчикам.\n"
 
 #: ../plug-ins/sslstrip/sslstrip.c:258
 msgid "SSLStrip: Unable to remove HTTP redirect, please do so manually.\n"
 msgstr ""
+"SSLStrip: невозможно удалить HTTP редирект, пожалуйста, сделайте это в "
+"ручном режиме.\n"
 
 #: ../plug-ins/sslstrip/sslstrip.c:500
 #, c-format
 msgid "SSLStrip: redir_command_on had non-zero exit status (%d): [%s]\n"
-msgstr ""
+msgstr "SSLStrip: redir_command_on имеет ненулевой код возврата (%d): [%s]\n"
 
 #: ../plug-ins/sslstrip/sslstrip.c:561
 #, c-format
 msgid "SSLStrip: redir_command_off had non-zero exit status (%d): [%s]\n"
-msgstr ""
+msgstr "SSLStrip: redir_command_off имеет ненулевой код возврата (%d): [%s]\n"
 
 #: ../plug-ins/sslstrip/sslstrip.c:1278
 #, c-format
 msgid "SSLStrip plugin: bind 80 on %d\n"
-msgstr ""
+msgstr "SSLStrip плагин: назначаю 80 на %d\n"
+
+#: ../plug-ins/stp_mangler/stp_mangler.c:83
+msgid "Become root of a switches spanning tree"
+msgstr "Становится корнем остовного дерева коммутаторов (STP)"
 
 #: ../plug-ins/stp_mangler/stp_mangler.c:106
 msgid "stp_mangler: plugin doesn't work in UNOFFENSIVE mode\n"
-msgstr ""
+msgstr "stp_mangler: плагин не работает в пассивном режиме\n"
 
 #: ../plug-ins/stp_mangler/stp_mangler.c:110
 msgid "stp_mangler: Start sending fake STP packets...\n"
-msgstr ""
+msgstr "stp_mangler: Запущена отправка фиктивных STP пакетов...\n"
 
 #: ../plug-ins/stp_mangler/stp_mangler.c:129
-#, fuzzy
 msgid "stp_mangler: plugin stopped...\n"
-msgstr "Логирование сообщений было отключено."
+msgstr "stp_mangler: плагин остановлен...\n"
+
+#~ msgid "/?/Contents"
+#~ msgstr "/?/Содержание"
 
 #, fuzzy
 #~ msgid "/Targets/sep1"

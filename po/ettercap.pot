@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2017-02-27 14:33+0300\n"
+        "POT-Creation-Date: 2017-02-28 17:18+0300\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,7 +136,7 @@ msgid   "Deactivating %s plugin...\n"
 msgstr  ""
 
 #: ../src/interfaces/curses/ec_curses_hosts.c:159
-#: ../src/interfaces/curses/ec_curses.c:541 ../src/interfaces/gtk/ec_gtk.c:801
+#: ../src/interfaces/curses/ec_curses.c:541 ../src/interfaces/gtk/ec_gtk.c:803
 #: ../src/interfaces/gtk/ec_gtk_hosts.c:150
 #, c-format
 msgid   "Cannot write %s"
@@ -154,7 +154,7 @@ msgstr  ""
 msgid   "Host %s added to TARGET2\n"
 msgstr  ""
 
-#: ../src/interfaces/curses/ec_curses.c:665 ../src/interfaces/gtk/ec_gtk.c:1094
+#: ../src/interfaces/curses/ec_curses.c:665 ../src/interfaces/gtk/ec_gtk.c:1096
 #, c-format
 msgid   "Invalid netmask %s"
 msgstr  ""
@@ -398,32 +398,28 @@ msgstr  ""
 msgid   "/Plugins/Load a plugin..."
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk_menus.c:104 ../src/interfaces/gtk/ec_gtk.c:614
-msgid   "/_?"
-msgstr  ""
-
-#: ../src/interfaces/gtk/ec_gtk_menus.c:105 ../src/interfaces/gtk/ec_gtk.c:615
-msgid   "/?/Contents"
-msgstr  ""
-
-#: ../src/interfaces/gtk/ec_gtk_menus.c:110
+#: ../src/interfaces/gtk/ec_gtk_menus.c:103
 msgid   "/Detach page"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk_menus.c:111
+#: ../src/interfaces/gtk/ec_gtk_menus.c:104
 msgid   "/Close page"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk_menus.c:113
+#: ../src/interfaces/gtk/ec_gtk_menus.c:106
 msgid   "/Next page"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk_menus.c:114
+#: ../src/interfaces/gtk/ec_gtk_menus.c:107
 msgid   "/Previous page"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:412 ../src/interfaces/gtk/ec_gtk.c:829
+#: ../src/interfaces/gtk/ec_gtk.c:412 ../src/interfaces/gtk/ec_gtk.c:831
 msgid   " Input"
+msgstr  ""
+
+#: ../src/interfaces/gtk/ec_gtk.c:466 ../src/interfaces/gtk/ec_gtk.c:625
+msgid   "ettercap"
 msgstr  ""
 
 #: ../src/interfaces/gtk/ec_gtk.c:599
@@ -474,39 +470,39 @@ msgstr  ""
 msgid   "/Options/Set netmask"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:734
+#: ../src/interfaces/gtk/ec_gtk.c:736
 msgid   "Select a pcap file..."
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:789 ../src/interfaces/gtk/ec_gtk_hosts.c:140
+#: ../src/interfaces/gtk/ec_gtk.c:791 ../src/interfaces/gtk/ec_gtk_hosts.c:140
 msgid   "Output file :"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:842
+#: ../src/interfaces/gtk/ec_gtk.c:844
 msgid   "Network interface : "
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:936
+#: ../src/interfaces/gtk/ec_gtk.c:938
 msgid   "Bridged Sniffing"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:960
+#: ../src/interfaces/gtk/ec_gtk.c:962
 msgid   "First network interface  : "
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:981
+#: ../src/interfaces/gtk/ec_gtk.c:983
 msgid   "Second network interface : "
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:1071
+#: ../src/interfaces/gtk/ec_gtk.c:1073
 msgid   "Pcap filter :"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:1090
+#: ../src/interfaces/gtk/ec_gtk.c:1092
 msgid   "Netmask :"
 msgstr  ""
 
-#: ../src/interfaces/gtk/ec_gtk.c:1360
+#: ../src/interfaces/gtk/ec_gtk.c:1362
 msgid   "Select a file..."
 msgstr  ""
 
@@ -1289,6 +1285,10 @@ msgstr  ""
 msgid   "autoadd: %s %s added to GROUP2\n"
 msgstr  ""
 
+#: ../plug-ins/chk_poison/chk_poison.c:64
+msgid   "Check if the poisoning had success"
+msgstr  ""
+
 #: ../plug-ins/chk_poison/chk_poison.c:103
 msgid   "chk_poison: You have to run this plugin during a poisoning session.\n"
         "\n"
@@ -1391,6 +1391,10 @@ msgstr  ""
 msgid   "dns_spoof: negative cache spoofed for [%s] type %s \n"
 msgstr  ""
 
+#: ../plug-ins/dos_attack/dos_attack.c:61
+msgid   "Run a d.o.s. attack against an IP address"
+msgstr  ""
+
 #: ../plug-ins/dos_attack/dos_attack.c:88
 msgid   "dos_attack: plugin doesn't work in UNOFFENSIVE mode\n"
 msgstr  ""
@@ -1422,6 +1426,10 @@ msgstr  ""
 msgid   "dos_attack: Port %d added\n"
 msgstr  ""
 
+#: ../plug-ins/find_conn/find_conn.c:43
+msgid   "Search connections on a switched LAN"
+msgstr  ""
+
 #: ../plug-ins/find_conn/find_conn.c:64
 msgid   "find_conn: plugin running...\n"
 msgstr  ""
@@ -1433,6 +1441,10 @@ msgstr  ""
 #: ../plug-ins/find_conn/find_conn.c:87
 #, c-format
 msgid   "find_conn: Probable connection attempt %s -> %s\n"
+msgstr  ""
+
+#: ../plug-ins/find_ettercap/find_ettercap.c:50
+msgid   "Try to find ettercap activity"
 msgstr  ""
 
 #: ../plug-ins/find_ettercap/find_ettercap.c:102
@@ -1475,6 +1487,10 @@ msgid   "ettercap NG plugin (gw_discover) is trying to discover the gateway "
         "from %s...\n"
 msgstr  ""
 
+#: ../plug-ins/find_ip/find_ip.c:43
+msgid   "Search an unused IP address in the subnet"
+msgstr  ""
+
 #: ../plug-ins/find_ip/find_ip.c:72
 msgid   "find_ip: You have to build host-list to run this plugin.\n"
         "\n"
@@ -1491,6 +1507,10 @@ msgstr  ""
 #: ../plug-ins/find_ip/find_ip.c:87
 #, c-format
 msgid   "find_ip: %s seems to be unused\n"
+msgstr  ""
+
+#: ../plug-ins/finger/finger.c:59
+msgid   "Fingerprint a remote host"
 msgstr  ""
 
 #: ../plug-ins/finger/finger.c:231
@@ -1520,6 +1540,10 @@ msgid   " NEAREST ONE IS   : %s \n"
         "\n"
 msgstr  ""
 
+#: ../plug-ins/fraggle_attack/fraggle_attack.c:29
+msgid   "Run a fraggle attack against hosts of target one"
+msgstr  ""
+
 #: ../plug-ins/fraggle_attack/fraggle_attack.c:48
 msgid   "fraggle_attack: plugin doesn't work in unoffensive mode.\n"
 msgstr  ""
@@ -1538,6 +1562,10 @@ msgid   "fraggle_attack: starting fraggle attack against hosts of target "
         "one.\n"
 msgstr  ""
 
+#: ../plug-ins/gre_relay/gre_relay.c:70
+msgid   "Tunnel broker for redirected GRE tunnels"
+msgstr  ""
+
 #: ../plug-ins/gre_relay/gre_relay.c:95
 msgid   "gre_relay: plugin doesn't work in UNOFFENSIVE mode\n"
 msgstr  ""
@@ -1552,6 +1580,10 @@ msgstr  ""
 
 #: ../plug-ins/gre_relay/gre_relay.c:121
 msgid   "gre_relay: plugin terminated...\n"
+msgstr  ""
+
+#: ../plug-ins/gw_discover/gw_discover.c:55
+msgid   "Try to find the LAN gateway"
 msgstr  ""
 
 #: ../plug-ins/gw_discover/gw_discover.c:153
@@ -1571,6 +1603,10 @@ msgstr  ""
 msgid   "[%s] %s is probably a gateway for the LAN\n"
 msgstr  ""
 
+#: ../plug-ins/isolate/isolate.c:52
+msgid   "Isolate an host from the lan"
+msgstr  ""
+
 #: ../plug-ins/isolate/isolate.c:76
 msgid   "isolate: please specify the TARGET host\n"
 msgstr  ""
@@ -1578,6 +1614,10 @@ msgstr  ""
 #: ../plug-ins/isolate/isolate.c:147
 #, c-format
 msgid   "isolate: %s added to the list\n"
+msgstr  ""
+
+#: ../plug-ins/link_type/link_type.c:52
+msgid   "Check the link type (hub/switch)"
 msgstr  ""
 
 #: ../plug-ins/link_type/link_type.c:81
@@ -1622,6 +1662,10 @@ msgid   "HUB\n"
         "\n"
 msgstr  ""
 
+#: ../plug-ins/mdns_spoof/mdns_spoof.c:81
+msgid   "Sends spoofed mDNS replies"
+msgstr  ""
+
 #: ../plug-ins/mdns_spoof/mdns_spoof.c:140
 #, c-format
 msgid   "mdns_spoof: Cannot open %s\n"
@@ -1664,6 +1708,10 @@ msgstr  ""
 msgid   "mdns_spoof: [%s %s] spoofed to [%s]\n"
 msgstr  ""
 
+#: ../plug-ins/nbns_spoof/nbns_spoof.c:189
+msgid   "Sends spoof NBNS replies & sends SMB challenges with custom challenge"
+msgstr  ""
+
 #: ../plug-ins/nbns_spoof/nbns_spoof.c:235
 #, c-format
 msgid   "Cannot open %s\n"
@@ -1693,6 +1741,10 @@ msgstr  ""
 msgid   "nbns_spoof: Query [%s] spoofed to [%s]\n"
 msgstr  ""
 
+#: ../plug-ins/pptp_chapms1/pptp_chapms1.c:61
+msgid   "PPTP: Forces chapms-v1 from chapms-v2"
+msgstr  ""
+
 #: ../plug-ins/pptp_chapms1/pptp_chapms1.c:84
 msgid   "pptp_chapms1: plugin doesn't work in UNOFFENSIVE mode\n"
 msgstr  ""
@@ -1710,6 +1762,10 @@ msgstr  ""
 msgid   "pptp_chapms1: Forced PPP MS-CHAPv1 auth  %s -> "
 msgstr  ""
 
+#: ../plug-ins/pptp_clear/pptp_clear.c:66
+msgid   "PPTP: Tries to force cleartext tunnel"
+msgstr  ""
+
 #: ../plug-ins/pptp_clear/pptp_clear.c:89
 msgid   "pptp_clear: plugin doesn't work in UNOFFENSIVE mode\n"
 msgstr  ""
@@ -1720,6 +1776,10 @@ msgstr  ""
 
 #: ../plug-ins/pptp_clear/pptp_clear.c:104
 msgid   "pptp_clear: plugin terminated...\n"
+msgstr  ""
+
+#: ../plug-ins/pptp_pap/pptp_pap.c:58
+msgid   "PPTP: Forces PAP authentication"
 msgstr  ""
 
 #: ../plug-ins/pptp_pap/pptp_pap.c:81
@@ -1739,6 +1799,10 @@ msgstr  ""
 msgid   "pptp_pap: Forced PPP clear text auth  %s -> "
 msgstr  ""
 
+#: ../plug-ins/pptp_reneg/pptp_reneg.c:65
+msgid   "PPTP: Forces tunnel re-negotiation"
+msgstr  ""
+
 #: ../plug-ins/pptp_reneg/pptp_reneg.c:88
 msgid   "pptp_reneg: plugin doesn't work in UNOFFENSIVE mode\n"
 msgstr  ""
@@ -1756,6 +1820,10 @@ msgstr  ""
 msgid   "pptp_reneg: Forced tunnel re-negotiation  %s -> "
 msgstr  ""
 
+#: ../plug-ins/rand_flood/rand_flood.c:75
+msgid   "Flood the LAN with random MAC addresses"
+msgstr  ""
+
 #: ../plug-ins/rand_flood/rand_flood.c:98
 msgid   "rand_flood: plugin doesn't work in UNOFFENSIVE mode\n"
 msgstr  ""
@@ -1768,9 +1836,17 @@ msgstr  ""
 msgid   "rand_flood: plugin stopped...\n"
 msgstr  ""
 
+#: ../plug-ins/remote_browser/remote_browser.c:48
+msgid   "Sends visited URLs to the browser"
+msgstr  ""
+
 #: ../plug-ins/remote_browser/remote_browser.c:134
 #, c-format
 msgid   "REMOTE COMMAND: %s\n"
+msgstr  ""
+
+#: ../plug-ins/reply_arp/reply_arp.c:43
+msgid   "Simple arp responder"
 msgstr  ""
 
 #: ../plug-ins/reply_arp/reply_arp.c:66
@@ -1781,12 +1857,20 @@ msgstr  ""
 msgid   "reply_arp: plugin terminated...\n"
 msgstr  ""
 
+#: ../plug-ins/repoison_arp/repoison_arp.c:47
+msgid   "Repoison after broadcast ARP"
+msgstr  ""
+
 #: ../plug-ins/repoison_arp/repoison_arp.c:70
 msgid   "repoison_arp: plugin doesn't work in UNOFFENSIVE mode\n"
 msgstr  ""
 
 #: ../plug-ins/repoison_arp/repoison_arp.c:84
 msgid   "repoison_arp: plugin terminated...\n"
+msgstr  ""
+
+#: ../plug-ins/scan_poisoner/scan_poisoner.c:51
+msgid   "Actively search other poisoners"
 msgstr  ""
 
 #: ../plug-ins/scan_poisoner/scan_poisoner.c:87
@@ -1824,6 +1908,10 @@ msgstr  ""
 msgid   "scan_poisoner: - %s is replying for %s\n"
 msgstr  ""
 
+#: ../plug-ins/search_promisc/search_promisc.c:57
+msgid   "Search promisc NICs in the LAN"
+msgstr  ""
+
 #: ../plug-ins/search_promisc/search_promisc.c:95
 msgid   "search_promisc: plugin doesn't work in UNOFFENSIVE mode.\n"
         "\n"
@@ -1836,6 +1924,10 @@ msgstr  ""
 
 #: ../plug-ins/search_promisc/search_promisc.c:104
 msgid   "search_promisc: Searching promisc NICs...\n"
+msgstr  ""
+
+#: ../plug-ins/smb_clear/smb_clear.c:61
+msgid   "Tries to force SMB cleartext auth"
 msgstr  ""
 
 #: ../plug-ins/smb_clear/smb_clear.c:84
@@ -1855,6 +1947,10 @@ msgstr  ""
 msgid   "smb_clear: Forced SMB clear text auth  %s -> "
 msgstr  ""
 
+#: ../plug-ins/smb_down/smb_down.c:62
+msgid   "Tries to force SMB to not use NTLM2 key auth"
+msgstr  ""
+
 #: ../plug-ins/smb_down/smb_down.c:85
 msgid   "smb_down: plugin doesn't work in UNOFFENSIVE mode\n"
 msgstr  ""
@@ -1870,6 +1966,10 @@ msgstr  ""
 #: ../plug-ins/smb_down/smb_down.c:145
 #, c-format
 msgid   "smb_down: Forced no NTLM2 key  %s -> "
+msgstr  ""
+
+#: ../plug-ins/smurf_attack/smurf_attack.c:25
+msgid   "Run a smurf attack against specified hosts"
 msgstr  ""
 
 #: ../plug-ins/smurf_attack/smurf_attack.c:45
@@ -1919,6 +2019,10 @@ msgstr  ""
 #: ../plug-ins/sslstrip/sslstrip.c:1278
 #, c-format
 msgid   "SSLStrip plugin: bind 80 on %d\n"
+msgstr  ""
+
+#: ../plug-ins/stp_mangler/stp_mangler.c:83
+msgid   "Become root of a switches spanning tree"
 msgstr  ""
 
 #: ../plug-ins/stp_mangler/stp_mangler.c:106
