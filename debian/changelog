@@ -1,3 +1,9 @@
+ettercap (1:0.8.0-0kali1+echelon1) kali; urgency=medium
+
+  * Add Echelon patches.
+
+ -- Vasily Laur <v.laur@npo-echelon.ru>  Fri, 03 Mar 2017 14:23:20 +0300
+
 ettercap (1:0.8.0-0kali1) kali; urgency=low
 
   * New upstream release.
