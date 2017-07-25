@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Ettercap
+Name[ru]=Сетевой анализатор
+Comment=Nework sniffer/analyser
+Comment[ru_RU]=Сетевой сниффер/анализатор
+Exec=ettercap-pkexec -G
+Icon=ettercap
+Terminal=false
+Type=Application
+Categories=Network;

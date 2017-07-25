@@ -1,0 +1,59 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --parallel
+
+LIBNET_VER := $(shell dpkg --status libnet1-dev | awk '/^Version:/ {print $$2}')
+
+ENABLE_IPV6 := $(shell \
+ if dpkg --compare-versions $(LIBNET_VER) ge 1.1.6; \
+ then echo ON; \
+ else echo OFF; \
+ fi)
+ETTERCAP_OPTIONS= \
+ -DENABLE_IPV6=$(ENABLE_IPV6) \
+ -DBUNDLED_LIBS=OFF \
+ -DENABLE_LUA=$(ENABLE_LUA) \
+ -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+ -DENABLE_TESTS=OFF \
+ -DDISABLE_RPATH=ON \
+ -DNO_INSTALL_LICENSE=ON \
+ -DENABLE_PDF_DOCS=ON \
+ -DENABLE_NLS=ON
+
+override_dh_auto_configure:
+	@echo LIBNET_VER = $(LIBNET_VER)
+	@echo ENABLE_IPV6 = $(ENABLE_IPV6)
+	@echo main configuration deferred until build, as it must be done twice
+
+override_dh_auto_build:
+	dh_auto_configure -- $(ETTERCAP_OPTIONS) -DENABLE_GTK=OFF
+	dh_auto_build
+	cd obj-* && $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	mv debian/tmp/usr/bin/ettercap ettercap-text-only
+	dh_auto_configure -- $(ETTERCAP_OPTIONS) -DENABLE_GTK=ON
+	dh_auto_build
+	cd po && make
+
+override_dh_auto_install:
+	dh_auto_install
+	mkdir -p debian/tmp/usr/sbin
+	sed 's/bin/sbin/g' -i debian/tmp/usr/share/polkit-1/actions/org.pkexec.ettercap.policy
+	install --mode=0755 ettercap-text-only debian/tmp/usr/sbin/
+	install -o root -g root -m 644 -D po/ru.gmo \
+	debian/tmp/usr/share/locale/ru/LC_MESSAGES/ettercap.mo
+
+override_dh_install:
+	dh_install --list-missing
+	mkdir -p debian/ettercap-text-only/usr/sbin
+	install --mode=0755 \
+	 debian/tmp/usr/sbin/ettercap-text-only \
+	 debian/ettercap-text-only/usr/sbin/ettercap
+	-rm --verbose debian/ettercap-common/usr/share/ettercap/ettercap.png
+
+override_dh_installdocs:
+	dh_installdocs -pettercap-common
+	dh_installdocs -Nettercap-common --link-doc=ettercap-common
+
+override_dh_strip:
+	dh_strip --dbg-package=ettercap-dbg

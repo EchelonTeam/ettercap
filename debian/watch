@@ -1,0 +1,4 @@
+version=3
+
+http://ettercap.github.io/ettercap/downloads.html \
+(?:.*[/=]|)(?:ettercap[_\-]|v)(\d.*)\.(?:tgz|tbz2|txz|tar\.(?:gz|bz2|xz)).*

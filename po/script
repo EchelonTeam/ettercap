@@ -1,0 +1,12 @@
+#!/bin/sh
+xgettext -f POTFILES.in -i --keyword=N_ --keyword=_ -o ettercap.pot -L C
+
+if [ -f ru.po ]
+then
+    msginit -i ettercap.pot -o ruNEW.po        
+    msgmerge ru.po ruNEW.po -o ru.po    
+    rm ruNEW.po
+else
+    msginit -i ettercap.pot -o ru.po
+fi
+

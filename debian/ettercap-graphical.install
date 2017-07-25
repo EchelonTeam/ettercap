@@ -1,0 +1,7 @@
+debian/tmp/usr/bin/ettercap		usr/sbin/
+debian/tmp/usr/bin/ettercap-pkexec	usr/bin/
+debian/tmp/usr/share/ettercap/ettercap.png
+debian/tmp/usr/share/polkit-1
+debian/tmp/usr/share/pixmaps
+debian/tmp/usr/share/applications
+debian/tmp/usr/share/locale
