@@ -1,7 +1,7 @@
 Source: ettercap
 Section: net
 Priority: optional
-Maintainer: Barak A. Pearlmutter <bap@debian.org>
+Maintainer: Scanner-VS maintainers <support.sca@npo-echelon.ru>
 Uploaders: Murat Demirten <murat@debian.org>
 Build-Depends: debhelper (>= 9),
  cmake,
